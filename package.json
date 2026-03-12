@@ -1,0 +1,25 @@
+{
+  "name": "hsr",
+  "version": "1.0.0",
+  "description": "test project for DP",
+  "homepage": "https://github.com/Tunez666/forum#readme",
+  "bugs": {
+    "url": "https://github.com/Tunez666/forum/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tunez666/forum.git"
+  },
+  "license": "ISC",
+  "author": "Tunez",
+  "type": "commonjs",
+  "main": "dp/index.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.19.1"
+  }
+}
