@@ -5,17 +5,16 @@ const indexRoutes = require("./routes/index");
 
 const app = express();
 
-// Шаблонизатор
+// шаблонизатор
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// папка со статикой
+// статика
 app.use(express.static(path.join(__dirname, "public")));
 
-// подключаем маршруты
+// роуты
 app.use("/", indexRoutes);
 
-
-app.listen(3000, () => {
-    console.log("Server started http://localhost:3000");
+app.listen(8080, () => {
+    console.log("Server started http://localhost:8080");
 });

@@ -1,3 +1,3 @@
 exports.showHome = (req, res) => {
-    res.render("index");
+    res.render("index"); // рендерит views/index.ejs
 };
