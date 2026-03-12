@@ -12,10 +12,6 @@ app.set("views", path.join(__dirname, "views"));
 // папка со статикой
 app.use(express.static(path.join(__dirname, "public")));
 
-// тестовый маршрут
-app.get("/", (req, res) => {
-    res.send("Сервер работает!");
-});
 // подключаем маршруты
 app.use("/", indexRoutes);
 
