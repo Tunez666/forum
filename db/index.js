@@ -1,19 +1,27 @@
 const express = require("express");
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 const app = express();
 
-// Настройка подключения
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "forum"
+// Создаём пул соединений
+const pool = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "forum",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-// Подключение
-connection.connect(err => {
-  if (err) throw err;
-  console.log("MySQL подключена!");
-});
+// Проверим подключение (опционально)
+(async () => {
+    try {
+        const conn = await pool.getConnection();
+        console.log("MySQL подключена!");
+        conn.release();
+    } catch (err) {
+        console.error("Ошибка подключения к MySQL:", err);
+    }
+})();
 
-app.listen(3000, () => console.log("Сервер запущен"));
+module.exports = pool;
