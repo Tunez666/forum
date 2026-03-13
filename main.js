@@ -11,6 +11,9 @@ app.set("views", path.join(__dirname, "views"));
 
 // статика
 app.use(express.static(path.join(__dirname, "public")));
+//даннфе форм
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // роуты
 app.use("/", indexRoutes);
