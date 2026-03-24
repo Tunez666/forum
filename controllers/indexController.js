@@ -5,5 +5,5 @@ exports.showLogin = (req, res) => {
     res.render("login"); // рендерит views/login.ejs
 };
 exports.showReg = (req, res) => {
-    res.render("reg"); // рендерит views/login.ejs
+    res.render("reg"); // рендерит views/reg.ejs
 };

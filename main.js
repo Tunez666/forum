@@ -1,8 +1,12 @@
 const express = require("express");
 const path = require("path"); 
+const session = require("express-session");
+
 const db = require("./db/index.js");
 const indexRoutes = require("./routes/index");
 const authRoutes = require("./routes/auth");
+const logRoutes = require("./routes/log");
+
 
 const app = express();
 
@@ -19,6 +23,8 @@ app.use(express.json());
 // роуты
 app.use("/", indexRoutes);
 app.use("/api", authRoutes);
+app.use("/api", logRoutes);
+
 
 app.listen(8080, () => {
     console.log("Server started http://localhost:8080");
