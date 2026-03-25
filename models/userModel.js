@@ -27,7 +27,7 @@ exports.countUser = async () => {
 exports.selectUser = async (email) => {
 
     const sql = `
-        SELECT id, username, email, password 
+        SELECT id, username, email, password, id_r
         FROM users 
         WHERE username = ? OR email = ?
         LIMIT 1

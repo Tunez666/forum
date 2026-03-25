@@ -19,3 +19,6 @@ exports.showLogin = (req, res) => {
 exports.showReg = (req, res) => {
     res.render("reg"); // рендерит views/reg.ejs
 };
+exports.showAdmin = (req, res) => {
+    res.render("adminPanel"); 
+};

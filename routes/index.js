@@ -13,4 +13,7 @@ router.get("/login", indexController.showLogin);
 // Регистрация
 router.get("/reg", indexController.showReg);
 
+//Админ панель
+router.get("/adminPanel", indexController.showAdmin);
+
 module.exports = router;

@@ -35,8 +35,12 @@ exports.login = async (req, res) => {
         return res.send("Неверный пароль");
     }
 
-    //req.session.userId = user.id;
-   // req.session.username = user.username;
+    const usersRole = user.id_r;
 
-    res.redirect("/");
+    if (usersRole == 2) {
+        return res.redirect("/");
+    } else if (usersRole == 1) {
+        return res.redirect("/adminPanel");
+    }
+
 };
