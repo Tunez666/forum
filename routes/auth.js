@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const indexController = require("../controllers/authController");
+const regController = require("../controllers/authController");
+const logoutController = require("../controllers/authController");
 
 console.log("auth routes loaded");
 
-router.post("/reg", indexController.register);
+router.post("/reg", regController.register);
+
+router.get("/logout", logoutController.logout);
 
 module.exports = router;

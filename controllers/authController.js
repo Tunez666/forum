@@ -35,6 +35,10 @@ exports.login = async (req, res) => {
         return res.send("Неверный пароль");
     }
 
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    req.session.role = user.id_r;
+
     const usersRole = user.id_r;
 
     if (usersRole == 2) {
@@ -43,4 +47,13 @@ exports.login = async (req, res) => {
         return res.redirect("/adminPanel");
     }
 
+};
+
+exports.logout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.send("Ошибка при выходе");
+        }
+        res.redirect("/login");
+    });
 };

@@ -20,6 +20,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// сессии
+app.use(session({
+    secret: "supersecretkey",  // секретная фраза для подписи куки
+    resave: false,              // не сохранять, если сессия не изменена
+    saveUninitialized: false,   // не сохранять пустые сессии
+    cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 день
+}));
+
 // роуты
 app.use("/", indexRoutes);
 app.use("/api", authRoutes);

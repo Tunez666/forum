@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const indexController = require("../controllers/indexController");
+const authMiddleware = require("../middlewares/auth");
 
 console.log("index routes loaded");
 
@@ -13,7 +14,7 @@ router.get("/login", indexController.showLogin);
 // Регистрация
 router.get("/reg", indexController.showReg);
 
-//Админ панель
-router.get("/adminPanel", indexController.showAdmin);
+// Админка
+router.get("/adminPanel", authMiddleware.isAuth, authMiddleware.isAdmin, indexController.showAdmin);
 
 module.exports = router;
