@@ -13,3 +13,27 @@ exports.createUser = async (user) => {
     ]);
     return result;
 };
+
+exports.countUser = async () => {
+    const sql = `
+        SELECT COUNT(id) AS countUsers
+        FROM users 
+    `;
+
+    const [rows] = await db.query(sql);
+    return rows; 
+};
+
+exports.selectUser = async (email) => {
+
+    const sql = `
+        SELECT id, username, email, password 
+        FROM users 
+        WHERE username = ? OR email = ?
+        LIMIT 1
+    `;
+
+    const [rows] = await db.query(sql, [email, email]);
+
+    return rows[0]; // возвращаем одного пользователя
+};

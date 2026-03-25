@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const indexController = require("../controllers/loginController");
+const indexController = require("../controllers/authController");
 
 console.log("login routes loaded");
 
