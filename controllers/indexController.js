@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const postsModel = require("../models/postsModel");
+const topicsModel = require("../models/topicsModel");
 
 exports.showHome = async (req, res) => {
 
@@ -13,12 +14,3 @@ exports.showHome = async (req, res) => {
 
 };
 
-exports.showLogin = (req, res) => {
-    res.render("login"); // рендерит views/login.ejs
-};
-exports.showReg = (req, res) => {
-    res.render("reg"); // рендерит views/reg.ejs
-};
-exports.showAdmin = (req, res) => {
-    res.render("adminPanel"); 
-};

@@ -36,11 +36,11 @@
 
         <div class="visual-stats">
           <div class="stat-orb">
-            <span class="stat-num">15K+</span>
+            <span class="stat-num"><%= usersCount %></span>
             <span class="stat-label">Участников</span>
           </div>
           <div class="stat-orb">
-            <span class="stat-num">50K+</span>
+            <span class="stat-num"><%= topicsCount %></span>
             <span class="stat-label">Тем</span>
           </div>
         </div>
@@ -71,7 +71,7 @@
         </div>
 
         <!-- TODO: Замени action и добавь обработку формы -->
-        <form class="auth-form" action="/api/login" method="POST">
+        <form class="auth-form" action="/login" method="POST">
           <div class="form-group">
             <label class="form-label" for="email">Email или никнейм</label>
             <div class="input-wrapper">

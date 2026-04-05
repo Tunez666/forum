@@ -5,7 +5,8 @@ const session = require("express-session");
 const db = require("./db/index.js");
 const indexRoutes = require("./routes/index");
 const authRoutes = require("./routes/auth");
-const logRoutes = require("./routes/log");
+const adminRoutes = require("./routes/admin");
+
 
 
 const app = express();
@@ -28,10 +29,21 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 день
 }));
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.userId ? {
+        id: req.session.userId,
+        username: req.session.username,
+        role: req.session.role
+    } : null;
+
+    next();
+});
+
 // роуты
 app.use("/", indexRoutes);
-app.use("/api", authRoutes);
-app.use("/api", logRoutes);
+app.use("/", authRoutes);
+app.use("/admin", adminRoutes);
+
 
 
 app.listen(8080, () => {

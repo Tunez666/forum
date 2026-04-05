@@ -1,5 +1,20 @@
 const userModel = require("../models/userModel");
+const topicsModel = require("../models/topicsModel");
 const bcrypt = require("bcrypt");
+
+exports.showLogin = async(req, res) => {
+
+    const rows = await userModel.countUser();
+    const usersCount = rows[0].countUsers;
+
+    const rowsss = await topicsModel.countTopics();
+    const topicsCount = rowsss[0].countTopics;
+
+    res.render("login", { usersCount, topicsCount}); 
+};
+exports.showReg = (req, res) => {
+    res.render("reg"); 
+};
 
 exports.register = async (req, res) => {
     const { username, uid, email, password } = req.body;
@@ -16,7 +31,7 @@ exports.register = async (req, res) => {
         password: hashedPassword
     });
 
-    res.redirect("/login");
+    res.redirect("login");
 };
 
 exports.login = async (req, res) => {
@@ -40,11 +55,12 @@ exports.login = async (req, res) => {
     req.session.role = user.id_r;
 
     const usersRole = user.id_r;
+    console.log("ROLE:", user.id_r);
 
     if (usersRole == 2) {
         return res.redirect("/");
     } else if (usersRole == 1) {
-        return res.redirect("/adminPanel");
+        return res.redirect("/admin/dashboard");
     }
 
 };
@@ -54,6 +70,6 @@ exports.logout = (req, res) => {
         if (err) {
             return res.send("Ошибка при выходе");
         }
-        res.redirect("/login");
+        res.redirect("login");
     });
 };

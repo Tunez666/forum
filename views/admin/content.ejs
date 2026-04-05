@@ -1,0 +1,783 @@
+<%- include('../partials/head') %>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-layer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- Admin Layout -->
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <%- include('../partials/adminSidebar') %>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="admin-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="page-title">
+            <h1>Управление главной</h1>
+            <span class="page-subtitle">Редактирование контента главной страницы</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <a href="/" class="btn-back-site" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            <span>Посмотреть сайт</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+        <!-- Quick Action Buttons -->
+        <section class="action-buttons-section">
+          <button class="action-button primary" onclick="scrollToSection('version-section')">
+            <div class="action-button-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="action-button-content">
+              <span class="action-button-title">Обновить версию</span>
+              <span class="action-button-desc">Изменить версию игры в Hero секции</span>
+            </div>
+          </button>
+
+          <button class="action-button secondary" onclick="scrollToSection('character-section')">
+            <div class="action-button-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="action-button-content">
+              <span class="action-button-title">Обновить персонажа</span>
+              <span class="action-button-desc">Изменить баннер текущего персонажа</span>
+            </div>
+          </button>
+
+          <button class="action-button accent" onclick="scrollToSection('events-section')">
+            <div class="action-button-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="action-button-content">
+              <span class="action-button-title">Обновить события</span>
+              <span class="action-button-desc">Управление событиями в сайдбаре</span>
+            </div>
+          </button>
+        </section>
+
+        <!-- Version Section -->
+        <section id="version-section" class="edit-section">
+          <div class="section-header-card">
+            <div class="section-icon version">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="section-title-info">
+              <h2>Версия игры</h2>
+              <p>Отображается в Hero секции главной страницы</p>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <form id="version-form">
+              <div class="form-group">
+                <label for="version-number">Номер версии</label>
+                <input 
+                  type="text" 
+                  id="version-number" 
+                  name="version" 
+                  class="form-input"
+                  placeholder="Например: 4.0"
+                  value="4.0"
+                >
+                <span class="form-hint">Введите номер текущей версии игры</span>
+              </div>
+
+              <div class="form-group">
+                <label for="version-text">Текст баджа</label>
+                <input 
+                  type="text" 
+                  id="version-text" 
+                  name="version_text" 
+                  class="form-input"
+                  placeholder="Например: Версия 4.0 уже здесь!"
+                  value="Версия 4.0 уже здесь!"
+                >
+                <span class="form-hint">Полный текст, который отображается в бадже Hero секции</span>
+              </div>
+
+              <div class="form-group">
+                <label>Предпросмотр</label>
+                <div class="preview-badge">
+                  <span class="pulse"></span>
+                  <span id="preview-version-text">Версия 4.0 уже здесь!</span>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <!-- TODO: Добавить обработчик отправки формы -->
+                <button type="submit" class="btn btn-primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                  </svg>
+                  Сохранить изменения
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetVersionForm()">
+                  Отменить
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Character Banner Section -->
+        <section id="character-section" class="edit-section">
+          <div class="section-header-card">
+            <div class="section-icon character">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="section-title-info">
+              <h2>Баннер персонажа</h2>
+              <p>Изображение персонажа в Hero секции главной страницы</p>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <form id="character-form">
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="character-name">Имя персонажа</label>
+                  <input 
+                    type="text" 
+                    id="character-name" 
+                    name="character_name" 
+                    class="form-input"
+                    placeholder="Например: Sparkle"
+                    value="Sparkle"
+                  >
+                </div>
+
+                <div class="form-group flex-1">
+                  <label for="character-element">Элемент</label>
+                  <select id="character-element" name="character_element" class="form-input">
+                    <option value="physical">Физический</option>
+                    <option value="fire">Огонь</option>
+                    <option value="ice">Лёд</option>
+                    <option value="lightning">Молния</option>
+                    <option value="wind">Ветер</option>
+                    <option value="quantum" selected>Квант</option>
+                    <option value="imaginary">Мнимый</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="character-image">Изображение персонажа</label>
+                <div class="image-upload-area" id="image-upload-area">
+                  <input 
+                    type="file" 
+                    id="character-image" 
+                    name="character_image" 
+                    class="file-input"
+                    accept="image/*"
+                  >
+                  <div class="upload-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span class="upload-text">Перетащите изображение или нажмите для выбора</span>
+                    <span class="upload-hint">PNG, JPG до 5MB. Рекомендуемый размер: 400x500px</span>
+                  </div>
+                  <!-- TODO: Показать превью загруженного изображения -->
+                  <div class="image-preview" id="image-preview" style="display: none;">
+                    <img src="" alt="Preview" id="preview-image">
+                    <button type="button" class="remove-image" onclick="removeImage()">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="character-image-url">Или укажите URL изображения</label>
+                <input 
+                  type="url" 
+                  id="character-image-url" 
+                  name="character_image_url" 
+                  class="form-input"
+                  placeholder="https://example.com/character.png"
+                  value="/img/spark.jpg"
+                >
+                <span class="form-hint">Текущий путь к изображению на сервере</span>
+              </div>
+
+              <div class="form-group">
+                <label>Текущий баннер</label>
+                <div class="current-banner-preview">
+                  <div class="banner-card floating">
+                    <!-- TODO: Загрузить текущее изображение из БД -->
+                    <img src="/img/spark.jpg" alt="Текущий баннер" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="banner-placeholder" style="display: none;">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                      <span>Баннер персонажа</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <!-- TODO: Добавить обработчик загрузки изображения -->
+                <button type="submit" class="btn btn-primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Загрузить баннер
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetCharacterForm()">
+                  Отменить
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events-section" class="edit-section">
+          <div class="section-header-card">
+            <div class="section-icon events">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="section-title-info">
+              <h2>Ближайшие события</h2>
+              <p>Список событий в сайдбаре главной страницы</p>
+            </div>
+            <button class="btn btn-add" onclick="showAddEventModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Добавить событие
+            </button>
+          </div>
+
+          <div class="events-list-admin">
+            <!-- TODO: Загрузить события из БД -->
+            
+            <!-- Event Item 1 -->
+            <div class="event-item-admin" data-event-id="1">
+              <div class="event-drag-handle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="8" y2="6"/>
+                  <line x1="16" y1="6" x2="16" y2="6"/>
+                  <line x1="8" y1="12" x2="8" y2="12"/>
+                  <line x1="16" y1="12" x2="16" y2="12"/>
+                  <line x1="8" y1="18" x2="8" y2="18"/>
+                  <line x1="16" y1="18" x2="16" y2="18"/>
+                </svg>
+              </div>
+              <div class="event-date-admin">
+                <span class="event-day-admin">15</span>
+                <span class="event-month-admin">Мар</span>
+              </div>
+              <div class="event-info-admin">
+                <span class="event-name-admin">Баннер Firefly</span>
+                <span class="event-time-admin">Осталось 3 дня</span>
+              </div>
+              <div class="event-actions-admin">
+                <button class="event-btn edit" onclick="editEvent(1)" title="Редактировать">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button class="event-btn delete" onclick="deleteEvent(1)" title="Удалить">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Event Item 2 -->
+            <div class="event-item-admin" data-event-id="2">
+              <div class="event-drag-handle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="8" y2="6"/>
+                  <line x1="16" y1="6" x2="16" y2="6"/>
+                  <line x1="8" y1="12" x2="8" y2="12"/>
+                  <line x1="16" y1="12" x2="16" y2="12"/>
+                  <line x1="8" y1="18" x2="8" y2="18"/>
+                  <line x1="16" y1="18" x2="16" y2="18"/>
+                </svg>
+              </div>
+              <div class="event-date-admin">
+                <span class="event-day-admin">22</span>
+                <span class="event-month-admin">Мар</span>
+              </div>
+              <div class="event-info-admin">
+                <span class="event-name-admin">Обновление 2.8</span>
+                <span class="event-time-admin">Через 10 дней</span>
+              </div>
+              <div class="event-actions-admin">
+                <button class="event-btn edit" onclick="editEvent(2)" title="Редактировать">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button class="event-btn delete" onclick="deleteEvent(2)" title="Удалить">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Event Item 3 -->
+            <div class="event-item-admin" data-event-id="3">
+              <div class="event-drag-handle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="8" y2="6"/>
+                  <line x1="16" y1="6" x2="16" y2="6"/>
+                  <line x1="8" y1="12" x2="8" y2="12"/>
+                  <line x1="16" y1="12" x2="16" y2="12"/>
+                  <line x1="8" y1="18" x2="8" y2="18"/>
+                  <line x1="16" y1="18" x2="16" y2="18"/>
+                </svg>
+              </div>
+              <div class="event-date-admin">
+                <span class="event-day-admin">01</span>
+                <span class="event-month-admin">Апр</span>
+              </div>
+              <div class="event-info-admin">
+                <span class="event-name-admin">Турнир гильдий</span>
+                <span class="event-time-admin">Через 20 дней</span>
+              </div>
+              <div class="event-actions-admin">
+                <button class="event-btn edit" onclick="editEvent(3)" title="Редактировать">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button class="event-btn delete" onclick="deleteEvent(3)" title="Удалить">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Event Modal -->
+  <div class="modal-overlay" id="event-modal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Добавить событие</h3>
+        <button class="modal-close" onclick="closeEventModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="event-form">
+        <input type="hidden" id="event-id" name="event_id">
+        
+        <div class="form-group">
+          <label for="event-name">Название события</label>
+          <input 
+            type="text" 
+            id="event-name" 
+            name="event_name" 
+            class="form-input"
+            placeholder="Например: Баннер Firefly"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="event-date">Дата события</label>
+            <input 
+              type="date" 
+              id="event-date" 
+              name="event_date" 
+              class="form-input"
+              required
+            >
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="event-end-date">Дата окончания (опционально)</label>
+            <input 
+              type="date" 
+              id="event-end-date" 
+              name="event_end_date" 
+              class="form-input"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="event-description">Описание (опционально)</label>
+          <textarea 
+            id="event-description" 
+            name="event_description" 
+            class="form-textarea"
+            placeholder="Краткое описание события..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <!-- TODO: Добавить обработчик сохранения события в БД -->
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="modal-submit-text">Добавить</span>
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeEventModal()">
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+   
+    // ============================================
+    // Smooth Scroll to Section
+    // ============================================
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // ============================================
+    // Version Form
+    // ============================================
+    const versionTextInput = document.getElementById('version-text');
+    const previewVersionText = document.getElementById('preview-version-text');
+
+    // Live preview для текста версии
+    versionTextInput.addEventListener('input', function() {
+      previewVersionText.textContent = this.value || 'Версия X.X уже здесь!';
+    });
+
+    document.getElementById('version-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // TODO: Отправить данные на сервер через fetch API
+      // const formData = new FormData(this);
+      // fetch('/api/admin/version', {
+      //   method: 'POST',
+      //   body: formData
+      // }).then(response => response.json())
+      //   .then(data => {
+      //     showToast('Версия успешно обновлена!', 'success');
+      //   })
+      //   .catch(error => {
+      //     showToast('Ошибка при сохранении', 'error');
+      //   });
+
+      showToast('Версия успешно обновлена!', 'success');
+    });
+
+    function resetVersionForm() {
+      // TODO: Загрузить текущие значения из БД
+      document.getElementById('version-number').value = '4.0';
+      document.getElementById('version-text').value = 'Версия 4.0 уже здесь!';
+      previewVersionText.textContent = 'Версия 4.0 уже здесь!';
+    }
+
+    // ============================================
+    // Character Form - Image Upload
+    // ============================================
+    const imageInput = document.getElementById('character-image');
+    const imageUploadArea = document.getElementById('image-upload-area');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImage = document.getElementById('preview-image');
+
+    // Drag and drop
+    imageUploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      this.classList.add('dragover');
+    });
+
+    imageUploadArea.addEventListener('dragleave', function() {
+      this.classList.remove('dragover');
+    });
+
+    imageUploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].type.startsWith('image/')) {
+        handleImageFile(files[0]);
+      }
+    });
+
+    imageInput.addEventListener('change', function() {
+      if (this.files.length > 0) {
+        handleImageFile(this.files[0]);
+      }
+    });
+
+    function handleImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        imagePreview.style.display = 'block';
+        imageUploadArea.querySelector('.upload-placeholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+      imageUploadArea.querySelector('.upload-placeholder').style.display = 'flex';
+    }
+
+    document.getElementById('character-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // TODO: Отправить данные на сервер через fetch API
+      // const formData = new FormData(this);
+      // fetch('/api/admin/character', {
+      //   method: 'POST',
+      //   body: formData
+      // }).then(response => response.json())
+      //   .then(data => {
+      //     showToast('Баннер персонажа обновлён!', 'success');
+      //   })
+      //   .catch(error => {
+      //     showToast('Ошибка при загрузке', 'error');
+      //   });
+
+      showToast('Баннер персонажа обновлён!', 'success');
+    });
+
+    function resetCharacterForm() {
+      // TODO: Загрузить текущие значения из БД
+      document.getElementById('character-name').value = 'Sparkle';
+      document.getElementById('character-element').value = 'quantum';
+      document.getElementById('character-image-url').value = '/img/spark.jpg';
+      removeImage();
+    }
+
+    // ============================================
+    // Events Management
+    // ============================================
+    const eventModal = document.getElementById('event-modal');
+    const eventForm = document.getElementById('event-form');
+    let editingEventId = null;
+
+    function showAddEventModal() {
+      editingEventId = null;
+      document.getElementById('modal-title').textContent = 'Добавить событие';
+      document.getElementById('modal-submit-text').textContent = 'Добавить';
+      eventForm.reset();
+      eventModal.classList.add('active');
+    }
+
+    function editEvent(eventId) {
+      editingEventId = eventId;
+      document.getElementById('modal-title').textContent = 'Редактировать событие';
+      document.getElementById('modal-submit-text').textContent = 'Сохранить';
+      
+      // TODO: Загрузить данные события из БД по eventId
+      // fetch(`/api/admin/events/${eventId}`)
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     document.getElementById('event-id').value = data.id;
+      //     document.getElementById('event-name').value = data.name;
+      //     document.getElementById('event-date').value = data.date;
+      //     document.getElementById('event-end-date').value = data.end_date || '';
+      //     document.getElementById('event-description').value = data.description || '';
+      //   });
+
+      // Заглушка с примерными данными
+      const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
+      if (eventItem) {
+        const name = eventItem.querySelector('.event-name-admin').textContent;
+        document.getElementById('event-name').value = name;
+      }
+
+      eventModal.classList.add('active');
+    }
+
+    function closeEventModal() {
+      eventModal.classList.remove('active');
+      eventForm.reset();
+      editingEventId = null;
+    }
+
+    function closeModalOnOverlay(e) {
+      if (e.target === eventModal) {
+        closeEventModal();
+      }
+    }
+
+    eventForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // TODO: Сохранить событие в БД
+      // const formData = new FormData(this);
+      // const url = editingEventId 
+      //   ? `/api/admin/events/${editingEventId}` 
+      //   : '/api/admin/events';
+      // const method = editingEventId ? 'PUT' : 'POST';
+      // 
+      // fetch(url, {
+      //   method: method,
+      //   body: formData
+      // }).then(response => response.json())
+      //   .then(data => {
+      //     showToast(editingEventId ? 'Событие обновлено!' : 'Событие добавлено!', 'success');
+      //     closeEventModal();
+      //     // TODO: Обновить список событий на странице
+      //   })
+      //   .catch(error => {
+      //     showToast('Ошибка при сохранении', 'error');
+      //   });
+
+      showToast(editingEventId ? 'Событие обновлено!' : 'Событие добавлено!', 'success');
+      closeEventModal();
+    });
+
+    function deleteEvent(eventId) {
+      if (!confirm('Вы уверены, что хотите удалить это событие?')) {
+        return;
+      }
+
+      // TODO: Удалить событие из БД
+      // fetch(`/api/admin/events/${eventId}`, {
+      //   method: 'DELETE'
+      // }).then(response => response.json())
+      //   .then(data => {
+      //     showToast('Событие удалено', 'success');
+      //     // Удалить элемент из DOM
+      //     const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
+      //     if (eventItem) {
+      //       eventItem.remove();
+      //     }
+      //   })
+      //   .catch(error => {
+      //     showToast('Ошибка при удалении', 'error');
+      //   });
+
+      // Заглушка - удаляем элемент из DOM
+      const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
+      if (eventItem) {
+        eventItem.style.animation = 'fadeOut 0.3s ease forwards';
+        setTimeout(() => eventItem.remove(), 300);
+      }
+      showToast('Событие удалено', 'success');
+    }
+
+    // ============================================
+    // Toast Notifications
+    // ============================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      const icons = {
+        success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+        error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+        info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+      };
+
+      toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || icons.info}</span>
+        <span class="toast-message">${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Анимация появления
+      setTimeout(() => toast.classList.add('show'), 10);
+
+      // Автоматическое скрытие через 3 секунды
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ============================================
+    // Keyboard shortcuts
+    // ============================================
+    document.addEventListener('keydown', function(e) {
+      // Escape закрывает модальное окно
+      if (e.key === 'Escape' && eventModal.classList.contains('active')) {
+        closeEventModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -37,3 +37,14 @@ exports.selectUser = async (email) => {
 
     return rows[0]; // возвращаем одного пользователя
 };
+
+exports.getLastUsers = async () => {
+    const [rows] = await db.query(`
+        SELECT id, username, email, created_at
+        FROM users
+        ORDER BY created_at DESC
+        LIMIT 4
+    `);
+
+    return rows;
+};
