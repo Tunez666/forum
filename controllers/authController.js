@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
     req.session.role = user.id_r;
 
     const usersRole = user.id_r;
+    console.log("ID:", user.id);
     console.log("ROLE:", user.id_r);
 
     if (usersRole == 2) {

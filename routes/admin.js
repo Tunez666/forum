@@ -9,4 +9,6 @@ router.get("/dashboard", authMiddleware.isAuth, authMiddleware.isAdmin, adminCon
 
 router.get("/content", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showContent);
 
+router.post("/updateVersion", adminConroller.updateVersion);
+
 module.exports = router;

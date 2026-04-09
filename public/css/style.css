@@ -2150,12 +2150,12 @@ button {
   flex-direction: column;
   z-index: 100;
 
-  transform: translateX(0); /* по умолчанию открыт */
+  transform: translateX(-100%); /* по умолчанию открыт */
   transition: transform 0.3s ease;
 }
 
 .admin-sidebar.closed {
-  transform: translateX(-100%);
+  transform: translateX(0);
 }
 
 @media (max-width: 1024px) {
@@ -3404,10 +3404,6 @@ button {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
 }
 
 .form-group:last-child {

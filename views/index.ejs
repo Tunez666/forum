@@ -15,7 +15,7 @@
       <div class="hero-content">
         <div class="hero-badge">
           <span class="pulse"></span>
-          Версия 4.0 уже здесь!
+          Версия <%= settings.version %> уже здесь!
         </div>
         <h1 class="hero-title">
           <span class="glitch" data-text="Добро пожаловать">Добро пожаловать</span>
@@ -26,7 +26,6 @@
           Обсуждайте билды, делитесь стратегиями, находите друзей.
         </p>
         <div class="hero-stats">
-          <!-- TODO: Динамическая статистика -->
           <div class="stat-item">
             <span class="stat-value"><%= usersCount %></span>
             <span class="stat-label">Участников</span>
@@ -43,9 +42,8 @@
       </div>
       <div class="hero-visual">
         <div class="hero-card floating">
-          <!-- TODO: Изображение персонажа -->
           <div class="hero-card-placeholder">
-            <img src="/img/spark.jpg">
+            <img src="/img/<%= settings.patch %>">
             <span>Баннер персонажа</span>
           </div>
         </div>

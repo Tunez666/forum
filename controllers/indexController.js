@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const postsModel = require("../models/postsModel");
-const topicsModel = require("../models/topicsModel");
+const settingsModel = require("../models/settingsModel");
 
 exports.showHome = async (req, res) => {
 
@@ -10,7 +10,10 @@ exports.showHome = async (req, res) => {
     const rowss = await postsModel.countPosts();
     const postsCount = rowss[0].countPosts;
 
-    res.render("index", { usersCount, postsCount });
+    const rowsss = await settingsModel.selectSettings(); 
+        console.log(rowsss);
+        
+    res.render("index", { usersCount, postsCount, settings: rowsss[0] });
 
 };
 
