@@ -41,6 +41,14 @@ exports.showContent = async(req, res) => {
     res.render("admin/content", {settings: rowsss[0], events }); 
 };
 
+exports.showCategories = (req, res) => {
+    res.render("admin/categories"); 
+};
+
+exports.showTopics = (req, res) => {
+    res.render("admin/topics"); 
+};
+
 exports.updateVersion = async (req, res) => {
     const { version } = req.body;
     console.log(req.body);

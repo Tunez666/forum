@@ -10,6 +10,10 @@ router.get("/dashboard", authMiddleware.isAuth, authMiddleware.isAdmin, adminCon
 
 router.get("/content", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showContent);
 
+router.get("/categories", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showCategories);
+
+router.get("/topics", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showTopics);
+
 router.post("/updateVersion", adminConroller.updateVersion);
 
 router.post(

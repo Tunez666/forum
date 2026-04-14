@@ -1,0 +1,1064 @@
+<%- include('../partials/head') %>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-layer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- Admin Layout -->
+  <div class="admin-layout">
+   <%- include('../partials/adminSidebar') %>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="admin-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="page-title">
+            <h1>Управление темами</h1>
+            <span class="page-subtitle">Мoдерация и управление темами форума</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-secondary" onclick="exportTopics()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Экспорт
+          </button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+        <!-- Stats Cards -->
+        <section class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <!-- TODO: Загрузить из БД -->
+              <span class="stat-value">1,247</span>
+              <span class="stat-label">Всего тем</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <!-- TODO: Загрузить из БД -->
+              <span class="stat-value">15,892</span>
+              <span class="stat-label">Всего сообщений</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon pink">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <!-- TODO: Загрузить из БД -->
+              <span class="stat-value">89</span>
+              <span class="stat-label">Закрепленных</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <!-- TODO: Загрузить из БД -->
+              <span class="stat-value">23</span>
+              <span class="stat-label">Закрытых</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Filters and Search -->
+        <section class="filters-section">
+          <div class="filters-row">
+            <div class="search-box large">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" placeholder="Поиск по названию, автору или ID..." class="search-input" id="search-topics">
+            </div>
+
+            <div class="filter-group">
+              <select class="filter-select" id="filter-category">
+                <option value="">Все категории</option>
+                <!-- TODO: Загрузить категории из БД -->
+                <option value="1">Общее обсуждение</option>
+                <option value="2">Персонажи</option>
+                <option value="3">Гайды</option>
+                <option value="4">Творчество</option>
+                <option value="5">Оффтоп</option>
+              </select>
+
+              <select class="filter-select" id="filter-status">
+                <option value="">Все статусы</option>
+                <option value="active">Активные</option>
+                <option value="pinned">Закрепленные</option>
+                <option value="closed">Закрытые</option>
+                <option value="hidden">Скрытые</option>
+              </select>
+
+              <select class="filter-select" id="filter-sort">
+                <option value="newest">Сначала новые</option>
+                <option value="oldest">Сначала старые</option>
+                <option value="popular">По популярности</option>
+                <option value="replies">По ответам</option>
+                <option value="views">По просмотрам</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bulk Actions -->
+          <div class="bulk-actions" id="bulk-actions" style="display: none;">
+            <span class="selected-count"><span id="selected-count">0</span> выбрано</span>
+            <div class="bulk-buttons">
+              <button class="bulk-btn" onclick="bulkPin()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Закрепить
+              </button>
+              <button class="bulk-btn" onclick="bulkClose()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Закрыть
+              </button>
+              <button class="bulk-btn" onclick="bulkMove()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                Переместить
+              </button>
+              <button class="bulk-btn danger" onclick="bulkDelete()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Удалить
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Topics Table -->
+        <section class="data-section">
+          <div class="table-container">
+            <table class="data-table" id="topics-table">
+              <thead>
+                <tr>
+                  <th class="th-checkbox">
+                    <label class="table-checkbox">
+                      <input type="checkbox" id="select-all" onchange="toggleSelectAll()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </th>
+                  <th class="th-topic">Тема</th>
+                  <th class="th-category">Категория</th>
+                  <th class="th-author">Автор</th>
+                  <th class="th-stats">Ответы</th>
+                  <th class="th-stats">Просмотры</th>
+                  <th class="th-date">Последняя активность</th>
+                  <th class="th-actions">Действия</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- TODO: Загрузить темы из БД -->
+                
+                <!-- Topic Row 1 - Pinned -->
+                <tr class="topic-row pinned" data-topic-id="1">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="1" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-badges">
+                        <span class="topic-badge pinned" title="Закреплено">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">Правила форума StarRail Station</a>
+                        <span class="topic-excerpt">Обязательно к прочтению для всех пользователей форума...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #06d6d6;">Общее обсуждение</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar admin">A</div>
+                      <span class="author-name">Admin</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">45</td>
+                  <td class="td-stats">12,456</td>
+                  <td class="td-date">
+                    <span class="date-primary">Сегодня</span>
+                    <span class="date-secondary">14:32</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" title="Открепить" onclick="unpinTopic(1)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(1)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(1)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Topic Row 2 -->
+                <tr class="topic-row" data-topic-id="2">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="2" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-badges">
+                        <span class="topic-badge hot" title="Горячая тема">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">Лучший билд для Sparkle в версии 4.0</a>
+                        <span class="topic-excerpt">Делюсь своим билдом для Sparkle после последних изменений...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #a855f7;">Персонажи</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar">S</div>
+                      <span class="author-name">SparkleMain</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">128</td>
+                  <td class="td-stats">5,672</td>
+                  <td class="td-date">
+                    <span class="date-primary">Сегодня</span>
+                    <span class="date-secondary">12:15</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" title="Закрепить" onclick="pinTopic(2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Topic Row 3 -->
+                <tr class="topic-row" data-topic-id="3">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="3" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">Гайд по прохождению Forgotten Hall 12</a>
+                        <span class="topic-excerpt">Подробный гайд с командами для каждого этажа...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #ff2d75;">Гайды</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar">G</div>
+                      <span class="author-name">GuidesMaster</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">67</td>
+                  <td class="td-stats">3,421</td>
+                  <td class="td-date">
+                    <span class="date-primary">Вчера</span>
+                    <span class="date-secondary">23:45</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" title="Закрепить" onclick="pinTopic(3)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(3)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(3)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Topic Row 4 - Closed -->
+                <tr class="topic-row closed" data-topic-id="4">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="4" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-badges">
+                        <span class="topic-badge closed" title="Закрыта">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">Обсуждение ивента версии 3.5</a>
+                        <span class="topic-excerpt">Ивент закончился, тема закрыта...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #06d6d6;">Общее обсуждение</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar">E</div>
+                      <span class="author-name">EventHunter</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">234</td>
+                  <td class="td-stats">8,901</td>
+                  <td class="td-date">
+                    <span class="date-primary">12 Мар</span>
+                    <span class="date-secondary">2024</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" title="Открыть" onclick="openTopic(4)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(4)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(4)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Topic Row 5 -->
+                <tr class="topic-row" data-topic-id="5">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="5" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">Фан-арт: Моя версия Kafka</a>
+                        <span class="topic-excerpt">Ри��овал 3 дня, надеюсь вам понравится...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #22c55e;">Творчество</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar">A</div>
+                      <span class="author-name">ArtistPro</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">89</td>
+                  <td class="td-stats">2,134</td>
+                  <td class="td-date">
+                    <span class="date-primary">Вчера</span>
+                    <span class="date-secondary">18:20</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" title="Закрепить" onclick="pinTopic(5)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(5)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(5)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Topic Row 6 - Hidden/Reported -->
+                <tr class="topic-row hidden-topic" data-topic-id="6">
+                  <td>
+                    <label class="table-checkbox">
+                      <input type="checkbox" class="topic-checkbox" value="6" onchange="updateSelection()">
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <td class="td-topic">
+                    <div class="topic-info">
+                      <div class="topic-badges">
+                        <span class="topic-badge hidden" title="Скрыта">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                          </svg>
+                        </span>
+                        <span class="topic-badge reported" title="Есть жалобы">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                            <line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="2"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="topic-title-wrapper">
+                        <a href="#" class="topic-title">[СКРЫТО] Подозрительный контент</a>
+                        <span class="topic-excerpt">Тема скрыта из-за жалоб пользователей...</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-tag" style="--tag-color: #3b82f6;">Оффтоп</span>
+                  </td>
+                  <td>
+                    <div class="author-cell">
+                      <div class="author-avatar warned">X</div>
+                      <span class="author-name">SuspiciousUser</span>
+                    </div>
+                  </td>
+                  <td class="td-stats">12</td>
+                  <td class="td-stats">456</td>
+                  <td class="td-date">
+                    <span class="date-primary">10 Мар</span>
+                    <span class="date-secondary">2024</span>
+                  </td>
+                  <td class="td-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn success" title="Показать" onclick="showTopic(6)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn" title="Редактировать" onclick="editTopic(6)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button class="action-btn danger" title="Удалить" onclick="deleteTopic(6)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <div class="pagination-info">
+              Показано <strong>1-6</strong> из <strong>1,247</strong> тем
+            </div>
+            <div class="pagination-controls">
+              <button class="pagination-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"/>
+                </svg>
+              </button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <span class="pagination-dots">...</span>
+              <button class="pagination-btn">208</button>
+              <button class="pagination-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="per-page">
+              <span>На странице:</span>
+              <select class="per-page-select" id="per-page">
+                <option value="6" selected>6</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit Topic Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3>Редактировать тему</h3>
+        <button class="modal-close" onclick="closeEditModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="edit-topic-form">
+        <input type="hidden" id="edit-topic-id" name="id">
+        
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-topic-title">Название темы *</label>
+            <input type="text" id="edit-topic-title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-topic-category">Категория</label>
+              <select id="edit-topic-category" name="category_id" class="form-input">
+                <!-- TODO: Загрузить категории из БД -->
+                <option value="1">Общее обсуждение</option>
+                <option value="2">Персонажи</option>
+                <option value="3">Гайды</option>
+                <option value="4">Творчество</option>
+                <option value="5">Оффтоп</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-topic-author">Автор</label>
+              <input type="text" id="edit-topic-author" name="author" class="form-input" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Статус темы</label>
+            <div class="checkbox-group horizontal">
+              <label class="checkbox-label">
+                <input type="checkbox" name="is_pinned" id="edit-is-pinned">
+                <span class="checkmark"></span>
+                <span>Закрепить</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="is_closed" id="edit-is-closed">
+                <span class="checkmark"></span>
+                <span>Закрыть</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="is_hidden" id="edit-is-hidden">
+                <span class="checkmark"></span>
+                <span>Скрыть</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-topic-note">Заметка модератора</label>
+            <textarea id="edit-topic-note" name="mod_note" class="form-textarea" placeholder="Причина изменений (видна только модераторам)..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <!-- TODO: Добавить обработчик сохранения -->
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Сохранить
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Move Topic Modal -->
+  <div class="modal-overlay" id="move-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Переместить темы</h3>
+        <button class="modal-close" onclick="closeMoveModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="modal-description">Выберите категорию для перемещения <strong id="move-count">0</strong> тем:</p>
+        
+        <div class="form-group">
+          <label for="move-category">Категория назначения</label>
+          <select id="move-category" class="form-input">
+            <!-- TODO: Загрузить категории из БД -->
+            <option value="1">Общее обсуждение</option>
+            <option value="2">Персонажи</option>
+            <option value="3">Гайды</option>
+            <option value="4">Творчество</option>
+            <option value="5">Оффтоп</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- TODO: Добавить обработчик перемещения -->
+        <button type="button" class="btn btn-primary" onclick="confirmMove()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          Переместить
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeMoveModal()">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header danger">
+        <h3>Удаление темы</h3>
+        <button class="modal-close" onclick="closeDeleteModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="delete-warning">
+          <div class="warning-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <p>Вы уверены, что хотите удалить <span id="delete-count">эту тему</span>?</p>
+          <p class="warning-text">Все сообщения в теме также будут удалены. Это действие нельзя отменить.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- TODO: Добавить обработчик удаления -->
+        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Да, удалить
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+
+
+    // ============================================
+    // Selection Management
+    // ============================================
+    let selectedTopics = new Set();
+
+    function toggleSelectAll() {
+      const selectAll = document.getElementById('select-all');
+      const checkboxes = document.querySelectorAll('.topic-checkbox');
+      
+      checkboxes.forEach(cb => {
+        cb.checked = selectAll.checked;
+        if (selectAll.checked) {
+          selectedTopics.add(cb.value);
+        } else {
+          selectedTopics.delete(cb.value);
+        }
+      });
+      
+      updateBulkActions();
+    }
+
+    function updateSelection() {
+      const checkboxes = document.querySelectorAll('.topic-checkbox');
+      const selectAll = document.getElementById('select-all');
+      
+      selectedTopics.clear();
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          selectedTopics.add(cb.value);
+        }
+      });
+      
+      // Update "select all" checkbox state
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+      selectAll.checked = allChecked;
+      selectAll.indeterminate = someChecked && !allChecked;
+      
+      updateBulkActions();
+    }
+
+    function updateBulkActions() {
+      const bulkActions = document.getElementById('bulk-actions');
+      const countSpan = document.getElementById('selected-count');
+      
+      countSpan.textContent = selectedTopics.size;
+      
+      if (selectedTopics.size > 0) {
+        bulkActions.style.display = 'flex';
+      } else {
+        bulkActions.style.display = 'none';
+      }
+    }
+
+    // ============================================
+    // Bulk Actions
+    // ============================================
+    function bulkPin() {
+      // TODO: Закрепить выбранные темы в БД
+      console.log('Pinning topics:', Array.from(selectedTopics));
+      showToast(`${selectedTopics.size} тем закреплено`, 'success');
+      clearSelection();
+    }
+
+    function bulkClose() {
+      // TODO: Закрыть выбранные темы в БД
+      console.log('Closing topics:', Array.from(selectedTopics));
+      showToast(`${selectedTopics.size} тем закрыто`, 'success');
+      clearSelection();
+    }
+
+    function bulkMove() {
+      document.getElementById('move-count').textContent = selectedTopics.size;
+      document.getElementById('move-modal').classList.add('active');
+    }
+
+    function bulkDelete() {
+      document.getElementById('delete-count').textContent = `${selectedTopics.size} тем`;
+      deleteTopicIds = Array.from(selectedTopics);
+      document.getElementById('delete-modal').classList.add('active');
+    }
+
+    function clearSelection() {
+      selectedTopics.clear();
+      document.querySelectorAll('.topic-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('select-all').checked = false;
+      updateBulkActions();
+    }
+
+    // ============================================
+    // Single Topic Actions
+    // ============================================
+    function pinTopic(id) {
+      // TODO: Закрепить тему в БД
+      const row = document.querySelector(`[data-topic-id="${id}"]`);
+      row.classList.add('pinned');
+      showToast('Тема закреплена', 'success');
+    }
+
+    function unpinTopic(id) {
+      // TODO: Открепить тему в БД
+      const row = document.querySelector(`[data-topic-id="${id}"]`);
+      row.classList.remove('pinned');
+      showToast('Тема откреплена', 'success');
+    }
+
+    function openTopic(id) {
+      // TODO: Открыть тему в БД
+      const row = document.querySelector(`[data-topic-id="${id}"]`);
+      row.classList.remove('closed');
+      showToast('Тема открыта', 'success');
+    }
+
+    function showTopic(id) {
+      // TODO: Показать тему в БД
+      const row = document.querySelector(`[data-topic-id="${id}"]`);
+      row.classList.remove('hidden-topic');
+      showToast('Тема показана', 'success');
+    }
+
+    // ============================================
+    // Edit Modal
+    // ============================================
+    let currentEditId = null;
+
+    function editTopic(id) {
+      currentEditId = id;
+      
+      // TODO: Загрузить данные темы из БД
+      // Заглушка:
+      document.getElementById('edit-topic-id').value = id;
+      document.getElementById('edit-topic-title').value = 'Название темы ' + id;
+      document.getElementById('edit-topic-author').value = 'Author' + id;
+      
+      document.getElementById('edit-modal').classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('active');
+      currentEditId = null;
+    }
+
+    document.getElementById('edit-topic-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // TODO: Сохранить изменения в БД
+      showToast('Тема обновлена', 'success');
+      closeEditModal();
+    });
+
+    // ============================================
+    // Move Modal
+    // ============================================
+    function closeMoveModal() {
+      document.getElementById('move-modal').classList.remove('active');
+    }
+
+    function confirmMove() {
+      const categoryId = document.getElementById('move-category').value;
+      
+      // TODO: Переместить темы в БД
+      console.log('Moving topics to category:', categoryId);
+      
+      showToast(`${selectedTopics.size} тем перемещено`, 'success');
+      closeMoveModal();
+      clearSelection();
+    }
+
+    // ============================================
+    // Delete Modal
+    // ============================================
+    let deleteTopicIds = [];
+
+    function deleteTopic(id) {
+      deleteTopicIds = [id];
+      document.getElementById('delete-count').textContent = 'эту тему';
+      document.getElementById('delete-modal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.remove('active');
+      deleteTopicIds = [];
+    }
+
+    function confirmDelete() {
+      // TODO: Удалить темы из БД
+      console.log('Deleting topics:', deleteTopicIds);
+      
+      deleteTopicIds.forEach(id => {
+        const row = document.querySelector(`[data-topic-id="${id}"]`);
+        if (row) {
+          row.style.animation = 'fadeOut 0.3s ease forwards';
+          setTimeout(() => row.remove(), 300);
+        }
+      });
+      
+      showToast(`${deleteTopicIds.length > 1 ? deleteTopicIds.length + ' тем удалено' : 'Тема удалена'}`, 'success');
+      closeDeleteModal();
+      clearSelection();
+    }
+
+    // ============================================
+    // Search and Filters
+    // ============================================
+    document.getElementById('search-topics').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('.topic-row');
+      
+      rows.forEach(row => {
+        const title = row.querySelector('.topic-title').textContent.toLowerCase();
+        const author = row.querySelector('.author-name').textContent.toLowerCase();
+        
+        if (title.includes(query) || author.includes(query)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+
+    document.getElementById('filter-category').addEventListener('change', filterTopics);
+    document.getElementById('filter-status').addEventListener('change', filterTopics);
+    document.getElementById('filter-sort').addEventListener('change', filterTopics);
+
+    function filterTopics() {
+      // TODO: Фильтровать темы через API
+      console.log('Filtering topics...');
+    }
+
+    // ============================================
+    // Export
+    // ============================================
+    function exportTopics() {
+      // TODO: Экспорт тем в CSV/Excel
+      showToast('Экспорт начат...', 'info');
+    }
+
+    // ============================================
+    // Toast Notifications
+    // ============================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      const icons = {
+        success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+        error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+        info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+      };
+      
+      toast.innerHTML = `
+        <span class="toast-icon">${icons[type]}</span>
+        <span class="toast-message">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Закрытие модалок
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+          modal.classList.remove('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
