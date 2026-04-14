@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const postsModel = require("../models/postsModel");
 const topicsModel = require("../models/topicsModel");
 const settingsModel = require("../models/settingsModel");
+const eventsModel = require("../models/eventsModel");
 
 exports.showAdmin = async (req, res) => {
 
@@ -16,7 +17,7 @@ exports.showAdmin = async (req, res) => {
 
     const rowssss = await userModel.getLastUsers(); 
 
-    const rowsssss = await settingsModel.getLastEvents(); 
+    const rowsssss = await eventsModel.getLastEvents(); 
 
     res.render("admin/dashboard", { usersCount, postsCount, topicsCount, users: rowssss, events: rowsssss }); 
 };
@@ -25,7 +26,7 @@ exports.showContent = async(req, res) => {
 
     const rowsss = await settingsModel.selectSettings(); 
 
-    const eventsRaw = await settingsModel.getLastEvents(); 
+    const eventsRaw = await eventsModel.getLastEvents(); 
 
     const events = eventsRaw.map(e => {
         const date = new Date(e.datee);
@@ -69,7 +70,7 @@ exports.addEvent = async (req, res) => {
     const { event_name, event_description, event_date, id_u } = req.body;
     console.log(req.body);
     const userIs = req.session.userId;
-    await settingsModel.createEvent({
+    await eventsModel.createEvent({
         name: event_name,
         description: event_description,
         datee: event_date,
@@ -84,7 +85,7 @@ exports.updateEvent = async (req, res) => {
 
     const { event_name, event_description, event_date, id_u, event_id } = req.body;
     const userIs = req.session.userId;
-    await settingsModel.updateEvent({
+    await eventsModel.updateEvent({
         id: event_id,
         name: event_name,
         description: event_description,
@@ -99,7 +100,7 @@ exports.updateEvent = async (req, res) => {
 exports.DeleteEvent = async (req, res) => {
     const { event_id } = req.body;
 
-    await settingsModel.DeleteEvent(event_id);
+    await eventsModel.DeleteEvent(event_id);
 
     res.redirect("/admin/content");
 };
