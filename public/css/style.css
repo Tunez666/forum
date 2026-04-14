@@ -374,6 +374,21 @@ button {
   margin-bottom: 1.5rem;
 }
 
+.hero-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ключевой момент */
+  object-position: center;
+  display: block;
+}
+
+.hero-card {
+  width: 100%;
+  height: 500px; /* или сколько тебе нужно */
+  overflow: hidden;
+  border-radius: 16px; /* если есть дизайн */
+}
+
 .pulse {
   width: 8px;
   height: 8px;
@@ -3975,4 +3990,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   filter: invert(0.5);
+}
+.modal-overlay {
+  display: none;
+}
+
+.modal-overlay.active {
+  display: flex;
 }

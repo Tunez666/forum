@@ -159,7 +159,7 @@
           </div>
 
            <div class="form-card">
-            <form id="character-form">
+            <form id="character-form" action="/admin/updateCharacter" method="POST" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group flex-1">
                   <!-- <label for="character-name">Имя персонажа</label>
@@ -206,7 +206,7 @@
                     <span class="upload-text">Перетащите изображение или нажмите для выбора</span>
                     <span class="upload-hint">PNG, JPG до 5MB. Рекомендуемый размер: 400x500px</span>
                   </div>
-                  <!-- TODO: Показать превью загруженного изображения -->
+                  <!-- TODO: Показать превью загруженного изображения 
                   <div class="image-preview" id="image-preview" style="display: none;">
                     <img src="" alt="Preview" id="preview-image">
                     <button type="button" class="remove-image" onclick="removeImage()">
@@ -215,11 +215,11 @@
                         <line x1="6" y1="6" x2="18" y2="18"/>
                       </svg>
                     </button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
 
-              <div class="form-group">
+             <!-- <div class="form-group">
                 <label for="character-image-url">Или укажите URL изображения</label>
                 <input 
                   type="url" 
@@ -230,7 +230,7 @@
                   value="/img/spark.jpg"
                 >
                 <span class="form-hint">Текущий путь к изображению на сервере</span>
-              </div>
+              </div>-->
 
               <div class="form-group">
                 <label>Текущий баннер</label>
@@ -250,7 +250,6 @@
               </div>
 
               <div class="form-actions">
-                <!-- TODO: Добавить обработчик загрузки изображения -->
                 <button type="submit" class="btn btn-primary">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -282,7 +281,7 @@
               <h2>Ближайшие события</h2>
               <p>Список событий в сайдбаре главной страницы</p>
             </div>
-            <button class="btn btn-add" onclick="showAddEventModal()">
+            <button class="btn btn-add" onclick="openCreateModal()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
@@ -292,8 +291,8 @@
           </div>
 
           <div class="events-list-admin">
-            <!-- TODO: Загрузить события из БД -->
-            
+
+             <% events.forEach(event => { %>
             <!-- Event Item 1 -->
             <div class="event-item-admin" data-event-id="1">
               <div class="event-drag-handle">
@@ -307,119 +306,48 @@
                 </svg>
               </div>
               <div class="event-date-admin">
-                <span class="event-day-admin">15</span>
-                <span class="event-month-admin">Мар</span>
+                <span class="event-day-admin"><%= event.day %></span>
+                <span class="event-month-admin"><%= event.month %></span>
               </div>
               <div class="event-info-admin">
-                <span class="event-name-admin">Баннер Firefly</span>
-                <span class="event-time-admin">Осталось 3 дня</span>
+                <span class="event-name-admin"><%= event.name %></span>
+                <!--<span class="event-time-admin">Осталось 3 дня</span>-->
               </div>
               <div class="event-actions-admin">
-                <button class="event-btn edit" onclick="editEvent(1)" title="Редактировать">
+                <button class="event-btn edit"onclick="openEditModal(<%= event.id %>,'<%= event.name %>','<%= event.datee.toISOString().split("T")[0] %>','<%= (event.description || '').replace(/'/g, "\\'") %>')">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                   </svg>
                 </button>
-                <button class="event-btn delete" onclick="deleteEvent(1)" title="Удалить">
+                <button class="event-btn edit"onclick="openDeleteModal(<%= event.id %>,'<%= event.name %>','<%= event.datee.toISOString().split("T")[0] %>','<%= (event.description || '').replace(/'/g, "\\'") %>')">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                   </svg>
                 </button>
               </div>
+               
             </div>
-
-            <!-- Event Item 2 -->
-            <div class="event-item-admin" data-event-id="2">
-              <div class="event-drag-handle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="8" y1="6" x2="8" y2="6"/>
-                  <line x1="16" y1="6" x2="16" y2="6"/>
-                  <line x1="8" y1="12" x2="8" y2="12"/>
-                  <line x1="16" y1="12" x2="16" y2="12"/>
-                  <line x1="8" y1="18" x2="8" y2="18"/>
-                  <line x1="16" y1="18" x2="16" y2="18"/>
-                </svg>
-              </div>
-              <div class="event-date-admin">
-                <span class="event-day-admin">22</span>
-                <span class="event-month-admin">Мар</span>
-              </div>
-              <div class="event-info-admin">
-                <span class="event-name-admin">Обновление 2.8</span>
-                <span class="event-time-admin">Через 10 дней</span>
-              </div>
-              <div class="event-actions-admin">
-                <button class="event-btn edit" onclick="editEvent(2)" title="Редактировать">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-                <button class="event-btn delete" onclick="deleteEvent(2)" title="Удалить">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Event Item 3 -->
-            <div class="event-item-admin" data-event-id="3">
-              <div class="event-drag-handle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="8" y1="6" x2="8" y2="6"/>
-                  <line x1="16" y1="6" x2="16" y2="6"/>
-                  <line x1="8" y1="12" x2="8" y2="12"/>
-                  <line x1="16" y1="12" x2="16" y2="12"/>
-                  <line x1="8" y1="18" x2="8" y2="18"/>
-                  <line x1="16" y1="18" x2="16" y2="18"/>
-                </svg>
-              </div>
-              <div class="event-date-admin">
-                <span class="event-day-admin">01</span>
-                <span class="event-month-admin">Апр</span>
-              </div>
-              <div class="event-info-admin">
-                <span class="event-name-admin">Турнир гильдий</span>
-                <span class="event-time-admin">Через 20 дней</span>
-              </div>
-              <div class="event-actions-admin">
-                <button class="event-btn edit" onclick="editEvent(3)" title="Редактировать">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-                <button class="event-btn delete" onclick="deleteEvent(3)" title="Удалить">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+            <% }) %>
         </section>
       </div>
     </main>
   </div>
 
-  <!-- Add/Edit Event Modal -->
+  <!-- Add Event Modal -->
   <div class="modal-overlay" id="event-modal" onclick="closeModalOnOverlay(event)">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modal-title">Добавить событие</h3>
-        <button class="modal-close" onclick="closeEventModal()">
+        <button class="modal-close" onclick="closeCreateModal()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
-      <form id="event-form">
+      <form id="event-form" method = 'POST' action = '/admin/modalAddEvent'>
         <input type="hidden" id="event-id" name="event_id">
         
         <div class="form-group">
@@ -446,19 +374,19 @@
             >
           </div>
 
-          <div class="form-group flex-1">
-            <label for="event-end-date">Дата окончания (опционально)</label>
+         <!--<div class="form-group flex-1">
+             <label for="event-end-date">Дата окончания (опционально)</label>
             <input 
               type="date" 
               id="event-end-date" 
               name="event_end_date" 
               class="form-input"
             >
-          </div>
+          </div>-->
         </div>
 
         <div class="form-group">
-          <label for="event-description">Описание (опционально)</label>
+          <label for="event-description">Описание</label>
           <textarea 
             id="event-description" 
             name="event_description" 
@@ -469,24 +397,115 @@
         </div>
 
         <div class="form-actions">
-          <!-- TODO: Добавить обработчик сохранения события в БД -->
           <button type="submit" class="btn btn-primary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
             <span id="modal-submit-text">Добавить</span>
           </button>
-          <button type="button" class="btn btn-secondary" onclick="closeEventModal()">
+          <button type="button" class="btn btn-secondary" onclick="closeCreateModal()">
             Отмена
           </button>
         </div>
       </form>
     </div>
   </div>
+<!-- Edit Event Modal -->
+<div class="modal-overlay" id="edit-modal" onclick="closeModalOnOverlayEdit(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Редактировать событие</h3>
+      <button class="modal-close" onclick="closeEditModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
 
-  <!-- Toast Notifications -->
-  <div class="toast-container" id="toast-container"></div>
+    <form method="POST" action="/admin/modalEditEvent">
+      <input type="hidden" id="edit-event-id" name="event_id">
+      
+      <div class="form-group">
+        <label>Название события</label>
+        <input 
+          type="text" 
+          id="edit-event-name" 
+          name="event_name" 
+          class="form-input"
+          required
+        >
+      </div>
 
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label>Дата события</label>
+          <input 
+            type="date" 
+            id="edit-event-date" 
+            name="event_date" 
+            class="form-input"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea 
+          id="edit-event-description" 
+          name="event_description" 
+          class="form-textarea"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Сохранить
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+          Отмена
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Event Modal -->
+<div class="modal-overlay" id="delete-modal" onclick="closeModalOnOverlayEdit(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Удаление события</h3>
+      <button class="modal-close" onclick="closeDeleteModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <form method="POST" action="/admin/modalDeleteEvent">
+      <input type="hidden" id="delete-event-id" name="event_id">
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Удалить
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+          Отмена
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+  
   <script>
    
     // ============================================
@@ -497,52 +516,15 @@
       if (section) {
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }
-
-    // ============================================
-    // Version Form
-    // ============================================
-    const versionTextInput = document.getElementById('version-text');
-    const previewVersionText = document.getElementById('preview-version-text');
-
-    // Live preview для текста версии
-    versionTextInput.addEventListener('input', function() {
-      previewVersionText.textContent = this.value || 'Версия X.X уже здесь!';
-    });
-
-    document.getElementById('version-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // TODO: Отправить данные на сервер через fetch API
-      // const formData = new FormData(this);
-      // fetch('/api/admin/version', {
-      //   method: 'POST',
-      //   body: formData
-      // }).then(response => response.json())
-      //   .then(data => {
-      //     showToast('Версия успешно обновлена!', 'success');
-      //   })
-      //   .catch(error => {
-      //     showToast('Ошибка при сохранении', 'error');
-      //   });
-
-      showToast('Версия успешно обновлена!', 'success');
-    });
-
-    function resetVersionForm() {
-      // TODO: Загрузить текущие значения из БД
-      document.getElementById('version-number').value = '4.0';
-      document.getElementById('version-text').value = 'Версия 4.0 уже здесь!';
-      previewVersionText.textContent = 'Версия 4.0 уже здесь!';
-    }
+    };
 
     // ============================================
     // Character Form - Image Upload
     // ============================================
     const imageInput = document.getElementById('character-image');
     const imageUploadArea = document.getElementById('image-upload-area');
-    const imagePreview = document.getElementById('image-preview');
-    const previewImage = document.getElementById('preview-image');
+    //const imagePreview = document.getElementById('image-preview');
+    //const previewImage = document.getElementById('preview-image');
 
     // Drag and drop
     imageUploadArea.addEventListener('dragover', function(e) {
@@ -586,183 +568,92 @@
       imageUploadArea.querySelector('.upload-placeholder').style.display = 'flex';
     }
 
-    document.getElementById('character-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // TODO: Отправить данные на сервер через fetch API
-      // const formData = new FormData(this);
-      // fetch('/api/admin/character', {
-      //   method: 'POST',
-      //   body: formData
-      // }).then(response => response.json())
-      //   .then(data => {
-      //     showToast('Баннер персонажа обновлён!', 'success');
-      //   })
-      //   .catch(error => {
-      //     showToast('Ошибка при загрузке', 'error');
-      //   });
+    // ===============================
+// OPEN CREATE MODAL
+// ===============================
+function openCreateModal() {
+    const modal = document.getElementById('event-modal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-      showToast('Баннер персонажа обновлён!', 'success');
-    });
+// ===============================
+// CLOSE CREATE MODAL
+// ===============================
+function closeCreateModal() {
+    const modal = document.getElementById('event-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
 
-    function resetCharacterForm() {
-      // TODO: Загрузить текущие значения из БД
-      document.getElementById('character-name').value = 'Sparkle';
-      document.getElementById('character-element').value = 'quantum';
-      document.getElementById('character-image-url').value = '/img/spark.jpg';
-      removeImage();
+// ===============================
+// CLOSE BY OVERLAY CLICK
+// ===============================
+function closeModalOnOverlayEdit(event) {
+    if (event.target.id === 'event-modal') {
+        closeCreateModal();
     }
+}
+// ===============================
+// OPEN EDIT MODAL
+// ===============================
+function openEditModal(id, name, date, description) {
+    document.getElementById('edit-event-id').value = id;
+    document.getElementById('edit-event-name').value = name;
+    document.getElementById('edit-event-date').value = date;
+    document.getElementById('edit-event-description').value = description;
 
-    // ============================================
-    // Events Management
-    // ============================================
-    const eventModal = document.getElementById('event-modal');
-    const eventForm = document.getElementById('event-form');
-    let editingEventId = null;
+    const modal = document.getElementById('edit-modal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-    function showAddEventModal() {
-      editingEventId = null;
-      document.getElementById('modal-title').textContent = 'Добавить событие';
-      document.getElementById('modal-submit-text').textContent = 'Добавить';
-      eventForm.reset();
-      eventModal.classList.add('active');
+// ===============================
+// CLOSE EDIT MODAL
+// ===============================
+function closeEditModal() {
+    const modal = document.getElementById('edit-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ===============================
+// CLOSE BY OVERLAY CLICK
+// ===============================
+function closeModalOnOverlayEdit(event) {
+    if (event.target.id === 'edit-modal') {
+        closeEditModal();
     }
+}
 
-    function editEvent(eventId) {
-      editingEventId = eventId;
-      document.getElementById('modal-title').textContent = 'Редактировать событие';
-      document.getElementById('modal-submit-text').textContent = 'Сохранить';
-      
-      // TODO: Загрузить данные события из БД по eventId
-      // fetch(`/api/admin/events/${eventId}`)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     document.getElementById('event-id').value = data.id;
-      //     document.getElementById('event-name').value = data.name;
-      //     document.getElementById('event-date').value = data.date;
-      //     document.getElementById('event-end-date').value = data.end_date || '';
-      //     document.getElementById('event-description').value = data.description || '';
-      //   });
+// ===============================
+// OPEN DELETE MODAL
+// ===============================
+function openDeleteModal(id) {
+    document.getElementById('delete-event-id').value = id;
 
-      // Заглушка с примерными данными
-      const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
-      if (eventItem) {
-        const name = eventItem.querySelector('.event-name-admin').textContent;
-        document.getElementById('event-name').value = name;
-      }
+    const modal = document.getElementById('delete-modal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-      eventModal.classList.add('active');
+// ===============================
+// CLOSE EDIT MODAL
+// ===============================
+function closeDeleteModal() {
+    const modal = document.getElementById('delete-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ===============================
+// CLOSE BY OVERLAY CLICK
+// ===============================
+function closeModalOnOverlayEdit(event) {
+    if (event.target.id === 'delete-modal') {
+        closeDeleteModal();
     }
-
-    function closeEventModal() {
-      eventModal.classList.remove('active');
-      eventForm.reset();
-      editingEventId = null;
-    }
-
-    function closeModalOnOverlay(e) {
-      if (e.target === eventModal) {
-        closeEventModal();
-      }
-    }
-
-    eventForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // TODO: Сохранить событие в БД
-      // const formData = new FormData(this);
-      // const url = editingEventId 
-      //   ? `/api/admin/events/${editingEventId}` 
-      //   : '/api/admin/events';
-      // const method = editingEventId ? 'PUT' : 'POST';
-      // 
-      // fetch(url, {
-      //   method: method,
-      //   body: formData
-      // }).then(response => response.json())
-      //   .then(data => {
-      //     showToast(editingEventId ? 'Событие обновлено!' : 'Событие добавлено!', 'success');
-      //     closeEventModal();
-      //     // TODO: Обновить список событий на странице
-      //   })
-      //   .catch(error => {
-      //     showToast('Ошибка при сохранении', 'error');
-      //   });
-
-      showToast(editingEventId ? 'Событие обновлено!' : 'Событие добавлено!', 'success');
-      closeEventModal();
-    });
-
-    function deleteEvent(eventId) {
-      if (!confirm('Вы уверены, что хотите удалить это событие?')) {
-        return;
-      }
-
-      // TODO: Удалить событие из БД
-      // fetch(`/api/admin/events/${eventId}`, {
-      //   method: 'DELETE'
-      // }).then(response => response.json())
-      //   .then(data => {
-      //     showToast('Событие удалено', 'success');
-      //     // Удалить элемент из DOM
-      //     const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
-      //     if (eventItem) {
-      //       eventItem.remove();
-      //     }
-      //   })
-      //   .catch(error => {
-      //     showToast('Ошибка при удалении', 'error');
-      //   });
-
-      // Заглушка - удаляем элемент из DOM
-      const eventItem = document.querySelector(`[data-event-id="${eventId}"]`);
-      if (eventItem) {
-        eventItem.style.animation = 'fadeOut 0.3s ease forwards';
-        setTimeout(() => eventItem.remove(), 300);
-      }
-      showToast('Событие удалено', 'success');
-    }
-
-    // ============================================
-    // Toast Notifications
-    // ============================================
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      
-      const icons = {
-        success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
-        error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
-        info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-      };
-
-      toast.innerHTML = `
-        <span class="toast-icon">${icons[type] || icons.info}</span>
-        <span class="toast-message">${message}</span>
-      `;
-
-      container.appendChild(toast);
-
-      // Анимация появления
-      setTimeout(() => toast.classList.add('show'), 10);
-
-      // Автоматическое скрытие через 3 секунды
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    // ============================================
-    // Keyboard shortcuts
-    // ============================================
-    document.addEventListener('keydown', function(e) {
-      // Escape закрывает модальное окно
-      if (e.key === 'Escape' && eventModal.classList.contains('active')) {
-        closeEventModal();
-      }
-    });
+}
   </script>
 </body>
 </html>
