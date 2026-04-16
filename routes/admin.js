@@ -18,7 +18,7 @@ router.post("/updateVersion", adminConroller.updateVersion);
 
 router.post(
   "/updateCharacter",
-  upload.single("character_image"), 
+  upload.single("character_image"),
   adminConroller.updateCharacter
 );
 
@@ -27,5 +27,11 @@ router.post("/modalAddEvent", adminConroller.addEvent);
 router.post("/modalEditEvent", adminConroller.updateEvent);
 
 router.post("/modalDeleteEvent", adminConroller.DeleteEvent);
+
+router.post("/modalAddCategories", adminConroller.addCate);
+
+router.post("/modalEditCategories", adminConroller.updateCate);
+
+router.post("/modalDeleteCategory", adminConroller.deleteCat);
 
 module.exports = router;

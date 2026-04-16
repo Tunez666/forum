@@ -48,3 +48,14 @@ exports.getLastUsers = async () => {
 
     return rows;
 };
+
+exports.countModerators = async () => {
+    const sql = `
+        SELECT COUNT(id) AS countModerators
+        FROM users 
+        Where id_r = 3
+    `;
+
+    const [rows] = await db.query(sql);
+    return rows; 
+};
