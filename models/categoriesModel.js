@@ -11,7 +11,7 @@ exports.countCategories = async () => {
 
 exports.getCategories = async () => {
     const [rows] = await db.query(`
-        SELECT id, name, description
+        SELECT id, name, description, parent_id
         FROM categories
     `);
 
@@ -42,12 +42,13 @@ exports.countPostsByCategory = async (categoryId) => {
 
 exports.createCategotie = async (cate) => {
     const sql = `
-        INSERT INTO categories (name, description)
-        VALUES (?, ?)
+        INSERT INTO categories (name, description, parent_id)
+        VALUES (?, ?, ?)
     `;
     const [result] = await db.query(sql, [
         cate.name,
-        cate.description
+        cate.description,
+        cate.parent_id
     ]);
     return result;
 };
@@ -55,13 +56,14 @@ exports.createCategotie = async (cate) => {
 exports.updateCategories = async (cat) => {
     const sql = `
         UPDATE categories
-        SET name = ?, description = ?
+        SET name = ?, description = ?, parent_id = ?
         WHERE id = ?
     `;
 
     await db.query(sql, [
         cat.name,
         cat.description,
+        cat.parent_id,
         cat.id
     ]);
 };

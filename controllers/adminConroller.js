@@ -132,11 +132,12 @@ exports.DeleteEvent = async (req, res) => {
 };
 
 exports.addCate = async (req, res) => {
-    const { name, description } = req.body;
+    const { name, description, parent_id } = req.body;
     console.log(req.body);
     await categoriesModel.createCategotie({
         name: name,
         description: description,
+        parent_id: parent_id || null
     });
 
     res.redirect("/admin/categories");
@@ -145,11 +146,12 @@ exports.addCate = async (req, res) => {
 exports.updateCate = async (req, res) => {
     console.log(req.body);
 
-    const { name, description, id } = req.body;
+    const { name, description, id, parent_id } = req.body;
     await categoriesModel.updateCategories({
         id,
         name: name,
         description: description,
+        parent_id: parent_id || null
 
     });
 
