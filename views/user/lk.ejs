@@ -1,0 +1,949 @@
+<%- include('../partials/head') %>
+
+    <body>
+        <!-- Animated Background -->
+        <div class="animated-bg">
+            <div class="grid-overlay"></div>
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+        </div>
+
+        <%- include('../partials/header') %>
+
+            <main class="profile-page">
+                <div class="profile-container">
+
+                    <%- include('../partials/userSidebar') %>
+
+                        <!-- Main Content -->
+                        <div class="profile-content">
+
+                            <!-- Tab: General -->
+                            <section id="general" class="profile-tab active">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                <circle cx="12" cy="7" r="4" />
+                                            </svg>
+                                            Основная информация
+                                        </h2>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <!-- Avatar Upload -->
+
+                                        <div class="avatar-upload-section">
+                                            <!-- Form Fields -->
+                                            <form class="profile-form" id="generalForm" method='POST'
+                                                action='/user/updateUserInfo' enctype="multipart/form-data">
+                                                <div class="form-row">
+                                                    <div class="avatar-preview" id="avatarPreview">
+                                                        <img src="/img/avas/<%= userData.avatarca %>"
+                                                            alt="Аватар" id="avatarImage">
+                                                        <div class="avatar-overlay">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <path
+                                                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                                                <circle cx="12" cy="13" r="4" />
+                                                            </svg>
+                                                            <span>Изменить</span>
+                                                        </div>
+                                                        <input type="file" id="avatarInput" name="ava" accept="image/*"
+                                                            hidden>
+                                                    </div>
+                                                    <div class="avatar-info">
+                                                        <h4>Аватар профиля</h4>
+                                                        <p>JPG, PNG или GIF. Максимум 2MB.</p>
+                                                        <div class="avatar-buttons">
+                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                                onclick="document.getElementById('avatarInput').click()">
+                                                                Загрузить
+                                                            </button>
+                                                            <button class="btn btn-ghost btn-sm"
+                                                                onclick="removeAvatar()">
+                                                                Удалить
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="username">Имя пользователя</label>
+                                                    <input type="text" id="username" class="form-input" name="username"
+                                                        value="<%= userData.username %>" placeholder="Введите имя">
+                                                    <span class="form-hint">Видно другим пользователям форума</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="uid">UID в игре</label>
+                                                    <input type="text" id="uid" class="form-input" name="uid"
+                                                        value="<%= userData.uid %>" placeholder="Введите UID">
+                                                    <span class="form-hint">Для добавления в друзья в игре</span>
+                                                </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="bio">О себе</label>
+                                            <textarea id="bio" class="form-textarea" name="about" rows="3"
+                                                placeholder="Расскажите о себе..."><%= userData.about %></textarea>
+                                            <span class="form-hint">Краткое описание для вашего профиля</span>
+                                        </div>
+
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                                    <polyline points="17 21 17 13 7 13 7 21" />
+                                                    <polyline points="7 3 7 8 15 8" />
+                                                </svg>
+                                                Сохранить изменения
+                                            </button>
+                                            <button type="reset" class="btn btn-ghost">Отменить</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab: Security -->
+                            <section id="security" class="profile-tab">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                            </svg>
+                                            Безопасность
+                                        </h2>
+                                    </div>
+
+                                    <!-- Change Password -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Изменить пароль</h3>
+                                        <form class="profile-form" id="passwordForm">
+                                            <div class="form-group">
+                                                <label for="currentPassword">Текущий пароль</label>
+                                                <div class="password-input-wrapper">
+                                                    <input type="password" id="currentPassword" class="form-input"
+                                                        placeholder="Введите текущий пароль">
+                                                    <button type="button" class="password-toggle"
+                                                        onclick="togglePassword('currentPassword')">
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                            <circle cx="12" cy="12" r="3" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="newPassword">Новый пароль</label>
+                                                    <div class="password-input-wrapper">
+                                                        <input type="password" id="newPassword" class="form-input"
+                                                            placeholder="Введите новый пароль">
+                                                        <button type="button" class="password-toggle"
+                                                            onclick="togglePassword('newPassword')">
+                                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <path
+                                                                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                                <circle cx="12" cy="12" r="3" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <div class="password-strength" id="passwordStrength">
+                                                        <div class="strength-bar"></div>
+                                                        <span class="strength-text">Надежность пароля</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="confirmPassword">Подтвердите пароль</label>
+                                                    <div class="password-input-wrapper">
+                                                        <input type="password" id="confirmPassword" class="form-input"
+                                                            placeholder="Повторите новый пароль">
+                                                        <button type="button" class="password-toggle"
+                                                            onclick="togglePassword('confirmPassword')">
+                                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <path
+                                                                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                                <circle cx="12" cy="12" r="3" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Two-Factor Auth -->
+                                    <div class="section-card">
+                                        <div class="security-option">
+                                            <div class="security-info">
+                                                <div class="security-icon">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h3 class="card-title">Двухфакторная аутентификация</h3>
+                                                    <p class="security-description">Дополнительный уровень защиты вашего
+                                                        аккаунта</p>
+                                                </div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="twoFactorToggle">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Active Sessions -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Активные сессии</h3>
+                                        <div class="sessions-list">
+                                            <div class="session-item current">
+                                                <div class="session-icon">
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                                        <line x1="8" y1="21" x2="16" y2="21" />
+                                                        <line x1="12" y1="17" x2="12" y2="21" />
+                                                    </svg>
+                                                </div>
+                                                <div class="session-info">
+                                                    <span class="session-device">Windows - Chrome</span>
+                                                    <span class="session-location">Москва, Россия • Текущая
+                                                        сессия</span>
+                                                </div>
+                                                <span class="session-badge current">Текущая</span>
+                                            </div>
+                                            <div class="session-item">
+                                                <div class="session-icon">
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                                                        <line x1="12" y1="18" x2="12.01" y2="18" />
+                                                    </svg>
+                                                </div>
+                                                <div class="session-info">
+                                                    <span class="session-device">iPhone - Safari</span>
+                                                    <span class="session-location">Москва, Россия • 2 часа назад</span>
+                                                </div>
+                                                <button class="btn btn-ghost btn-sm"
+                                                    onclick="terminateSession(1)">Завершить</button>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-danger btn-sm" onclick="terminateAllSessions()">
+                                            Завершить все сессии
+                                        </button>
+                                    </div>
+
+                                    <!-- Delete Account -->
+                                    <div class="section-card danger-zone">
+                                        <h3 class="card-title danger">Опасная зона</h3>
+                                        <p class="danger-description">Удаление аккаунта необратимо. Все ваши данные
+                                            будут удалены.</p>
+                                        <button class="btn btn-danger" onclick="showDeleteAccountModal()">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path
+                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                            </svg>
+                                            Удалить аккаунт
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab: Forum -->
+                            <section id="forum" class="profile-tab">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                            </svg>
+                                            Настройки форума
+                                        </h2>
+                                    </div>
+
+                                    <!-- Signature -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Подпись на форуме</h3>
+                                        <p class="card-description">Отображается под каждым вашим сообщением</p>
+                                        <form class="profile-form" id="signatureForm">
+                                            <div class="form-group">
+                                                <div class="signature-editor">
+                                                    <div class="editor-toolbar">
+                                                        <button type="button" class="toolbar-btn"
+                                                            onclick="formatText('bold')" title="Жирный">
+                                                            <strong>B</strong>
+                                                        </button>
+                                                        <button type="button" class="toolbar-btn"
+                                                            onclick="formatText('italic')" title="Курсив">
+                                                            <em>I</em>
+                                                        </button>
+                                                        <button type="button" class="toolbar-btn"
+                                                            onclick="formatText('underline')" title="Подчеркнутый">
+                                                            <u>U</u>
+                                                        </button>
+                                                        <span class="toolbar-divider"></span>
+                                                        <button type="button" class="toolbar-btn" onclick="insertLink()"
+                                                            title="Ссылка">
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <path
+                                                                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                                                <path
+                                                                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                                            </svg>
+                                                        </button>
+                                                        <button type="button" class="toolbar-btn"
+                                                            onclick="insertImage()" title="Изображение">
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2">
+                                                                <rect x="3" y="3" width="18" height="18" rx="2"
+                                                                    ry="2" />
+                                                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                                                <polyline points="21 15 16 10 5 21" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <textarea id="signature" class="form-textarea signature-textarea"
+                                                        rows="4"
+                                                        placeholder="Введите вашу подпись...">✨ Серебряный Волк мейн | UID: 700123456 | Всегда готов помочь!</textarea>
+                                                </div>
+                                                <div class="signature-preview">
+                                                    <span class="preview-label">Предпросмотр:</span>
+                                                    <div class="preview-content" id="signaturePreview">
+                                                        ✨ Серебряный Волк мейн | UID: 700123456 | Всегда готов помочь!
+                                                    </div>
+                                                </div>
+                                                <span class="form-hint">Максимум 200 символов. HTML-теги
+                                                    запрещены.</span>
+                                            </div>
+
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn btn-primary">Сохранить подпись</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Forum Preferences -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Настройки отображения</h3>
+                                        <div class="preferences-list">
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Показывать подпись</span>
+                                                    <span class="preference-description">Отображать вашу подпись под
+                                                        сообщениями</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Показывать онлайн-статус</span>
+                                                    <span class="preference-description">Другие пользователи видят,
+                                                        когда вы онлайн</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Показывать UID</span>
+                                                    <span class="preference-description">Отображать ваш игровой UID в
+                                                        профиле</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Разрешить личные сообщения</span>
+                                                    <span class="preference-description">Позволить другим пользователям
+                                                        писать вам в ЛС</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab: Notifications -->
+                            <section id="notifications" class="profile-tab">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                                            </svg>
+                                            Уведомления
+                                        </h2>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <h3 class="card-title">Email уведомления</h3>
+                                        <div class="preferences-list">
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Ответы на темы</span>
+                                                    <span class="preference-description">Когда кто-то отвечает в ваших
+                                                        темах</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Упоминания</span>
+                                                    <span class="preference-description">Когда вас упоминают через
+                                                        @username</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Личные сообщения</span>
+                                                    <span class="preference-description">Когда вам пишут в личные
+                                                        сообщения</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Новости форума</span>
+                                                    <span class="preference-description">Важные объявления и
+                                                        обновления</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <h3 class="card-title">Push-уведомления</h3>
+                                        <div class="preferences-list">
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Браузерные уведомления</span>
+                                                    <span class="preference-description">Получать уведомления в
+                                                        браузере</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="preference-item">
+                                                <div class="preference-info">
+                                                    <span class="preference-title">Звук уведомлений</span>
+                                                    <span class="preference-description">Воспроизводить звук при новых
+                                                        уведомлениях</span>
+                                                </div>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab: Socials -->
+                            <section id="socials" class="profile-tab">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                                <rect x="2" y="9" width="4" height="12" />
+                                                <circle cx="4" cy="4" r="2" />
+                                            </svg>
+                                            Привязка соцсетей
+                                        </h2>
+                                    </div>
+
+                                    <div class="section-card">
+                                        <div class="socials-grid">
+                                            <!-- Discord -->
+                                            <div class="social-card connected">
+                                                <div class="social-icon discord">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path
+                                                            d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="social-info">
+                                                    <span class="social-name">Discord</span>
+                                                    <span class="social-username">StarRaider#1234</span>
+                                                </div>
+                                                <button class="btn btn-ghost btn-sm"
+                                                    onclick="unlinkSocial('discord')">Отвязать</button>
+                                            </div>
+
+                                            <!-- Telegram -->
+                                            <div class="social-card">
+                                                <div class="social-icon telegram">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path
+                                                            d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="social-info">
+                                                    <span class="social-name">Telegram</span>
+                                                    <span class="social-status">Не привязан</span>
+                                                </div>
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="linkSocial('telegram')">Привязать</button>
+                                            </div>
+
+                                            <!-- VK -->
+                                            <div class="social-card">
+                                                <div class="social-icon vk">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path
+                                                            d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.577 4 8.072c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.677.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.744c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.813-.542 1.254-1.406 2.151-3.574 2.151-3.574.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="social-info">
+                                                    <span class="social-name">VKontakte</span>
+                                                    <span class="social-status">Не привязан</span>
+                                                </div>
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="linkSocial('vk')">Привязать</button>
+                                            </div>
+
+                                            <!-- Google -->
+                                            <div class="social-card connected">
+                                                <div class="social-icon google">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path
+                                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                                            fill="#4285F4" />
+                                                        <path
+                                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                                            fill="#34A853" />
+                                                        <path
+                                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                                            fill="#FBBC05" />
+                                                        <path
+                                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                                            fill="#EA4335" />
+                                                    </svg>
+                                                </div>
+                                                <div class="social-info">
+                                                    <span class="social-name">Google</span>
+                                                    <span class="social-username">user@gmail.com</span>
+                                                </div>
+                                                <button class="btn btn-ghost btn-sm"
+                                                    onclick="unlinkSocial('google')">Отвязать</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab: Stats -->
+                            <section id="stats" class="profile-tab">
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h2 class="section-title">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="20" x2="18" y2="10" />
+                                                <line x1="12" y1="20" x2="12" y2="4" />
+                                                <line x1="6" y1="20" x2="6" y2="14" />
+                                            </svg>
+                                            Статистика активности
+                                        </h2>
+                                    </div>
+
+                                    <!-- Stats Cards -->
+                                    <div class="stats-grid">
+                                        <div class="stat-card">
+                                            <div class="stat-icon purple">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                                </svg>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-value">1,247</span>
+                                                <span class="stat-label">Сообщений</span>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon pink">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                    <polyline points="14 2 14 8 20 8" />
+                                                </svg>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-value">56</span>
+                                                <span class="stat-label">Тем создано</span>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon cyan">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                                </svg>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-value">3,891</span>
+                                                <span class="stat-label">Получено лайков</span>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon gold">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <polygon
+                                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                                </svg>
+                                            </div>
+                                            <div class="stat-content">
+                                                <span class="stat-value">+842</span>
+                                                <span class="stat-label">Репутация</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Activity Chart -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Активность за последние 30 дней</h3>
+                                        <div class="activity-chart">
+                                            <!-- TODO: Интегрировать библиотеку для графиков (Chart.js или Recharts) -->
+                                            <div class="chart-placeholder">
+                                                <div class="chart-bars">
+                                                    <div class="chart-bar" style="--height: 40%"></div>
+                                                    <div class="chart-bar" style="--height: 65%"></div>
+                                                    <div class="chart-bar" style="--height: 35%"></div>
+                                                    <div class="chart-bar" style="--height: 80%"></div>
+                                                    <div class="chart-bar" style="--height: 55%"></div>
+                                                    <div class="chart-bar" style="--height: 90%"></div>
+                                                    <div class="chart-bar" style="--height: 70%"></div>
+                                                    <div class="chart-bar" style="--height: 45%"></div>
+                                                    <div class="chart-bar" style="--height: 60%"></div>
+                                                    <div class="chart-bar" style="--height: 75%"></div>
+                                                    <div class="chart-bar" style="--height: 50%"></div>
+                                                    <div class="chart-bar" style="--height: 85%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Recent Activity -->
+                                    <div class="section-card">
+                                        <h3 class="card-title">Последняя активность</h3>
+                                        <div class="activity-list">
+                                            <div class="activity-item">
+                                                <div class="activity-icon reply">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <polyline points="9 17 4 12 9 7" />
+                                                        <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                                                    </svg>
+                                                </div>
+                                                <div class="activity-content">
+                                                    <span class="activity-text">Ответил в теме <a href="#">Гайд по
+                                                            Серебряному Волку</a></span>
+                                                    <span class="activity-time">2 часа назад</span>
+                                                </div>
+                                            </div>
+                                            <div class="activity-item">
+                                                <div class="activity-icon like">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path
+                                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="activity-content">
+                                                    <span class="activity-text">Получил лайк от <a
+                                                            href="#">MiyakoStar</a></span>
+                                                    <span class="activity-time">5 часов назад</span>
+                                                </div>
+                                            </div>
+                                            <div class="activity-item">
+                                                <div class="activity-icon topic">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path
+                                                            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                        <polyline points="14 2 14 8 20 8" />
+                                                    </svg>
+                                                </div>
+                                                <div class="activity-content">
+                                                    <span class="activity-text">Создал тему <a href="#">Обсуждение
+                                                            нового обновления 2.0</a></span>
+                                                    <span class="activity-time">Вчера</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </div>
+                </div>
+            </main>
+
+            <!-- Toast Container -->
+            <div id="toastContainer" class="toast-container"></div>
+
+            <script>
+
+
+                // ============================================
+                // Avatar Upload Widget
+                // ============================================
+
+                const avatarInput = document.getElementById('avatarInput');
+                const avatarPreview = document.getElementById('avatarPreview');
+                const avatarImage = document.getElementById('avatarImage');
+                const sidebarAvatar = document.getElementById('sidebarAvatar');
+
+                avatarPreview.addEventListener('click', () => {
+                    avatarInput.click();
+                });
+
+                avatarInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    if (file.size > 2 * 1024 * 1024) {
+                        showToast('Файл слишком большой. Максимум 2MB.', 'error');
+                        return;
+                    }
+
+                    if (!file.type.startsWith('image/')) {
+                        showToast('Можно загружать только изображения.', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarImage.src = e.target.result;
+                        sidebarAvatar.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                });
+
+                function removeAvatar() {
+                    const defaultAvatar =
+                        'https://api.dicebear.com/7.x/avataaars/svg?seed=Default';
+
+                    avatarImage.src = defaultAvatar;
+                    sidebarAvatar.src = defaultAvatar;
+
+                    avatarInput.value = "";
+                }
+                // ============================================
+                // Remove avatar (UI + optional server call)
+                // ============================================
+                function removeAvatar() {
+                    const defaultAvatar =
+                        'https://api.dicebear.com/7.x/avataaars/svg?seed=Default';
+
+                    avatarImage.src = defaultAvatar;
+                    sidebarAvatar.src = defaultAvatar;
+
+                    // reset input
+                    avatarInput.value = "";
+                    selectedAvatarFile = null;
+
+                    showToast('Аватар сброшен', 'success');
+
+                    // OPTIONAL: backend request
+                    // fetch("/deleteAvatar", { method: "POST" });
+                }
+
+                // ============================================
+                // Password Toggle
+                // ============================================
+                function togglePassword(inputId) {
+                    const input = document.getElementById(inputId);
+                    const button = input.nextElementSibling;
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        button.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>`;
+                    } else {
+                        input.type = 'password';
+                        button.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>`;
+                    }
+                }
+
+                // ============================================
+                // Signature Preview
+                // ============================================
+                const signatureInput = document.getElementById('signature');
+                const signaturePreview = document.getElementById('signaturePreview');
+
+                signatureInput.addEventListener('input', function () {
+                    signaturePreview.textContent = this.value || 'Предпросмотр подписи...';
+                });
+
+                // ============================================
+                // Form Submissions
+                // ============================================
+                //document.getElementById('generalForm').addEventListener('submit', function (e) {
+                //e.preventDefault();
+
+                // TODO: Отправка данных на сервер
+                // const formData = new FormData(this);
+                // await updateProfile(formData);
+
+                //showToast('Изменения сохранены!', 'success');
+                //  });
+
+                document.getElementById('passwordForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+
+                    if (newPassword !== confirmPassword) {
+                        showToast('Пароли не совпадают!', 'error');
+                        return;
+                    }
+
+                    // TODO: Отправка на сервер
+                    // await changePassword(currentPassword, newPassword);
+
+                    showToast('Пароль изменен!', 'success');
+                    this.reset();
+                });
+
+                document.getElementById('signatureForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // TODO: Сохранение подписи на сервере
+                    // await updateSignature(signature);
+
+                    showToast('Подпись сохранена!', 'success');
+                });
+
+                // ============================================
+                // Social Links
+                // ============================================
+                function linkSocial(platform) {
+                    // TODO: OAuth авторизация
+                    // window.location.href = `/auth/${platform}`;
+                    showToast(`Привязка ${platform} в разработке`, 'info');
+                }
+
+                function unlinkSocial(platform) {
+                    // TODO: Отвязка соцсети
+                    // await unlinkSocialAccount(platform);
+                    showToast(`${platform} отвязан`, 'success');
+                }
+
+                // ============================================
+                // Sessions
+                // ============================================
+                function terminateSession(sessionId) {
+                    // TODO: Завершение сессии на сервере
+                    // await terminateSession(sessionId);
+                    showToast('Сессия завершена', 'success');
+                }
+
+                function terminateAllSessions() {
+                    // TODO: Завершение всех сессий
+                    // await terminateAllSessions();
+                    showToast('Все сессии завершены', 'success');
+                }
+
+                // ============================================
+                // Delete Account
+                // ============================================
+                function showDeleteAccountModal() {
+                    // TODO: Показать модальное окно подтверждения
+                    if (confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
+                        // await deleteAccount();
+                        showToast('Аккаунт удален', 'success');
+                    }
+                }
+
+                // ============================================
+                // Toast Notifications
+                // ============================================
+                function showToast(message, type = 'info') {
+                    const container = document.getElementById('toastContainer');
+                    const toast = document.createElement('div');
+                    toast.className = `toast toast-${type}`;
+                    toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">×</button>
+      `;
+                    container.appendChild(toast);
+
+                    setTimeout(() => toast.remove(), 3000);
+                }
+            </script>
+    </body>
+
+    </html>

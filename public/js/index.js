@@ -149,3 +149,18 @@ function closeModalOnOverlayEdit(event) {
     closeDeleteModal();
   }
 }
+
+    // ============================================
+    // Tab Navigation
+    // ============================================
+    function switchTab(event, tabId) {
+      event.preventDefault();
+      
+      // Remove active from all tabs and nav items
+      document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.profile-nav-item').forEach(item => item.classList.remove('active'));
+      
+      // Add active to selected tab and nav item
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }

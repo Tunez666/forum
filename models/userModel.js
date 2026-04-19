@@ -27,7 +27,7 @@ exports.countUser = async () => {
 exports.selectUser = async (email) => {
 
     const sql = `
-        SELECT id, username, email, password, id_r
+        SELECT id, username, email, password, id_r, uid, about
         FROM users 
         WHERE username = ? OR email = ?
         LIMIT 1
@@ -59,3 +59,46 @@ exports.countModerators = async () => {
     const [rows] = await db.query(sql);
     return rows; 
 };
+
+exports.selectNormalUser = async (id) => {
+
+    const sql = `
+        SELECT username, email, password, id_r, uid, about, avatarca
+        FROM users 
+        WHERE id = ?
+    `;
+
+    const [rows] = await db.query(sql, [id]);
+
+    return rows[0];
+};
+
+exports.updateUserInfo = async (userInfo) => {
+
+    console.log(userInfo);
+
+    const sql = `
+        UPDATE users
+        SET username = ?, uid = ?, about = ?, avatarca = ?
+        WHERE id = ?;
+    `;
+    const [result] = await db.query(sql, [
+        userInfo.username,
+        userInfo.uid,
+        userInfo.about,
+        userInfo.avatarca,
+        userInfo.id
+ 
+    ]);
+    return result;
+};
+
+/*exports.updateAva = async (user) => {
+    const sql = `
+        UPDATE users
+        SET avatarca = ?
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [user.avatarca, user.id]);
+};*/

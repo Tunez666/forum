@@ -59,7 +59,7 @@ exports.login = async (req, res) => {
     console.log("ROLE:", user.id_r);
 
     if (usersRole == 2) {
-        return res.redirect("/");
+        return res.redirect("/user/lk");
     } else if (usersRole == 1) {
         return res.redirect("/admin/dashboard");
     }

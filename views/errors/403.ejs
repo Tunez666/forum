@@ -1,0 +1,124 @@
+<%- include('../partials/head') %>
+
+<body class="error-page">
+
+<div class="bg-layer">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-lines"></div>
+</div>
+
+<div class="error-container">
+
+  <div class="error-card">
+
+    <div class="error-code">
+      403
+    </div>
+
+    <h1 class="error-title">
+      Доступ запрещён
+    </h1>
+
+    <p class="error-text">
+      У тебя нет прав для просмотра этой страницы.
+      Если это ошибка — обратись к администратору.
+    </p>
+
+    <div class="error-actions">
+      <a href="/dashboard" class="btn btn-primary">
+        Вернуться в кабинет
+      </a>
+
+      <a href="/" class="btn btn-secondary">
+        На главную
+      </a>
+    </div>
+
+    <div class="error-meta">
+      <span>access_denied</span>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+.error-page {
+  margin: 0;
+  font-family: sans-serif;
+  background: #0b0f17;
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  position: relative;
+  z-index: 2;
+}
+
+.error-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 50px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 500px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+.error-code {
+  font-size: 90px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #06d6d6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.error-title {
+  margin: 10px 0;
+  font-size: 28px;
+}
+
+.error-text {
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
+.error-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: #06d6d6;
+  color: black;
+}
+
+.btn-secondary {
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+}
+
+.error-meta {
+  margin-top: 20px;
+  font-size: 12px;
+  opacity: 0.4;
+}
+</style>
+
+</body>
+</html>

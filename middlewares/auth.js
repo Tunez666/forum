@@ -11,7 +11,14 @@ module.exports = {
         if (req.session.role === 1) {
             next(); // админ
         } else {
-            res.send("Нет доступа");
+            return res.status(403).render("errors/403");
+        }
+    },
+    isUser: (req, res, next) => {
+        if (req.session.role === 2) {
+            next(); // юзер
+        } else {
+            return res.status(403).render("errors/403");
         }
     }
 };

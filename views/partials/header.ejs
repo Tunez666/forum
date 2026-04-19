@@ -25,15 +25,15 @@
   <% } else { %>
 
       <% 
-      let link = "user/lk";
+      let link = "/user/lk";
       if (user.role== 1) link = "/admin/dashboard";
       else if (user.role == 3) link = "/moder/lkk";
       %>
     <a href="<%= link %>" class="btn btn-primary" style="display:flex;align-items:center;gap:8px;">
       <span style="width:24px;height:24px;border-radius:50%;background:#6c5ce7;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">
-        <%= user.username[0].toUpperCase() %>
+        <%= userData.username[0].toUpperCase() %>
       </span>
-      <%= user.username %>
+     <%= userData.username %>
     </a>
 
     <button onclick="location.href='/logout'" class="btn btn-ghost">
