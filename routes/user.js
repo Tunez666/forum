@@ -10,6 +10,8 @@ router.get("/lk", authMiddleware.isAuth, authMiddleware.isUser, userConroller.sh
 
 router.post("/updateUserInfo", upload.single("ava"), userConroller.updateUserInfo);
 
-//router.post("/updateAva", upload.single("ava"), userConroller.updateAva);
+router.post("/updatePass", authMiddleware.isAuth, authMiddleware.isUser, userConroller.updatePass);
+
+router.post("/modalDeleteAcc", authMiddleware.isAuth, authMiddleware.isUser, userConroller.deleteUserModal);
 
 module.exports = router;

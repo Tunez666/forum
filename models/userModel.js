@@ -93,12 +93,20 @@ exports.updateUserInfo = async (userInfo) => {
     return result;
 };
 
-/*exports.updateAva = async (user) => {
+exports.updatePass = async (user) => {
     const sql = `
         UPDATE users
-        SET avatarca = ?
+        SET password = ?
         WHERE id = ?
     `;
 
-    await db.query(sql, [user.avatarca, user.id]);
-};*/
+    await db.query(sql, [user.password, user.id]);
+};
+
+exports.deleteUser = async (user) => {
+    const sql = `
+        DELETE FROM users WHERE id = ?
+    `;
+
+    await db.query(sql, [user.id]);
+};
