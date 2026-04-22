@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Все темы - StarRail Station</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="forum.css">
-</head>
+<%- include('partials/head') %>
 <body>
   <!-- Background -->
   <div class="bg-layer">
@@ -19,26 +8,7 @@
     <div class="grid-lines"></div>
   </div>
 
-  <!-- TODO: Подключить header через include -->
-  <header class="header">
-    <div class="header-container">
-      <a href="/" class="logo">
-        <span class="logo-icon">&#9733;</span>
-        <span class="logo-text">StarRail<span class="logo-highlight">Station</span></span>
-      </a>
-      <nav class="nav">
-        <a href="/" class="nav-link">Главная</a>
-        <a href="/forum" class="nav-link">Форум</a>
-        <a href="/topics" class="nav-link active">Все темы</a>
-        <a href="/profile" class="nav-link">Профиль</a>
-      </nav>
-      <div class="header-actions">
-        <!-- TODO: Проверка авторизации -->
-        <button class="btn btn-ghost btn-sm">Войти</button>
-        <button class="btn btn-primary btn-sm">Регистрация</button>
-      </div>
-    </div>
-  </header>
+<%- include('partials/header') %>
 
   <main class="topics-page">
     <div class="topics-container">

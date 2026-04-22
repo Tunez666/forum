@@ -135,7 +135,7 @@
                   </div>
                 <div class="topic-last-reply">
                   <span class="topic-author"><%= topic.author_name %></span>
-                  <span class="topic-time"><%= topic.created_at %></span>
+                  <span class="topic-time"><%= new Date(topic.created_at).toLocaleString('ru-RU') %></span>
                 </div>
               </article>
 
