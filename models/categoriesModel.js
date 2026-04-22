@@ -76,3 +76,13 @@ exports.deleteCat = async (id) => {
 
     await db.query(sql, [id]);
 };
+
+exports.getParentsCategories = async () => {
+    const [rows] = await db.query(`
+        SELECT id, name, description, parent_id
+        FROM categories
+        WHERE parent_id IS NULL
+    `);
+
+    return rows;
+};

@@ -164,3 +164,29 @@ function closeModalOnOverlayEdit(event) {
       document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
     }
+    // ===============================
+// OPEN CREATE MODAL
+// ===============================
+function openCreateTopicModal() {
+  const modal = document.getElementById('topic-modal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// ===============================
+// CLOSE CREATE MODAL
+// ===============================
+function closeCreateTopicModal() {
+  const modal = document.getElementById('topic-modal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ===============================
+// CLOSE BY OVERLAY CLICK
+// ===============================
+function closeModalOnOverlayEdit(event) {
+  if (event.target.id === 'topic-modal') {
+    closeCreateTopicModal();
+  }
+}

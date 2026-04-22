@@ -1,0 +1,277 @@
+<%- include('partials/head') %>
+<body>
+  <!-- Background -->
+  <div class="bg-layer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <%- include('partials/header') %>
+
+  <main class="forum-page">
+    <div class="forum-container">
+      <!-- Forum Header -->
+      <div class="forum-header">
+        <div class="forum-header-content">
+          <h1 class="forum-title">
+            <span class="title-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </span>
+            Форум сообщества
+          </h1>
+          <p class="forum-description">Обсуждайте игру, делитесь опытом и находите единомышленников</p>
+        </div>
+        <div class="forum-stats-row">
+          <div class="forum-stat">
+            <span class="forum-stat-value"><%= topicsCount %></span>
+            <span class="forum-stat-label">Тем</span>
+          </div>
+          <div class="forum-stat">
+            <span class="forum-stat-value"><%= postsCount %></span>
+            <span class="forum-stat-label">Сообщений</span>
+          </div>
+          <div class="forum-stat">
+            <span class="forum-stat-value"><%= usersCount %></span>
+            <span class="forum-stat-label">Участников</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="forum-content-grid">
+        <!-- Main Content -->
+        <div class="forum-main">
+          <!-- Categories Section -->
+          <section class="forum-section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <span class="section-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                </span>
+                Разделы форума
+              </h2>
+              <!--<a href="/categories" class="section-link">Все разделы</a>-->
+            </div>
+
+            <div class="categories-list">
+              <% categories.forEach(categorie=> { %>
+              <a href="/category/1" class="forum-category-card">
+                <div class="category-icon-box" style="--cat-color: #ff6b9d;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </div>
+                <div class="category-main">
+                  <h3 class="category-title"><%= categorie.name %></h3>
+                  <p class="category-desc"><%= categorie.description %></p>
+                </div>
+                <div class="category-meta">
+                  <div class="category-count">
+                    <span class="count-value"><%= topicsCat %></span>
+                    <span class="count-label">тем</span>
+                  </div>
+                  <div class="category-count">
+                    <span class="count-value"><%= postsCat %></span>
+                    <span class="count-label">сообщений</span>
+                  </div>
+                </div>
+              </a>
+              <% }) %>
+            </div>
+          </section>
+
+          <!-- Latest Topics Section -->
+          <section class="forum-section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <span class="section-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                  </svg>
+                </span>
+                Последние темы
+              </h2>
+              <div class="section-tabs">
+                <button class="tab-btn active" data-tab="new">Новые</button>
+                <button class="tab-btn" data-tab="popular">Популярные</button>
+                <button class="tab-btn" data-tab="unanswered">Без ответа</button>
+              </div>
+            </div>
+
+            <div class="latest-topics-list">
+              <% selectTopics.forEach(topic=> { %>
+                
+              <article class="topic-row">
+                <div class="topic-avatar">
+                  <div class="avatar-circle">S</div>
+                </div>
+                <div class="topic-info">
+                  <div class="topic-badges">
+                    <span class="topic-category-badge" style="--cat-color: #a855f7;"><%= topic.category_name %></span>
+                  </div>
+                  <h3 class="topic-title-link">
+                    <a href="/topic/<%= topic.id %>"><%= topic.title %></a>
+                  </h3>
+                  <p class="topic-preview"></p>
+
+                  <div class="topic-badges">
+                    <span class="topic-category-badge" style="--cat-color: #f755a6;"><%= topic.description %></span>
+                  </div>
+                  
+                </div>
+                <div class="topic-stats">
+                  <div class="topic-stat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span><%= topic.posts_count %></span>
+                  </div>
+                <div class="topic-last-reply">
+                  <span class="topic-author"><%= topic.author_name %></span>
+                  <span class="topic-time"><%= topic.created_at %></span>
+                </div>
+              </article>
+
+               <% }) %>
+            </div>
+
+            <a href="/topics" class="view-all-btn">
+              <span>Смотреть все темы</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="forum-sidebar">
+          <!-- Create Topic Button -->
+          <button class="create-topic-btn" onclick="openCreateTopicModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Создать тему
+          </button>
+
+          <!-- Top Contributors -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Топ участников
+            </h3>
+            <div class="leaderboard-list">
+                 <% top.forEach((user, i)=> { %>
+              <div class="leader-row">
+                <span class="leader-position gold"><%= i + 1%></span>
+                <div class="user-avatar-sm"><%= user.username[0].toUpperCase() %></div>
+                <span class="leader-username"><%= user.username %></span>
+                <span class="leader-points"><%= user.posts_count %></span>
+              </div>
+                              <% }) %>
+            </div>
+          </div>
+
+          <!-- Upcoming Events -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Ближайшие события
+            </h3>
+            <% events.forEach(event => { %>
+            <div class="events-list">
+              <div class="event-row">
+                <div class="event-date-box">
+                  <span class="event-day"><%= event.day %></span>
+                  <span class="event-month"><%= event.month %></span>
+                </div>
+                <div class="event-details">
+                  <span class="event-title"><%= event.name %></span>
+                  <!--<span class="event-countdown">Осталось 3 дня</span>-->
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+<!-- Add Event Modal -->
+  <div class="modal-overlay" id="topic-modal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Добавить событие</h3>
+        <button class="modal-close" onclick="closeCreateTopicModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="topic-form" method = 'POST' action = '/modalCreateTopic'>
+        
+        <div class="form-group">
+          <label for="event-name">Название топика</label>
+          <input 
+            type="text" 
+            id="title" 
+            name="title" 
+            class="form-input"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="event-name">Описание</label>
+          <input 
+            type="text" 
+            id="description" 
+            name="description" 
+            class="form-input"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+                  <label for="category-parent">Категория</label>
+                  <select id="category-parent-add" name="category_id" class="form-input">
+                    <% categories.forEach(categorie=> { %>
+                      <option value="<%= categorie.id %>">
+                        <%= categorie.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="modal-submit-text">Создать</span>
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeCreateTopicModal()">
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+     
+
+<%- include('partials/footer') %>
