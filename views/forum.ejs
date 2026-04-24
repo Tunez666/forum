@@ -62,7 +62,7 @@
 
             <div class="categories-list">
               <% categories.forEach(categorie=> { %>
-              <a href="/category/1" class="forum-category-card">
+              <a href="/dagCategories/<%= categorie.id %>" class="forum-category-card">
                 <div class="category-icon-box" style="--cat-color: #ff6b9d;">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -74,11 +74,11 @@
                 </div>
                 <div class="category-meta">
                   <div class="category-count">
-                    <span class="count-value"><%= topicsCat %></span>
+                    <span class="count-value"><%= categorie.topics_count %></span>
                     <span class="count-label">тем</span>
                   </div>
                   <div class="category-count">
-                    <span class="count-value"><%= postsCat %></span>
+                    <span class="count-value"><%= categorie.posts_count %></span>
                     <span class="count-label">сообщений</span>
                   </div>
                 </div>

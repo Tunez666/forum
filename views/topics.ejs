@@ -35,32 +35,17 @@
             <label class="filter-label">Категория</label>
             <select class="filter-select" id="categoryFilter">
               <option value="">Все категории</option>
-              <!-- TODO: Загрузка категорий из БД -->
-              <option value="1">Общее обсуждение</option>
-              <option value="2">Персонажи и билды</option>
-              <option value="3">Забытый Чертог</option>
-              <option value="4">Творчество</option>
-              <option value="5">Поиск команды</option>
-              <option value="6">Оффтоп</option>
+              <% categories.forEach(categorie=> { %>
+              <option value="<%= categorie.id %>"> <%= categorie.name %> </option>
+              <% }) %>
             </select>
           </div>
-          <div class="filter-group">
-            <label class="filter-label">Статус</label>
-            <select class="filter-select" id="statusFilter">
-              <option value="">Все статусы</option>
-              <option value="pinned">Закреплённые</option>
-              <option value="hot">Горячие</option>
-              <option value="unanswered">Без ответа</option>
-              <option value="closed">Закрытые</option>
-            </select>
-          </div>
+        
           <div class="filter-group">
             <label class="filter-label">Сортировка</label>
             <select class="filter-select" id="sortFilter">
               <option value="latest">Последние</option>
               <option value="popular">Популярные</option>
-              <option value="views">По просмотрам</option>
-              <option value="replies">По ответам</option>
             </select>
           </div>
           <div class="filter-group search-group">
@@ -82,371 +67,49 @@
           <span class="header-cell topic-cell">Тема</span>
           <span class="header-cell category-cell">Категория</span>
           <span class="header-cell replies-cell">Ответы</span>
-          <span class="header-cell views-cell">Просмотры</span>
-          <span class="header-cell activity-cell">Активность</span>
+          <span class="header-cell replies-cell"></span>
+          <span class="header-cell activity-cell">Автор</span>
         </div>
 
         <div class="topics-list-body">
-          <!-- TODO: Загрузка тем из БД -->
-          
-          <!-- Pinned Topic -->
-          <div class="topic-list-row pinned">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 180;">K</div>
-              </div>
-              <div class="topic-main-info">
-                <div class="topic-badges-row">
-                  <span class="pin-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M16 2H8c-1.1 0-2 .9-2 2v16l6-3 6 3V4c0-1.1-.9-2-2-2z"/>
-                    </svg>
-                    Закреплено
-                  </span>
-                </div>
-                <a href="/topic/2" class="topic-title-text">[Гайд] Чертог Небытия 12 - все команды без 5* световых конусов</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">KafkaMains</span>
-                  <span class="topic-date">создано 2 дня назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #06b6d4;">Забытый Чертог</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">89</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">1.8K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 45;">A</div>
-                <span class="last-activity-time">2 часа назад</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Hot Topic -->
-          <div class="topic-list-row hot">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle">S</div>
-              </div>
-              <div class="topic-main-info">
-                <div class="topic-badges-row">
-                  <span class="hot-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    Горячее
-                  </span>
-                </div>
-                <a href="/topic/1" class="topic-title-text">Firefly или Топаз? Кого крутить в 2.7 - подробный разбор</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">StarDust_Player</span>
-                  <span class="topic-date">создано 5 часов назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #a855f7;">Персонажи</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">247</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">3.2K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 270;">M</div>
-                <span class="last-activity-time">15 мин. назад</span>
-              </div>
-            </div>
-          </div>
-
+                
           <!-- Regular Topics -->
+           <% selectTopics.forEach(topic=> { %>
           <div class="topic-list-row">
             <div class="topic-cell">
               <div class="topic-avatar">
                 <div class="avatar-circle" style="--hue: 45;">A</div>
               </div>
               <div class="topic-main-info">
-                <a href="/topic/3" class="topic-title-text">Нарисовала Робин в стиле арт-деко, делюсь процессом</a>
+                <a href="/topic/3" class="topic-title-text"><%= topic.title %></a>
                 <div class="topic-meta-row">
-                  <span class="topic-author-name">ArtistMoon</span>
-                  <span class="topic-date">создано 8 часов назад</span>
+                  <div class="topic-badges">
+                    <span class="topic-category-badge" style="--cat-color: #f755a6;"><%= topic.description %></span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #f59e0b;">Творчество</span>
+              <span class="category-tag" style="--cat-color: #f59e0b;"><%= topic.category_name %></span>
             </div>
             <div class="replies-cell">
-              <span class="stat-number">156</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">2.1K</span>
+              <span class="stat-number"><%= topic.posts_count %></span>
             </div>
             <div class="activity-cell">
               <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 330;">N</div>
-                <span class="last-activity-time">4 часа назад</span>
+               
               </div>
             </div>
-          </div>
+            <div class="activity-cell">
+              <div class="last-activity">
+                <div class="last-user-avatar" style="--hue: 330;"><%= topic.author_name[0].toUpperCase() %></div>
+                <span class="last-activity-time"><%= new Date(topic.created_at).toLocaleString('ru-RU') %></span>
+              </div>
+            </div>
 
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 270;">M</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/4" class="topic-title-text">Сколько примогемов накопили к 2.8? Делимся результатами!</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">MarchSimp</span>
-                  <span class="topic-date">создано 12 часов назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #ff6b9d;">Общее</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">312</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">4.5K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 60;">J</div>
-                <span class="last-activity-time">6 часов назад</span>
-              </div>
-            </div>
+            
           </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 330;">N</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/5" class="topic-title-text">Ищу активную гильдию на EU сервере, AR 65+</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">NightOwl</span>
-                  <span class="topic-date">создано 1 день назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #10b981;">Поиск команды</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">24</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">456</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 200;">B</div>
-                <span class="last-activity-time">8 часов назад</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 60;">J</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/6" class="topic-title-text">Лучшие реликвии для Джинъюань: полный гайд</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">JingYuanFan</span>
-                  <span class="topic-date">создано 1 день назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #a855f7;">Персонажи</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">78</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">1.2K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 100;">H</div>
-                <span class="last-activity-time">10 часов назад</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 200;">B</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/7" class="topic-title-text">Мемы недели - голосуем за лучший!</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">BladeMaster</span>
-                  <span class="topic-date">создано 2 дня назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #ec4899;">Оффтоп</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">198</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">2.8K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar">S</div>
-                <span class="last-activity-time">12 часов назад</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 100;">H</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/8" class="topic-title-text">Чистое Измерение - советы для новичков</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">HuohuoHeal</span>
-                  <span class="topic-date">создано 2 дня назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #06b6d4;">Забытый Чертог</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">45</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">890</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 180;">K</div>
-                <span class="last-activity-time">14 часов назад</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 300;">S</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/9" class="topic-title-text">Мой первый косплей Кафки - нужна критика!</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">SilverWolf</span>
-                  <span class="topic-date">создано 3 дня назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #f59e0b;">Творчество</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">67</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">1.5K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 45;">A</div>
-                <span class="last-activity-time">18 часов назад</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="topic-list-row">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 150;">D</div>
-              </div>
-              <div class="topic-main-info">
-                <a href="/topic/10" class="topic-title-text">Обсуждаем утечки 2.8 - что нас ждёт?</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">DanHengIL</span>
-                  <span class="topic-date">создано 3 дня назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #ff6b9d;">Общее</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">423</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">6.7K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 270;">M</div>
-                <span class="last-activity-time">1 день назад</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Closed Topic -->
-          <div class="topic-list-row closed">
-            <div class="topic-cell">
-              <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 0;">X</div>
-              </div>
-              <div class="topic-main-info">
-                <div class="topic-badges-row">
-                  <span class="closed-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                    Закрыта
-                  </span>
-                </div>
-                <a href="/topic/11" class="topic-title-text">Баг с исчезновением реликвий - решено</a>
-                <div class="topic-meta-row">
-                  <span class="topic-author-name">XiaoDev</span>
-                  <span class="topic-date">создано 1 неделю назад</span>
-                </div>
-              </div>
-            </div>
-            <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #ff6b9d;">Общее</span>
-            </div>
-            <div class="replies-cell">
-              <span class="stat-number">156</span>
-            </div>
-            <div class="views-cell">
-              <span class="stat-number">4.2K</span>
-            </div>
-            <div class="activity-cell">
-              <div class="last-activity">
-                <div class="last-user-avatar" style="--hue: 0;">X</div>
-                <span class="last-activity-time">5 дней назад</span>
-              </div>
-            </div>
-          </div>
+          <% }) %>
         </div>
       </div>
 
@@ -482,6 +145,68 @@
         </div>
       </div>
     </div>
+
+    <!-- Add Event Modal -->
+  <div class="modal-overlay" id="topic-modal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Добавить событие</h3>
+        <button class="modal-close" onclick="closeCreateTopicModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="topic-form" method = 'POST' action = '/modalCreateTopic'>
+        
+        <div class="form-group">
+          <label for="event-name">Название топика</label>
+          <input 
+            type="text" 
+            id="title" 
+            name="title" 
+            class="form-input"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="event-name">Описание</label>
+          <input 
+            type="text" 
+            id="description" 
+            name="description" 
+            class="form-input"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+                  <label for="category-parent">Категория</label>
+                  <select id="category-parent-add" name="category_id" class="form-input">
+                    <% categories.forEach(categorie=> { %>
+                      <option value="<%= categorie.id %>">
+                        <%= categorie.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="modal-submit-text">Создать</span>
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeCreateTopicModal()">
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
   </main>
 
   <script>
@@ -521,13 +246,6 @@
       });
     });
 
-    // ============================================
-    // Create Topic Modal
-    // ============================================
-    function openCreateTopicModal() {
-      // TODO: Открыть модальное окно создания темы
-      alert('TODO: Модальное окно создания темы');
-    }
   </script>
 </body>
 </html>

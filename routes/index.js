@@ -13,6 +13,9 @@ router.get("/forum", indexController.showForum);
 //Категории
 router.get("/topics", indexController.showTop);
 
+//дочерние категории
+router.get("/dagCategories/:id", indexController.showCategory);
+
 router.post("/modalCreateTopic", indexController.createTopic);
 
 module.exports = router;

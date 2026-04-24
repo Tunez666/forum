@@ -37,8 +37,7 @@ exports.showForum = async (req, res) => {
 
     const rowssss = await categoriesModel.getParentsCategories();
 
-    const topicsCat = await categoriesModel.countTopicsByCategory(1);
-    const postsCat = await categoriesModel.countPostsByCategory(1);
+    const categories = await categoriesModel.getCategoriesWithStats();
 
     const lastTopics = await topicsModel.getLastTopics();
 
@@ -57,14 +56,26 @@ exports.showForum = async (req, res) => {
         };
     });
 
-    res.render("forum", { topicsCount, postsCount, usersCount, categories: rowssss, topicsCat, postsCat, selectTopics: lastTopics, userData: user, top: topUsers, events });
+    res.render("forum", { topicsCount, postsCount, usersCount, categories, selectTopics: lastTopics, userData: user, top: topUsers, events });
 
 };
 
 exports.showTop = async (req, res) => {
+    const rowssss = await categoriesModel.getParentsCategories();
+    const lastTopics = await topicsModel.getLastTopics();
+    res.render("topics", { categories: rowssss, selectTopics: lastTopics });
 
-    res.render("topics");
+};
 
+exports.showCategory = async (req, res) => {
+    const categoryId = req.params.id;
+
+    // получаем дочерние категории
+    const subcategories = await categoriesModel.getSubcategories(categoryId);
+
+    res.render('dagCategories', {
+        subcategories
+    });
 };
 
 //modals
