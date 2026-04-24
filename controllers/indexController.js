@@ -61,9 +61,12 @@ exports.showForum = async (req, res) => {
 };
 
 exports.showTop = async (req, res) => {
+    const userId = req.session.userId;
     const rowssss = await categoriesModel.getParentsCategories();
     const lastTopics = await topicsModel.getLastTopics();
-    res.render("topics", { categories: rowssss, selectTopics: lastTopics });
+    const user = await userModel.selectNormalUser(userId);
+    
+    res.render("topics", { categories: rowssss, selectTopics: lastTopics, userData: user });
 
 };
 
