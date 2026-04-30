@@ -1,0 +1,20 @@
+
+          
+  <div class="sidebar-card">
+            <h3 class="sidebar-title">Ближайшие события</h3>
+            
+            <div class="events-list">
+                <% events.forEach(event => { %>
+              <div class="event-item">
+                <div class="event-date">
+                  <span class="event-day"><%= event.day %></span>
+                  <span class="event-month"><%= event.month %></span>
+                </div>
+                <div class="event-info">
+                  <span class="event-name"><%= event.name %></span>
+                  <!--<span class="event-time">Осталось 3 дня</span>-->
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>

@@ -20,11 +20,28 @@ exports.showHome = async (req, res) => {
 
     const user = await userModel.selectNormalUser(userId);
 
-    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user });
+    const categories = await categoriesModel.getCategoriesWithStats();
+
+    const lastTopics = await topicsModel.getLastTopics();
+
+    const topUsers = await postsModel.topPosts();
+
+     const eventsRaw = await eventsModel.getLastEvents();
+    const events = eventsRaw.map(e => {
+        const date = new Date(e.datee);
+
+        return {
+            ...e,
+            day: date.getDate(),
+            month: date.toLocaleString('ru-RU', { month: 'short' }).replace('.', '')
+        };
+    });
+
+    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user, categories, lastTopics, top: topUsers, events });
 
 };
 
-exports.showForum = async (req, res) => {
+/*exports.showForum = async (req, res) => {
     const userId = req.session.userId;
     const rows = await topicsModel.countTopics();
     const topicsCount = rows[0].countTopics;
@@ -58,26 +75,26 @@ exports.showForum = async (req, res) => {
 
     res.render("forum", { topicsCount, postsCount, usersCount, categories, selectTopics: lastTopics, userData: user, top: topUsers, events });
 
-};
+};*/
 
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
     const rowssss = await categoriesModel.getParentsCategories();
     const lastTopics = await topicsModel.getLastTopics();
     const user = await userModel.selectNormalUser(userId);
-    
+
     res.render("topics", { categories: rowssss, selectTopics: lastTopics, userData: user });
 
 };
 
 exports.showCategory = async (req, res) => {
     const categoryId = req.params.id;
-
+    const userId = req.session.userId;
     // получаем дочерние категории
     const subcategories = await categoriesModel.getSubcategories(categoryId);
-
+    const user = await userModel.selectNormalUser(userId);
     res.render('dagCategories', {
-        subcategories
+        subcategories, userData: user
     });
 };
 

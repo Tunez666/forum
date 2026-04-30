@@ -55,10 +55,9 @@ exports.showCategories = async (req, res) => {
 
     const rowssss = await categoriesModel.getCategories();
 
-    const topicsCat = await categoriesModel.countTopicsByCategory(1);
-    const postsCat = await categoriesModel.countPostsByCategory(1);
+    const categories = await categoriesModel.getAllCategoriesWithStats();
 
-    res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories: rowssss, topicsCat, postsCat });
+    res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories });
 };
 
 exports.showTopics = (req, res) => {

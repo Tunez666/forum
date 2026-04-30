@@ -122,3 +122,28 @@ GROUP BY c.id, c.name, c.description, parent.name;
 
     return rows;
 };
+
+exports.getAllCategoriesWithStats = async () => {
+    const [rows] = await db.query(`
+SELECT 
+    c.id,
+    c.name,
+    c.description,
+
+    COUNT(DISTINCT t.id) AS topics_count,
+    COUNT(p.id) AS posts_count
+
+FROM categories c
+
+LEFT JOIN topics t 
+    ON c.id = t.category_id
+
+LEFT JOIN posts p 
+    ON t.id = p.topic_id
+    AND p.is_deleted = 0
+
+GROUP BY c.id, c.name, c.description;
+    `);
+
+    return rows;
+};

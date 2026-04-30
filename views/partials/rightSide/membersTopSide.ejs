@@ -1,0 +1,15 @@
+
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Топ участников</h3>
+            <div class="leaderboard">
+                 <% top.forEach((user, i)=> { %>
+              <div class="leader-item">
+                <span class="leader-rank gold"><%= i + 1%></span>
+                <div class="avatar-small"><%= user.username[0].toUpperCase() %></div>
+                <span class="leader-name"><%= user.username %></span>
+                <span class="leader-score"><%= user.posts_count %></span>
+              </div>
+ <% }) %>
+            </div>
+          </div>
+           
