@@ -1,0 +1,140 @@
+<%- include('partials/head') %>
+    <%- include('partials/header') %>
+        <div class="topic-view">
+
+            <!-- Хедер темы -->
+            <div class="topic-view__header">
+                <h1 class="topic-view__title">
+                    <%= topic.title %>
+                </h1>
+
+                <h3 class="topic-view__title">
+                    <%= topic.description %>
+                </h3>
+
+                <div class="topic-view__meta">
+                    <span>Автор: </span>
+                    <span><%= topic.author_name %></span>
+                </div>
+            </div>
+
+            <!-- Список постов -->
+            <div class="topic-view__posts">
+
+                <% posts.forEach(post=> { %>
+                    <div class="topic-view__post">
+
+                        <!-- Юзер -->
+                        <div class="topic-view__user">
+                            <img src="/img/avas/<%= post.avatarca || 'spark.jpg' %>" class="topic-view__avatar">
+
+                            <div class="topic-view__username">
+                                <%= post.username %>
+                            </div>
+                        </div>
+
+                        <!-- Контент -->
+                        <div class="topic-view__content">
+
+                            <div class="topic-view__text">
+                                <%= post.content %>
+                            </div>
+
+                            <div class="topic-view__footer">
+                                <span class="topic-view__date">
+                                    <%= new Date(post.created_at).toLocaleString() %>
+
+                                </span>
+
+                                <div class="topic-view__actions">
+                                    <button class="topic-view__btn like-btn <%= post.is_liked ? 'liked' : '' %>"
+                                        data-post-id="<%= post.id %>">
+                                        🖤 <span class="like-count">
+                                            <%= post.likes_count %>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <% }) %>
+            </div>
+            <div class="topic-view__reply">
+
+                <h3 class="topic-view__reply-title">Написать ответ</h3>
+
+                <form method="POST" action="/reply/<%= topicId %>">
+
+                    <textarea name="content" class="topic-view__textarea" placeholder="Напиши что-нибудь..." required
+                        minlength="3"></textarea>
+                    <% if (typeof error !=='undefined' && error==='empty' ) { %>
+                        <div class="error">Сообщение не может быть пустым</div>
+                        <% } %>
+
+                            <button type="submit" class="topic-view__submit">
+                                Отправить
+                            </button>
+
+                </form>
+
+            </div>
+            <div id="last"></div>
+        </div>
+        <script>
+           document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".like-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+
+            const postId = btn.dataset.postId;
+
+            if (!postId) {
+                console.log("NO POST ID");
+                return;
+            }
+
+            const res = await fetch("/like", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ postId })
+            });
+
+            let data;
+            try {
+                data = await res.json();
+            } catch (e) {
+                console.log("INVALID JSON RESPONSE");
+                return;
+            }
+
+            // 💥 ВАЖНО: сначала проверяем авторизацию
+            if (!res.ok) {
+                if (data.error === "NOT_AUTH") {
+                    window.location.href = data.redirect;
+                    return;
+                }
+
+                console.log("LIKE ERROR", data);
+                return;
+            }
+
+            const countEl = btn.querySelector(".like-count");
+            let count = parseInt(countEl.textContent || "0");
+
+            if (data.liked) {
+                btn.classList.add("liked");
+                count++;
+            } else {
+                btn.classList.remove("liked");
+                count--;
+            }
+
+            countEl.textContent = count;
+        });
+    });
+});
+        </script>
+        <%- include('partials/footer') %>

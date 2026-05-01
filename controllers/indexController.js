@@ -26,7 +26,7 @@ exports.showHome = async (req, res) => {
 
     const topUsers = await postsModel.topPosts();
 
-     const eventsRaw = await eventsModel.getLastEvents();
+    const eventsRaw = await eventsModel.getLastEvents();
     const events = eventsRaw.map(e => {
         const date = new Date(e.datee);
 
@@ -87,6 +87,22 @@ exports.showTop = async (req, res) => {
 
 };
 
+
+exports.showPosts = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const topicId = req.params.id;
+    const posts = await postsModel.getPosts(topicId, userId);
+
+    const error = req.query.error;
+
+    const topic = await topicsModel.selectTopic(topicId);
+
+    res.render("posts", { userData: user, posts, topicId, error, topic  });
+
+};
+
 exports.showCategory = async (req, res) => {
     const categoryId = req.params.id;
     const userId = req.session.userId;
@@ -96,6 +112,27 @@ exports.showCategory = async (req, res) => {
     res.render('dagCategories', {
         subcategories, userData: user
     });
+};
+
+//create mess
+exports.createMess = async (req, res) => {
+    const { content } = req.body;
+    console.log(req.body);
+    const userId = req.session.userId;
+    const topicId = req.params.id;
+
+    if (!content || !content.trim()) {
+        return res.redirect(`/topic/${topicId}?error=empty`);
+    }
+
+    await postsModel.createPost({
+        topic_id: topicId,
+        author_id: userId,
+        content: content,
+
+    });
+
+    res.redirect(`/topic/${topicId}#last`);
 };
 
 //modals

@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const indexController = require("../controllers/indexController");
+const likesController = require("../controllers/likesController");
+const authMiddleware = require("../middlewares/auth");
 
 console.log("index routes loaded");
 
@@ -16,6 +18,16 @@ router.get("/topics", indexController.showTop);
 //дочерние категории
 router.get("/dagCategories/:id", indexController.showCategory);
 
+//посты 
+router.get("/topic/:id", indexController.showPosts);
+
+//Модалка создания топика
 router.post("/modalCreateTopic", indexController.createTopic);
+
+//Отправка соо
+router.post("/reply/:id", authMiddleware.isAuth, indexController.createMess);
+
+//like
+router.post("/like", likesController.toggleLike);
 
 module.exports = router;

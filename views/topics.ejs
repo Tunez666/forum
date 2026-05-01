@@ -80,10 +80,10 @@
           <div class="topic-list-row">
             <div class="topic-cell">
               <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 45;">A</div>
+                <div class="avatar-circle" style="--hue: 45;"><%= topic.title[0].toUpperCase() %></div>
               </div>
               <div class="topic-main-info">
-                <a href="/topic/3" class="topic-title-text"><%= topic.title %></a>
+                <a href="/topic/<%= topic.id %>" class="topic-title-text"><%= topic.title %></a>
                 <div class="topic-meta-row">
                   <div class="topic-badges">
                     <span class="topic-category-badge" style="--cat-color: #f755a6;"><%= topic.description %></span>
@@ -211,43 +211,4 @@
   </div>
   </main>
 
-  <script>
-    // ============================================
-    // Filters
-    // ============================================
-    document.querySelectorAll('.filter-select').forEach(select => {
-      select.addEventListener('change', function() {
-        // TODO: Применить фильтр и перезагрузить темы
-        console.log('Filter changed:', this.id, this.value);
-      });
-    });
-
-    // ============================================
-    // Search
-    // ============================================
-    let searchTimeout;
-    document.getElementById('searchInput').addEventListener('input', function() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        // TODO: Выполнить поиск по темам
-        console.log('Searching:', this.value);
-      }, 300);
-    });
-
-    // ============================================
-    // Pagination
-    // ============================================
-    document.querySelectorAll('.pagination-btn:not(.disabled)').forEach(btn => {
-      btn.addEventListener('click', function() {
-        // TODO: Перейти на выбранную страницу
-        document.querySelectorAll('.pagination-btn').forEach(b => b.classList.remove('active'));
-        if (!this.querySelector('svg')) {
-          this.classList.add('active');
-        }
-        console.log('Page clicked:', this.textContent.trim() || 'arrow');
-      });
-    });
-
-  </script>
-</body>
-</html>
+  <%- include('partials/footer') %>
