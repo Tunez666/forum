@@ -21,19 +21,24 @@ SELECT
     c.name AS category_name,
     u.username AS author_name,
 
-    COALESCE(p.count_posts, 0) AS posts_count
+    COUNT(p.id) AS posts_count
 
 FROM topics t
 
 JOIN categories c ON c.id = t.category_id
 JOIN users u ON u.id = t.author_id
 
-LEFT JOIN (
-    SELECT topic_id, COUNT(*) AS count_posts
-    FROM posts
-    WHERE is_deleted = 0
-    GROUP BY topic_id
-) p ON p.topic_id = t.id
+LEFT JOIN posts p 
+    ON p.topic_id = t.id 
+    AND p.is_deleted = 0
+
+GROUP BY 
+    t.id,
+    t.title,
+    t.description,
+    t.created_at,
+    c.name,
+    u.username
 
 ORDER BY t.created_at DESC
 LIMIT 10;
