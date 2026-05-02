@@ -81,3 +81,34 @@ exports.selectTopic = async (topicId) => {
     const [rows] = await db.query(sql, [topicId]);
     return rows[0];
 };
+
+exports.getSubTopics = async (categoryId) => {
+    const [rows] = await db.query(`
+SELECT 
+    t.id,
+    t.title,
+    t.description,
+    t.created_at,
+
+    u.username AS author_name,
+
+    COUNT(p.id) AS posts_count
+
+FROM topics t
+
+JOIN users u 
+    ON u.id = t.author_id
+
+LEFT JOIN posts p 
+    ON p.topic_id = t.id 
+    AND p.is_deleted = 0
+
+WHERE t.category_id = ?
+
+GROUP BY t.id, t.title, t.description, t.created_at, u.username
+
+ORDER BY t.created_at DESC;
+    `, [categoryId]);
+
+    return rows;
+};

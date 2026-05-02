@@ -19,7 +19,7 @@
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            Дочерние категори в <%= subcategories[0].parent_name %>
+            Топики в <%= name.name %>
           </h1>
         </div>
 
@@ -48,22 +48,23 @@
       <!-- Topics List -->
       <div class="topics-list-container">
         <div class="topics-list-header">
-          <span class="header-cell topic-cell">Категория</span>
-          <span class="header-cell category-cell">Родительская категория</span>
-          <span class="header-cell activity-cell">Постов</span>
+          <span class="header-cell topic-cell">Название</span>
+          <span class="header-cell category-cell"> Постов </span>
+          <span class="header-cell activity-cell">Автор</span>
+          <span class="header-cell activity-cell">Дата создания</span>
         </div>
 
         <div class="topics-list-body">
                 
           <!-- Regular Topics -->
-           <% subcategories.forEach(sub => { %>
+           <% subTopics.forEach(sub => { %>
           <div class="topic-list-row">
             <div class="topic-cell">
               <div class="topic-avatar">
-                <div class="avatar-circle" style="--hue: 45;"><%= sub.name[0].toUpperCase() %></div>
+                <div class="avatar-circle" style="--hue: 270;"><%= sub.title[0].toUpperCase() %></div>
               </div>
               <div class="topic-main-info">
-                <a href="/topic/3" class="topic-title-text"><%= sub.name %></a>
+                <a href="/topic/<%= sub.id %>" class="topic-title-text"><%= sub.title %></a>
                 <div class="topic-meta-row">
                   <div class="topic-badges">
                     <span class="topic-category-badge" style="--cat-color: #f755a6;"><%= sub.description %></span>
@@ -72,12 +73,14 @@
               </div>
             </div>
             <div class="category-cell">
-              <span class="category-tag" style="--cat-color: #f59e0b;"><%= sub.parent_name %></span>
+              <span class="category-tag" style="--cat-color: #f59e0b;"><%= sub.posts_count %></span>
             </div>
             <div class="replies-cell">
-              <span class="stat-number"><%= sub.posts_count %></span>
+              <span class="avatar-circle" style="--hue: 285;"><%= sub.author_name[0].toUpperCase() %></span>
             </div>
             <div class="activity-cell">
+             
+               <span class="category-tag" style="--cat-color: #0bf565;"> <%= new Date(sub.created_at).toLocaleString('ru-RU') %></span>
               <div class="last-activity">
                
               </div>

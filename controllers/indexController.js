@@ -41,42 +41,6 @@ exports.showHome = async (req, res) => {
 
 };
 
-/*exports.showForum = async (req, res) => {
-    const userId = req.session.userId;
-    const rows = await topicsModel.countTopics();
-    const topicsCount = rows[0].countTopics;
-
-    const rowss = await postsModel.countPosts();
-    const postsCount = rowss[0].countPosts;
-
-    const rowsss = await userModel.countUser();
-    const usersCount = rowsss[0].countUsers;
-
-    const rowssss = await categoriesModel.getParentsCategories();
-
-    const categories = await categoriesModel.getCategoriesWithStats();
-
-    const lastTopics = await topicsModel.getLastTopics();
-
-    const user = await userModel.selectNormalUser(userId);
-
-    const topUsers = await postsModel.topPosts();
-
-    const eventsRaw = await eventsModel.getLastEvents();
-    const events = eventsRaw.map(e => {
-        const date = new Date(e.datee);
-
-        return {
-            ...e,
-            day: date.getDate(),
-            month: date.toLocaleString('ru-RU', { month: 'short' }).replace('.', '')
-        };
-    });
-
-    res.render("forum", { topicsCount, postsCount, usersCount, categories, selectTopics: lastTopics, userData: user, top: topUsers, events });
-
-};*/
-
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
     const rowssss = await categoriesModel.getParentsCategories();
@@ -99,18 +63,21 @@ exports.showPosts = async (req, res) => {
 
     const topic = await topicsModel.selectTopic(topicId);
 
-    res.render("posts", { userData: user, posts, topicId, error, topic  });
+    res.render("posts", { userData: user, posts, topicId, error, topic });
 
 };
 
-exports.showCategory = async (req, res) => {
+exports.showDagTopics = async (req, res) => {
     const categoryId = req.params.id;
     const userId = req.session.userId;
-    // получаем дочерние категории
-    const subcategories = await categoriesModel.getSubcategories(categoryId);
+    const subTopics = await topicsModel.getSubTopics(categoryId);
+    const name = await categoriesModel.getName(categoryId);
     const user = await userModel.selectNormalUser(userId);
-    res.render('dagCategories', {
-        subcategories, userData: user
+
+    const topicId = req.params.id;
+
+    res.render('dagTopics', {
+        subTopics, userData: user, name, topicId
     });
 };
 

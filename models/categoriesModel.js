@@ -147,3 +147,13 @@ GROUP BY c.id, c.name, c.description;
 
     return rows;
 };
+
+exports.getName = async (categoryId) => {
+    const [rows] = await db.query(`
+SELECT *
+FROM categories
+WHERE id = ?
+    `, [categoryId]);
+
+    return rows[0];
+};

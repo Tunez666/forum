@@ -16,7 +16,7 @@ router.get("/", indexController.showHome);
 router.get("/topics", indexController.showTop);
 
 //дочерние категории
-router.get("/dagCategories/:id", indexController.showCategory);
+router.get("/dagTopics/:id", indexController.showDagTopics);
 
 //посты 
 router.get("/topic/:id", indexController.showPosts);
