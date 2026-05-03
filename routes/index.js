@@ -34,4 +34,8 @@ router.post("/like", likesController.toggleLike);
 //searchRes
 router.get("/searchResults", searchController.showSearch); 
 
+//secret
+router.get("/errors/secret", (req, res) => {
+    res.render("errors/secret");
+});
 module.exports = router;
