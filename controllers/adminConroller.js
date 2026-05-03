@@ -63,8 +63,8 @@ exports.showCategories = async (req, res) => {
 
 exports.showSett = async (req, res) => {
 
-     const userId = req.session.userId;
-     const user = await userModel.selectNormalUser(userId);
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
 
     res.render("admin/settings", { userData: user });
 };
@@ -102,6 +102,10 @@ exports.updateUserInfo = async (req, res) => {
     const userId = req.session.userId;
     const { username, uid, about } = req.body;
 
+    console.log("=== DEBUG ===");
+    console.log("req.file:", req.file);           // что пришло от multer
+    console.log("session userId:", userId);
+
     const currentUser = await userModel.selectNormalUser(userId);
 
     const avatarca = req.file
@@ -125,18 +129,18 @@ exports.updatePass = async (req, res) => {
     const user = await userModel.selectNormalUser(userId);
     const match = await bcrypt.compare(currentPass, user.password);
 
-         if (!match) {
+    if (!match) {
         return res.send("Текущий пароль не совпадает");
     }
-        if (newPass !== enterPass){
-            return res.send("Пароли не совпадают");
-        }
-    const saltRounds = 10; 
+    if (newPass !== enterPass) {
+        return res.send("Пароли не совпадают");
+    }
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPass, saltRounds);
 
     await userModel.updatePass({
         password: hashedPassword,
-        id:userId
+        id: userId
     });
 
     res.redirect("/admin/settings");
@@ -144,9 +148,9 @@ exports.updatePass = async (req, res) => {
 exports.deleteUserModal = async (req, res) => {
     const userId = req.session.userId;
     await userModel.deleteUser({
-        id:userId
-});
-req.session.destroy(err => {
+        id: userId
+    });
+    req.session.destroy(err => {
         if (err) {
             return res.send("Ошибка при выходе");
         }

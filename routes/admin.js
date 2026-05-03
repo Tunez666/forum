@@ -36,7 +36,7 @@ router.post("/modalEditCategories", adminConroller.updateCate);
 
 router.post("/modalDeleteCategory", adminConroller.deleteCat);
 
-router.post("/updateInfo", upload.single("ava"), adminConroller.updateUserInfo);
+router.post("/updateInfo", upload.single("ava"), authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.updateUserInfo);
 
 router.post("/updatePasss", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.updatePass);
 
