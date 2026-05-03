@@ -1,0 +1,424 @@
+<%- include('../partials/head') %>
+
+    <body>
+        <!-- Animated Background -->
+        <div class="animated-bg">
+            <div class="grid-overlay"></div>
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+        </div>
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <div class="page-title">
+                    <h1>Настройки</h1>
+                    <span class="page-subtitle">Редактирование профиля</span>
+                </div>
+            </div>
+        </header>
+        <%- include('../partials/adminSidebar') %>
+            <main class="profile-page">
+
+                <div class="profile-container">
+
+
+
+                    <!-- Main Content -->
+                    <div class="profile-content">
+
+                        <!-- Tab: General -->
+                        <section id="general" class="profile-section-block">
+                            <div class="profile-section">
+                                <div class="section-header">
+                                    <h2 class="section-title">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                        Основная информация
+                                    </h2>
+                                </div>
+
+                                <div class="section-card">
+                                    <!-- Avatar Upload -->
+
+                                    <div class="avatar-upload-section">
+                                        <!-- Form Fields -->
+                                        <form class="profile-form" id="generalForm" method='POST'
+                                            action='/admin/updateInfo' enctype="multipart/form-data">
+                                            <div class="form-row">
+                                                <div class="avatar-preview" id="avatarPreview">
+                                                    <img src="/img/avas/<%= userData.avatarca %>" alt="Аватар"
+                                                        id="avatarImage">
+                                                    <div class="avatar-overlay">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path
+                                                                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                                            <circle cx="12" cy="13" r="4" />
+                                                        </svg>
+                                                        <span>Изменить</span>
+                                                    </div>
+                                                    <input type="file" id="avatarInput" name="ava" accept="image/*"
+                                                        hidden>
+                                                </div>
+                                                <div class="avatar-info">
+                                                    <h4>Аватар профиля</h4>
+                                                    <p>JPG, PNG или GIF. Максимум 2MB.</p>
+                                                    <div class="avatar-buttons">
+                                                        <button type="button" class="btn btn-primary btn-sm"
+                                                            onclick="document.getElementById('avatarInput').click()">
+                                                            Загрузить
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label for="username">Имя пользователя</label>
+                                                <input type="text" id="username" class="form-input" name="username"
+                                                    value="<%= userData.username %>" placeholder="Введите имя">
+                                                <span class="form-hint">Видно другим пользователям форума</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="uid">UID в игре</label>
+                                                <input type="text" id="uid" class="form-input" name="uid"
+                                                    value="<%= userData.uid %>" placeholder="Введите UID">
+                                                <span class="form-hint">Для добавления в друзья в игре</span>
+                                            </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="bio">О себе</label>
+                                        <textarea id="bio" class="form-textarea" name="about" rows="3"
+                                            placeholder="Расскажите о себе..."><%= userData.about %></textarea>
+                                        <span class="form-hint">Краткое описание для вашего профиля</span>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                                <polyline points="17 21 17 13 7 13 7 21" />
+                                                <polyline points="7 3 7 8 15 8" />
+                                            </svg>
+                                            Сохранить изменения
+                                        </button>
+                                        <button type="reset" class="btn btn-ghost">Отменить</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Tab: Security -->
+                        <section id="security" class="profile-section-block">
+                            <div class="profile-section">
+                                <div class="section-header">
+                                    <h2 class="section-title">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                        </svg>
+                                        Безопасность
+                                    </h2>
+                                </div>
+
+                                <!-- Change Password -->
+                                <div class="section-card">
+                                    <h3 class="card-title">Изменить пароль</h3>
+                                    <form class="profile-form" id="passwordForm" method='POST'
+                                        action='/admin/updatePasss'>
+                                        <div class="form-group">
+                                            <label for="currentPassword">Текущий пароль</label>
+                                            <div class="password-input-wrapper">
+                                                <input type="password" id="currentPassword" name="currentPass"
+                                                    class="form-input" placeholder="Введите текущий пароль">
+                                                <button type="button" class="password-toggle"
+                                                    onclick="togglePassword('currentPassword')">
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                        <circle cx="12" cy="12" r="3" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="newPassword">Новый пароль</label>
+                                                <div class="password-input-wrapper">
+                                                    <input type="password" id="newPassword" name="newPass"
+                                                        class="form-input" placeholder="Введите новый пароль">
+                                                    <button type="button" class="password-toggle"
+                                                        onclick="togglePassword('newPassword')">
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                            <circle cx="12" cy="12" r="3" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPassword">Подтвердите пароль</label>
+                                                <div class="password-input-wrapper">
+                                                    <input type="password" id="confirmPassword" name="enterPass"
+                                                        class="form-input" placeholder="Повторите новый пароль">
+                                                    <button type="button" class="password-toggle"
+                                                        onclick="togglePassword('confirmPassword')">
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2">
+                                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                            <circle cx="12" cy="12" r="3" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Two-Factor Auth -->
+                                <!--<div class="section-card">
+                                        <div class="security-option">
+                                            <div class="security-info">
+                                                <div class="security-icon">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h3 class="card-title">Двухфакторная аутентификация</h3>
+                                                    <p class="security-description">Дополнительный уровень защиты вашего
+                                                        аккаунта</p>
+                                                </div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="twoFactorToggle">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>-->
+
+                                
+                                <!-- Delete Account -->
+                                <div class="section-card danger-zone">
+                                    <h3 class="card-title danger">Опасная зона</h3>
+                                    <p class="danger-description">Удаление аккаунта необратимо. Все ваши данные
+                                        будут удалены.</p>
+                                    <button class="btn btn-danger" onclick="openDeleteAccModal()">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                        </svg>
+                                        Удалить аккаунт
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+
+
+
+
+                        
+                        
+
+                    </div>
+                </div>
+            </main>
+
+            <!-- Toast Container -->
+            <div id="toastContainer" class="toast-container"></div>
+            <!-- Delete Category Modal -->
+            <div class="modal-overlay" id="delete-category-modal" onclick="closeModalOnOverlayDelete(event)">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Удаление аккаунта</h3>
+
+                        <button class="modal-close" onclick="closeDeleteAccModal()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form method="POST" action="/admin/modalDelete">
+                        <input type="hidden" id="delete-category-id" name="id">
+
+                        <p style="margin-bottom: 20px;">
+                            Вы уверены, что хотите удалить аккаунт? Это дейтсвие нельзя будет отменить.
+                        </p>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Удалить
+                            </button>
+
+                            <button type="button" class="btn btn-secondary" onclick="closeDeleteAccModal()">
+                                Отмена
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+<script>
+
+
+                    // ============================================
+                    // Avatar Upload Widget
+                    // ============================================
+
+                    const avatarInput = document.getElementById('avatarInput');
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    const avatarImage = document.getElementById('avatarImage');
+                    const sidebarAvatar = document.getElementById('sidebarAvatar');
+
+                    avatarPreview.addEventListener('click', () => {
+                        avatarInput.click();
+                    });
+
+                    avatarInput.addEventListener('change', function (e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        if (file.size > 2 * 1024 * 1024) {
+                            showToast('Файл слишком большой. Максимум 2MB.', 'error');
+                            return;
+                        }
+
+                        if (!file.type.startsWith('image/')) {
+                            showToast('Можно загружать только изображения.', 'error');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            avatarImage.src = e.target.result;
+                            sidebarAvatar.src = e.target.result;
+                        };
+
+                        reader.readAsDataURL(file);
+                    });
+
+
+                    // ============================================
+                    // Remove avatar (UI + optional server call)
+                    // ============================================
+                    function removeAvatar() {
+                        const defaultAvatar =
+                            'https://api.dicebear.com/7.x/avataaars/svg?seed=Default';
+
+                        avatarImage.src = defaultAvatar;
+                        sidebarAvatar.src = defaultAvatar;
+
+                        // reset input
+                        avatarInput.value = "";
+                        selectedAvatarFile = null;
+
+                        showToast('Аватар сброшен', 'success');
+
+
+                    }
+
+                    // ============================================
+                    // Password Toggle
+                    // ============================================
+                    function togglePassword(inputId) {
+                        const input = document.getElementById(inputId);
+                        const button = input.nextElementSibling;
+
+                        if (input.type === 'password') {
+                            input.type = 'text';
+                            button.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>`;
+                        } else {
+                            input.type = 'password';
+                            button.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>`;
+                        }
+                    }
+
+
+
+                    document.getElementById('passwordForm').addEventListener('submit', function (e) {
+                        const newPassword = document.getElementById('newPassword').value;
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+
+                        if (newPassword !== confirmPassword) {
+                            e.preventDefault();
+                            showToast('Пароли не совпадают!', 'error');
+                        }
+                    });
+
+
+
+
+                    // ============================================
+                    // Toast Notifications
+                    // ============================================
+                    function showToast(message, type = 'info') {
+                        const container = document.getElementById('toastContainer');
+                        const toast = document.createElement('div');
+                        toast.className = `toast toast-${type}`;
+                        toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">×</button>
+      `;
+                        container.appendChild(toast);
+
+                        setTimeout(() => toast.remove(), 3000);
+                    }
+
+                    // Открыть модалку удаления
+                    function openDeleteAccModal(id) {
+                        document.getElementById('delete-category-id').value = id;
+                        document.getElementById('delete-category-modal').classList.add('active');
+                    }
+
+                    // Закрыть модалку
+                    function closeDeleteAccModal() {
+                        document.getElementById('delete-category-modal').classList.remove('active');
+                    }
+
+                    // Закрытие по клику на overlay
+                    function closeModalOnOverlayDelete(event) {
+                        if (event.target.id === 'delete-category-modal') {
+                            closeDeleteAccModal();
+                        }
+                    }
+                </script>
+    </body>
+
+    </html>

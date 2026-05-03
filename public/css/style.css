@@ -5859,6 +5859,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   display: block;
   animation: fadeIn 0.3s ease;
 }
+.profile-section-block {
+    display: block;
+    margin-bottom: 32px;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

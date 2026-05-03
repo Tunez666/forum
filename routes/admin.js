@@ -14,6 +14,8 @@ router.get("/categories", authMiddleware.isAuth, authMiddleware.isAdmin, adminCo
 
 router.get("/topics", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showTopics);
 
+router.get("/settings", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showSett);
+
 router.post("/updateVersion", adminConroller.updateVersion);
 
 router.post(
@@ -33,5 +35,11 @@ router.post("/modalAddCategories", adminConroller.addCate);
 router.post("/modalEditCategories", adminConroller.updateCate);
 
 router.post("/modalDeleteCategory", adminConroller.deleteCat);
+
+router.post("/updateInfo", upload.single("ava"), adminConroller.updateUserInfo);
+
+router.post("/updatePasss", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.updatePass);
+
+router.post("/modalDelete", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.deleteUserModal);
 
 module.exports = router;

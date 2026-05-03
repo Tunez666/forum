@@ -4,6 +4,7 @@ const topicsModel = require("../models/topicsModel");
 const settingsModel = require("../models/settingsModel");
 const eventsModel = require("../models/eventsModel");
 const categoriesModel = require("../models/categoriesModel");
+const bcrypt = require("bcrypt");
 
 exports.showAdmin = async (req, res) => {
 
@@ -60,6 +61,14 @@ exports.showCategories = async (req, res) => {
     res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories });
 };
 
+exports.showSett = async (req, res) => {
+
+     const userId = req.session.userId;
+     const user = await userModel.selectNormalUser(userId);
+
+    res.render("admin/settings", { userData: user });
+};
+
 exports.showTopics = (req, res) => {
     res.render("admin/topics");
 };
@@ -87,6 +96,63 @@ exports.updateCharacter = async (req, res) => {
     });
 
     res.redirect("/admin/content");
+};
+
+exports.updateUserInfo = async (req, res) => {
+    const userId = req.session.userId;
+    const { username, uid, about } = req.body;
+
+    const currentUser = await userModel.selectNormalUser(userId);
+
+    const avatarca = req.file
+        ? req.file.filename
+        : currentUser.avatarca;
+
+    await userModel.updateUserInfo({
+        id: userId,
+        username,
+        uid,
+        about,
+        avatarca
+    });
+
+    res.redirect("/admin/settings");
+};
+
+exports.updatePass = async (req, res) => {
+    const { currentPass, newPass, enterPass } = req.body;
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+    const match = await bcrypt.compare(currentPass, user.password);
+
+         if (!match) {
+        return res.send("Текущий пароль не совпадает");
+    }
+        if (newPass !== enterPass){
+            return res.send("Пароли не совпадают");
+        }
+    const saltRounds = 10; 
+    const hashedPassword = await bcrypt.hash(newPass, saltRounds);
+
+    await userModel.updatePass({
+        password: hashedPassword,
+        id:userId
+    });
+
+    res.redirect("/admin/settings");
+};
+exports.deleteUserModal = async (req, res) => {
+    const userId = req.session.userId;
+    await userModel.deleteUser({
+        id:userId
+});
+req.session.destroy(err => {
+        if (err) {
+            return res.send("Ошибка при выходе");
+        }
+        res.redirect("/");
+    });
+
 };
 
 
