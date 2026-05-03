@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const indexController = require("../controllers/indexController");
 const likesController = require("../controllers/likesController");
+const searchController = require("../controllers/searchController");
 const authMiddleware = require("../middlewares/auth");
 
 console.log("index routes loaded");
@@ -29,5 +30,8 @@ router.post("/reply/:id", authMiddleware.isAuth, indexController.createMess);
 
 //like
 router.post("/like", likesController.toggleLike);
+
+//searchRes
+router.get("/searchResults", searchController.showSearch); 
 
 module.exports = router;

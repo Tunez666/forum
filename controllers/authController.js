@@ -18,7 +18,7 @@ exports.showReg = (req, res) => {
 
 exports.register = async (req, res) => {
     const { username, uid, email, password } = req.body;
-
+    
     // Хешируем пароль
     const saltRounds = 10; // уровень сложности
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -29,6 +29,7 @@ exports.register = async (req, res) => {
         uid: uid || null,
         email,
         password: hashedPassword
+
     });
 
     res.redirect("login");

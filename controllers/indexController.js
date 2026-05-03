@@ -6,6 +6,7 @@ const categoriesModel = require("../models/categoriesModel");
 const eventsModel = require("../models/eventsModel");
 
 exports.showHome = async (req, res) => {
+     const sort = req.query.sort || "new";
 
     const rows = await userModel.countUser();
     const usersCount = rows[0].countUsers;
@@ -22,7 +23,7 @@ exports.showHome = async (req, res) => {
 
     const categories = await categoriesModel.getCategoriesWithStats();
 
-    const lastTopics = await topicsModel.getLastTopics();
+    const lastTopics = await topicsModel.getLastTopics(sort);
 
     const topUsers = await postsModel.topPosts();
 
@@ -37,18 +38,41 @@ exports.showHome = async (req, res) => {
         };
     });
 
-    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user, categories, lastTopics, top: topUsers, events });
+    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user, categories, lastTopics, top: topUsers, events, sort });
 
 };
 
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
-    const rowssss = await categoriesModel.getParentsCategories();
-    const lastTopics = await topicsModel.getLastTopics();
+
+    const sort = req.query.sort || "new";
+    const categoryId = req.query.category || null;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 12;
+    const offset = (page - 1) * limit;
+
+    const categories = await categoriesModel.getParentsCategories();
     const user = await userModel.selectNormalUser(userId);
 
-    res.render("topics", { categories: rowssss, selectTopics: lastTopics, userData: user });
+    const { topics, total } = await topicsModel.getTopics({
+        sort,
+        categoryId,
+        limit,
+        offset
+    });
 
+    const totalPages = Math.ceil(total / limit);
+
+    res.render("topics", {
+        categories,
+        selectTopics: topics,
+        userData: user,
+        sort,
+        categoryId,
+        page,
+        totalPages
+    });
 };
 
 

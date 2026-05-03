@@ -107,11 +107,13 @@
                   Последние темы
                 </h2>
                 <div class="section-tabs">
-                  <button class="tab active">Новые</button>
-                  <button class="tab">Популярные</button>
-                  <button class="tab">Без ответа</button>
+                  <a href="/?sort=new" class="tab <%= sort === 'new' ? 'active' : '' %>">Новые</a>
+                  <a href="/?sort=popular" class="tab <%= sort === 'popular' ? 'active' : '' %>">Популярные</a>
+                  <a href="/?sort=empty" class="tab <%= sort === 'empty' ? 'active' : '' %>">Не популярные</a>
                 </div>
               </div>
+
+              
 
               <div class="topics-list">
                 <% lastTopics.forEach(topic=> { %>

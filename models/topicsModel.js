@@ -10,41 +10,121 @@ exports.countTopics = async () => {
     return rows;
 };
 
-exports.getLastTopics = async () => {
+exports.getLastTopics = async (sort = "new", categoryId = null) => {
+
+    const sortMap = {
+        new: "t.created_at DESC",
+        popular: "posts_count DESC",
+        empty: "posts_count ASC"
+    };
+
+    const orderBy = sortMap[sort] || sortMap.new;
+
+    let where = "";
+    const params = [];
+
+    if (categoryId) {
+        where = "WHERE t.category_id = ?";
+        params.push(categoryId);
+    }
+
     const [rows] = await db.query(`
-SELECT 
-    t.id,
-    t.title,
-    t.description,
-    t.created_at,
+        SELECT 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
 
-    c.name AS category_name,
-    u.username AS author_name,
+            c.name AS category_name,
+            u.username AS author_name,
 
-    COUNT(p.id) AS posts_count
+            COUNT(p.id) AS posts_count
 
-FROM topics t
+        FROM topics t
 
-JOIN categories c ON c.id = t.category_id
-JOIN users u ON u.id = t.author_id
+        JOIN categories c ON c.id = t.category_id
+        JOIN users u ON u.id = t.author_id
 
-LEFT JOIN posts p 
-    ON p.topic_id = t.id 
-    AND p.is_deleted = 0
+        LEFT JOIN posts p 
+            ON p.topic_id = t.id 
+            AND p.is_deleted = 0
 
-GROUP BY 
-    t.id,
-    t.title,
-    t.description,
-    t.created_at,
-    c.name,
-    u.username
+        ${where}
 
-ORDER BY t.created_at DESC
-LIMIT 10;
-    `);
+        GROUP BY 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+            c.name,
+            u.username
+
+        ORDER BY ${orderBy}
+        LIMIT 10;
+    `, params);
 
     return rows;
+};
+
+exports.getTopics = async ({ sort, categoryId, limit, offset }) => {
+
+    const sortMap = {
+        new: "t.created_at DESC",
+        popular: "posts_count DESC",
+        empty: "posts_count ASC"
+    };
+
+    const orderBy = sortMap[sort] || sortMap.new;
+
+    let where = "";
+    const params = [];
+
+    if (categoryId) {
+        where = "WHERE t.category_id = ?";
+        params.push(categoryId);
+    }
+
+    // 1. данные
+    const [topics] = await db.query(`
+        SELECT 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+
+            c.name AS category_name,
+            u.username AS author_name,
+
+            COUNT(p.id) AS posts_count
+
+        FROM topics t
+
+        JOIN categories c ON c.id = t.category_id
+        JOIN users u ON u.id = t.author_id
+
+        LEFT JOIN posts p 
+            ON p.topic_id = t.id 
+            AND p.is_deleted = 0
+
+        ${where}
+
+        GROUP BY t.id
+
+        ORDER BY ${orderBy}
+        LIMIT ? OFFSET ?
+    `, [...params, limit, offset]);
+
+    // 2. общее количество
+    const [countRows] = await db.query(`
+        SELECT COUNT(*) as total
+        FROM topics t
+        ${where}
+    `, params);
+
+    return {
+        topics,
+        total: countRows[0].total
+    };
 };
 
 exports.createTopic = async (topic) => {
@@ -109,6 +189,40 @@ GROUP BY t.id, t.title, t.description, t.created_at, u.username
 
 ORDER BY t.created_at DESC;
     `, [categoryId]);
+
+    return rows;
+};
+
+exports.searchTop = async (search) => {
+    const [rows] = await db.query(`
+        SELECT 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+
+            c.name AS category_name,
+            u.username AS author_name,
+
+            COUNT(p.id) AS posts_count
+
+        FROM topics t
+
+        JOIN categories c ON c.id = t.category_id
+        JOIN users u ON u.id = t.author_id
+
+        LEFT JOIN posts p 
+            ON p.topic_id = t.id 
+            AND p.is_deleted = 0
+
+        WHERE t.title LIKE ?
+
+        GROUP BY 
+            t.id, t.title, t.description, t.created_at,
+            c.name, u.username
+
+        ORDER BY t.created_at DESC
+    `, [`%${search}%`]);
 
     return rows;
 };
