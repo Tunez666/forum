@@ -23,13 +23,13 @@ router.get("/dagTopics/:id", indexController.showDagTopics);
 router.get("/topic/:id", indexController.showPosts);
 
 //Модалка создания топика
-router.post("/modalCreateTopic", indexController.createTopic);
+router.post("/modalCreateTopic", authMiddleware.isAuth, indexController.createTopic);
 
 //Отправка соо
 router.post("/reply/:id", authMiddleware.isAuth, indexController.createMess);
 
 //like
-router.post("/like", likesController.toggleLike);
+router.post("/like", authMiddleware.isAuth, likesController.toggleLike);
 
 //searchRes
 router.get("/searchResults", searchController.showSearch); 
@@ -38,4 +38,8 @@ router.get("/searchResults", searchController.showSearch);
 router.get("/errors/secret", (req, res) => {
     res.render("errors/secret");
 });
+
+//Модалка жалобы
+router.post("/report/:id", authMiddleware.isAuth, indexController.createReport);
+
 module.exports = router;

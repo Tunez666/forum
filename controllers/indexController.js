@@ -4,9 +4,10 @@ const topicsModel = require("../models/topicsModel");
 const settingsModel = require("../models/settingsModel");
 const categoriesModel = require("../models/categoriesModel");
 const eventsModel = require("../models/eventsModel");
+const reportsModel = require("../models/reportsModel");
 
 exports.showHome = async (req, res) => {
-     const sort = req.query.sort || "new";
+    const sort = req.query.sort || "new";
 
     const rows = await userModel.countUser();
     const usersCount = rows[0].countUsers;
@@ -87,7 +88,9 @@ exports.showPosts = async (req, res) => {
 
     const topic = await topicsModel.selectTopic(topicId);
 
-    res.render("posts", { userData: user, posts, topicId, error, topic });
+    const reports = await reportsModel.getReportReasons();
+
+    res.render("posts", { userData: user, posts, topicId, error, topic, reports });
 
 };
 
@@ -97,8 +100,6 @@ exports.showDagTopics = async (req, res) => {
     const subTopics = await topicsModel.getSubTopics(categoryId);
     const name = await categoriesModel.getName(categoryId);
     const user = await userModel.selectNormalUser(userId);
-
-    const topicId = req.params.id;
 
     res.render('dagTopics', {
         subTopics, userData: user, name, topicId
@@ -139,4 +140,20 @@ exports.createTopic = async (req, res) => {
     });
 
     res.redirect("topics");
+};
+
+exports.createReport = async (req, res) => {
+    const { report_id, post_id  } = req.body;
+    console.log(req.body);
+    const userIs = req.session.userId;
+    const topicId = req.params.id;
+    const  stat = 'pending';
+    await reportsModel.createReport({
+        post_id: post_id,
+        user_id: userIs,
+        status: stat,
+        reason_id: report_id
+    });
+
+    res.redirect(`/topic/${topicId}`);
 };
