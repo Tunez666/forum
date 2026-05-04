@@ -78,3 +78,13 @@ exports.createPost = async (post) => {
     ]);
     return result;
 };
+
+exports.deletePost = async (postId) => {
+ const sql = `
+        DELETE FROM posts
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [postId]);
+};
+

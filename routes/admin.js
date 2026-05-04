@@ -16,6 +16,8 @@ router.get("/topics", authMiddleware.isAuth, authMiddleware.isAdmin, adminConrol
 
 router.get("/settings", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showSett);
 
+router.get("/reports", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showRep);
+
 router.post("/updateVersion", adminConroller.updateVersion);
 
 router.post(
@@ -41,5 +43,11 @@ router.post("/updateInfo", upload.single("ava"), authMiddleware.isAuth, authMidd
 router.post("/updatePasss", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.updatePass);
 
 router.post("/modalDelete", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.deleteUserModal);
+
+router.post("/deletePost", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.deletePosts);
+
+router.post("/blockUser", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.blockUser);
+
+router.post("/good", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.allGood);
 
 module.exports = router;

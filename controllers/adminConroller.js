@@ -72,6 +72,16 @@ exports.showSett = async (req, res) => {
     res.render("admin/settings", { userData: user });
 };
 
+exports.showRep = async (req, res) => {
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const reports = await reportsModel.getAllReports();
+
+    res.render("admin/reports", { userData: user, reports });
+};
+
 exports.showTopics = (req, res) => {
     res.render("admin/topics");
 };
@@ -162,6 +172,42 @@ exports.deleteUserModal = async (req, res) => {
 
 };
 
+exports.deletePosts = async (req, res) => {
+    const { post_id } = req.body;
+
+    console.log("DELETE:", post_id);
+
+    await postsModel.deletePost(post_id);
+
+    res.redirect("/admin/reports");
+};
+
+exports.blockUser = async (req, res) => {
+    const { author_id, reason, post_id } = req.body;
+    const userId = req.session.userId;
+
+    console.log("block:", author_id);
+    console.log("data:", req.body);
+
+    await userModel.blockUser({
+        user_id: author_id,
+        blocked_by_id: userId,
+        reason: reason
+    });
+
+    await postsModel.deletePost(post_id);
+
+    res.redirect("/admin/reports");
+};
+
+exports.allGood = async (req, res) => {
+    const { rep_id } = req.body;
+    console.log(req.body);
+
+    await reportsModel.deleteRep(rep_id);
+
+    res.redirect("/admin/reports");
+};
 
 // !!!!!!!!!!!!!!МОДАЛКИ!!!!!!!!!!!!!!!!!!!
 exports.addEvent = async (req, res) => {

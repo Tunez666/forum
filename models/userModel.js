@@ -110,3 +110,29 @@ exports.deleteUser = async (user) => {
 
     await db.query(sql, [user.id]);
 };
+
+exports.blockUser = async (user) => {
+    const sql = `
+        INSERT INTO blocked_users (user_id, blocked_by_id, reason)
+        VALUES (?, ?, ?)
+    `;
+    const [result] = await db.query(sql, [
+        user.user_id,
+        user.blocked_by_id,
+        user.reason
+    ]);
+    return result;
+};
+
+exports.isUserBlocked = async (userId) => {
+    const sql = `
+        SELECT id
+        FROM blocked_users
+        WHERE user_id = ?
+        LIMIT 1
+    `;
+
+    const [rows] = await db.query(sql, [userId]);
+    return rows.length > 0;
+};
+

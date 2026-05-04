@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const topicsModel = require("../models/topicsModel");
 const bcrypt = require("bcrypt");
 
-exports.showLogin = async(req, res) => {
+exports.showLogin = async (req, res) => {
 
     const rows = await userModel.countUser();
     const usersCount = rows[0].countUsers;
@@ -10,15 +10,15 @@ exports.showLogin = async(req, res) => {
     const rowsss = await topicsModel.countTopics();
     const topicsCount = rowsss[0].countTopics;
 
-    res.render("login", { usersCount, topicsCount}); 
+    res.render("login", { usersCount, topicsCount });
 };
 exports.showReg = (req, res) => {
-    res.render("reg"); 
+    res.render("reg");
 };
 
 exports.register = async (req, res) => {
     const { username, uid, email, password } = req.body;
-    
+
     // Хешируем пароль
     const saltRounds = 10; // уровень сложности
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -42,13 +42,25 @@ exports.login = async (req, res) => {
     const user = await userModel.selectUser(email);
 
     if (!user) {
-        return res.send("Пользователь не найден");
+        return res.status(404).render("error", {
+    message: "Пользователь не найден"
+});
     }
 
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-        return res.send("Неверный пароль");
+          return res.status(401).render("error", {
+    message: "Неверный пароль"
+});
+    }
+
+    const isBlocked = await userModel.isUserBlocked(user.id);
+
+    if (isBlocked) {
+         return res.status(403).render("error", {
+    message: "Аккаунт заблокирован"
+});
     }
 
     req.session.userId = user.id;
