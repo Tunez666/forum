@@ -33,14 +33,14 @@
         <div class="header-right">
           
 
-          <!-- TODO: Реальные уведомления из БД -->
+          <!-- TODO: Реальные уведомления из БД 
           <button class="notification-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
             <span class="notification-dot"></span>
-          </button>
+          </button>-->
 
           <a href="/" class="btn-back-site">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -57,7 +57,7 @@
       <div class="admin-content">
         <!-- Stats Cards -->
         <section class="stats-grid">
-          <!-- TODO: Получить реальные данные из БД -->
+          
           <div class="stat-card">
             <div class="stat-icon users">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -151,16 +151,16 @@
                 </svg>
                 Последние жалобы
               </h2>
-              <a href="#reports" class="card-link">Все жалобы &rarr;</a>
+              <a href="/admin/reports" class="card-link">Все жалобы &rarr;</a>
             </div>
             
             <div class="reports-list">
-              <!-- TODO: Жалобы из БД -->
+               <% reports.forEach(rep=> { %>
               <div class="report-item">
-                <div class="report-type spam">Спам</div>
+                <div class="report-type offensive"><%= rep.reason_name %></div>
                 <div class="report-info">
-                  <span class="report-target">Сообщение #45872</span>
-                  <span class="report-meta">от <strong>KafkaMains</strong> • 5 мин назад</span>
+                  <span class="report-target">Идентификатор поста = <%= rep.post_id %></span>
+                  <span class="report-meta">от <strong> <%= rep.reporter_name %></strong></span>
                 </div>
                 <div class="report-actions">
                   <button class="action-btn approve" title="Принять">
@@ -176,69 +176,7 @@
                   </button>
                 </div>
               </div>
-
-              <div class="report-item">
-                <div class="report-type offensive">Оскорбление</div>
-                <div class="report-info">
-                  <span class="report-target">Пользователь ToxicPlayer</span>
-                  <span class="report-meta">от <strong>StarDust</strong> • 12 мин назад</span>
-                </div>
-                <div class="report-actions">
-                  <button class="action-btn approve" title="Принять">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn reject" title="Отклонить">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="18" y1="6" x2="6" y2="18"/>
-                      <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div class="report-item">
-                <div class="report-type other">Другое</div>
-                <div class="report-info">
-                  <span class="report-target">Тема "Баг в игре..."</span>
-                  <span class="report-meta">от <strong>BladeMaster</strong> • 28 мин назад</span>
-                </div>
-                <div class="report-actions">
-                  <button class="action-btn approve" title="Принять">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn reject" title="Отклонить">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="18" y1="6" x2="6" y2="18"/>
-                      <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div class="report-item">
-                <div class="report-type spam">Спам</div>
-                <div class="report-info">
-                  <span class="report-target">Сообщение #45869</span>
-                  <span class="report-meta">от <strong>MarchSimp</strong> • 45 мин назад</span>
-                </div>
-                <div class="report-actions">
-                  <button class="action-btn approve" title="Принять">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn reject" title="Отклонить">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="18" y1="6" x2="6" y2="18"/>
-                      <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
+               <% }) %>
             </div>
           </section>
 

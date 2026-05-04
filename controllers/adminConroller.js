@@ -4,6 +4,7 @@ const topicsModel = require("../models/topicsModel");
 const settingsModel = require("../models/settingsModel");
 const eventsModel = require("../models/eventsModel");
 const categoriesModel = require("../models/categoriesModel");
+const reportsModel = require("../models/reportsModel");
 const bcrypt = require("bcrypt");
 
 exports.showAdmin = async (req, res) => {
@@ -21,7 +22,9 @@ exports.showAdmin = async (req, res) => {
 
     const rowsssss = await eventsModel.getLastEvents();
 
-    res.render("admin/dashboard", { usersCount, postsCount, topicsCount, users: rowssss, events: rowsssss });
+    const reports = await reportsModel.getFourReports();
+
+    res.render("admin/dashboard", { usersCount, postsCount, topicsCount, users: rowssss, events: rowsssss, reports });
 };
 
 exports.showContent = async (req, res) => {
