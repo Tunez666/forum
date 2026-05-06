@@ -43,6 +43,24 @@ exports.showHome = async (req, res) => {
 
 };
 
+exports.showRules = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('rules', {
+         userData: user
+    });
+};
+
+exports.showPolitic = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('privacy', {
+         userData: user
+    });
+};
+
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
 

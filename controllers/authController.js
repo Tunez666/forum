@@ -17,7 +17,29 @@ exports.showReg = (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    const { username, uid, email, password } = req.body;
+    const { username, uid, email, password, smart_token } = req.body;
+
+    const { verifyCaptcha } = require("../services/captchaService");
+
+    const ip =
+        req.headers["x-forwarded-for"]?.split(",")[0] ||
+        req.socket.remoteAddress;
+
+    // 1. СНАЧАЛА проверка наличия токена
+    if (!smart_token) {
+        return res.status(403).render("error", {
+            message: "Пройдите капчу"
+        });
+    }
+
+    // 2. ПОТОМ проверка у Яндекса
+    const captchaOk = await verifyCaptcha(smart_token, ip);
+
+    if (!captchaOk) {
+        return res.status(403).render("error", {
+            message: "Подтвердите, что вы не робот"
+        });
+    }
 
     // Хешируем пароль
     const saltRounds = 10; // уровень сложности
@@ -37,30 +59,44 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
 
-    const { email, password } = req.body;
-
+    const { email, password, smart_token } = req.body;
+    const { verifyCaptcha } = require("../services/captchaService");
     const user = await userModel.selectUser(email);
+    const ip =
+        req.headers["x-forwarded-for"]?.split(",")[0] ||
+        req.socket.remoteAddress;
 
+    const captchaOk = await verifyCaptcha(smart_token, ip);
+    if (!smart_token) {
+        return res.status(403).render("error", {
+            message: "Пройдите капчу"
+        });
+    }
+    if (!captchaOk) {
+        return res.status(403).render("error", {
+            message: "Подтвердите, что вы не робот"
+        });
+    }
     if (!user) {
         return res.status(404).render("error", {
-    message: "Пользователь не найден"
-});
+            message: "Пользователь не найден"
+        });
     }
 
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-          return res.status(401).render("error", {
-    message: "Неверный пароль"
-});
+        return res.status(401).render("error", {
+            message: "Неверный пароль"
+        });
     }
 
     const isBlocked = await userModel.isUserBlocked(user.id);
 
     if (isBlocked) {
-         return res.status(403).render("error", {
-    message: "Аккаунт заблокирован"
-});
+        return res.status(403).render("error", {
+            message: "Аккаунт заблокирован"
+        });
     }
 
     req.session.userId = user.id;
