@@ -1,4 +1,5 @@
 npm init
+--------------- 
 
 Create .env
 --------------- 
@@ -9,4 +10,3 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASS=123456
 DB_NAME=forum
-------------------------------
