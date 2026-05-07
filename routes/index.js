@@ -42,7 +42,10 @@ router.get("/errors/secret", (req, res) => {
     res.render("errors/secret");
 });
 
-//Модалка жалобы
+//Модалка жалобы на пост
 router.post("/report/:id", authMiddleware.isAuth, indexController.createReport);
+
+//Модалка жалобы на топик
+router.post("/repTop", authMiddleware.isAuth, indexController.createTopRep);
 
 module.exports = router;

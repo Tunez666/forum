@@ -11,11 +11,12 @@ exports.getReportReasons = async () => {
 
 exports.createReport = async (rep) => {
     const sql = `
-        INSERT INTO complaints (post_id, user_id, status, reason_id)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO complaints (post_id, topic_id, user_id, status, reason_id)
+        VALUES (?, ?, ?, ?, ?)
     `;
     const [result] = await db.query(sql, [
-        rep.post_id,
+        rep.post_id || null,
+        rep.topic_id || null,
         rep.user_id,
         rep.status,
         rep.reason_id

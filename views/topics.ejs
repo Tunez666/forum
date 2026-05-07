@@ -76,7 +76,6 @@
               <span class="header-cell topic-cell">Тема</span>
               <span class="header-cell category-cell">Раздел</span>
               <span class="header-cell replies-cell">Ответы</span>
-              <span class="header-cell replies-cell"></span>
               <span class="header-cell activity-cell">Автор</span>
             </div>
 
@@ -114,19 +113,23 @@
                       <%= topic.posts_count %>
                     </span>
                   </div>
-                  <div class="activity-cell">
-                    <div class="last-activity">
-
-                    </div>
-                  </div>
+                  
                   <div class="activity-cell">
                     <div class="last-activity">
                       <div class="last-user-avatar" style="--hue: 330;">
                         <%= topic.author_name[0].toUpperCase() %>
                       </div>
-                      <span class="last-activity-time">
+                      <!--<span class="last-activity-time">
                         <%= new Date(topic.created_at).toLocaleString('ru-RU') %>
-                      </span>
+                      </span>-->
+                    </div>
+                  </div>
+
+                  <div class="activity-cell">
+                    <div class="last-activity">
+                      <button class="topic-view__btn report-btn" onclick="openTopRep(<%= topic.id %>)">
+                                        Пожаловаться
+                                    </button>
                     </div>
                   </div>
 
@@ -175,7 +178,7 @@
         <div class="modal-overlay" id="topic-modal" onclick="closeModalOnOverlay(event)">
           <div class="modal-content">
             <div class="modal-header">
-              <h3 id="modal-title">Добавить событие</h3>
+              <h3 id="modal-title">Создание темы</h3>
               <button class="modal-close" onclick="closeCreateTopicModal()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -220,7 +223,52 @@
             </form>
           </div>
         </div>
+
+        <div class="modal-overlay" id="report-modal" onclick="closeModalOnOverlay(reason)">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Пожаловаться</h3>
+                    <button class="modal-close" onclick="closeTopRep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="report" method='POST' action='/repTop'>
+                    <input type="hidden" id="report-post-id" name="top_id">
+                    <div class="form-group">
+                        <label for="reasons">Причина жалобы</label>
+                        <select id="reason-list" name="report_id" class="form-input">
+
+                            <% reports.forEach(rep=> { %>
+                                <option value="<%= rep.id %>">
+                                    <%= rep.name %>
+                                </option>
+                                <% }) %>
+
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <span id="modal-submit-text">Отправить жалобу</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeReport()">
+                            Отмена
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
       </main>
+
+      
 
       <script>
         function applyFilter(select) {
@@ -235,6 +283,37 @@
 
           window.location.href = url.toString();
         }
+
+        // ===============================
+                // OPEN CREATE MODAL
+                // ===============================
+                function openTopRep(topicId) {
+                    const modal = document.getElementById('report-modal');
+                    const input = document.getElementById('report-post-id');
+
+                    input.value = topicId;
+
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                // ===============================
+                // CLOSE CREATE MODAL
+                // ===============================
+                function closeTopRep() {
+                    const modal = document.getElementById('report-modal');
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+
+                // ===============================
+                // CLOSE BY OVERLAY CLICK
+                // ===============================
+                function closeModalOnOverlayEdit(event) {
+                    if (event.target.id === 'report-modal') {
+                        closeTopRep();
+                    }
+                }
       </script>
 
       <%- include('partials/footer') %>

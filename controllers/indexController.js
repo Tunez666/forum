@@ -63,6 +63,7 @@ exports.showPolitic = async (req, res) => {
 
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
+    const topicId = req.params.id;
 
     const sort = req.query.sort || "new";
     const categoryId = req.query.category || null;
@@ -73,12 +74,14 @@ exports.showTop = async (req, res) => {
 
     const categories = await categoriesModel.getParentsCategories();
     const user = await userModel.selectNormalUser(userId);
+    const reports = await reportsModel.getReportReasons();
 
     const { topics, total } = await topicsModel.getTopics({
         sort,
         categoryId,
         limit,
-        offset
+        offset,
+        topicId
     });
 
     const totalPages = Math.ceil(total / limit);
@@ -90,7 +93,8 @@ exports.showTop = async (req, res) => {
         sort,
         categoryId,
         page,
-        totalPages
+        totalPages,
+        reports
     });
 };
 
@@ -174,4 +178,20 @@ exports.createReport = async (req, res) => {
     });
 
     res.redirect(`/topic/${topicId}`);
+};
+
+exports.createTopRep = async (req, res) => {
+    const { report_id, top_id  } = req.body;
+    console.log(req.body);
+    const userIs = req.session.userId;
+    const topicId = req.params.id;
+    const  stat = 'pending';
+    await reportsModel.createReport({
+        topic_id: top_id,
+        user_id: userIs,
+        status: stat,
+        reason_id: report_id
+    });
+
+    res.redirect(`/topics`);
 };
