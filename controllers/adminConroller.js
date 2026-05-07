@@ -77,9 +77,11 @@ exports.showRep = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
 
-    const reports = await reportsModel.getAllReports();
+    const postRep = await reportsModel.getPostReports();
 
-    res.render("admin/reports", { userData: user, reports });
+    const topicRep = await reportsModel.getTopReports();
+
+    res.render("admin/reports", { userData: user, postRep, topicRep });
 };
 
 exports.showTopics = (req, res) => {
@@ -182,6 +184,16 @@ exports.deletePosts = async (req, res) => {
     res.redirect("/admin/reports");
 };
 
+exports.deleteTop = async (req, res) => {
+    const { top_id } = req.body;
+
+    console.log("DELETE:", top_id);
+
+    await topicsModel.deleteTop(top_id);
+
+    res.redirect("/admin/reports");
+};
+
 exports.blockUser = async (req, res) => {
     const { author_id, reason, post_id } = req.body;
     const userId = req.session.userId;
@@ -196,6 +208,24 @@ exports.blockUser = async (req, res) => {
     });
 
     await postsModel.deletePost(post_id);
+
+    res.redirect("/admin/reports");
+};
+
+exports.blockUserByTop = async (req, res) => {
+    const { author_id, reason, top_id } = req.body;
+    const userId = req.session.userId;
+
+    console.log("block:", author_id);
+    console.log("data:", req.body);
+
+    await userModel.blockUser({
+        user_id: author_id,
+        blocked_by_id: userId,
+        reason: reason
+    });
+
+    await topicsModel.deleteTop(top_id);
 
     res.redirect("/admin/reports");
 };

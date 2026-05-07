@@ -226,3 +226,12 @@ exports.searchTop = async (search) => {
 
     return rows;
 };
+
+exports.deleteTop = async (topId) => {
+ const sql = `
+        DELETE FROM topics
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [topId]);
+};

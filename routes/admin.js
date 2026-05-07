@@ -46,7 +46,11 @@ router.post("/modalDelete", authMiddleware.isAuth, authMiddleware.isAdmin, admin
 
 router.post("/deletePost", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.deletePosts);
 
+router.post("/deleteTopic", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.deleteTop);
+
 router.post("/blockUser", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.blockUser);
+
+router.post("/blockUserByTop", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.blockUserByTop);
 
 router.post("/good", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.allGood);
 
