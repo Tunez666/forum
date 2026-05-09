@@ -136,3 +136,93 @@ exports.isUserBlocked = async (userId) => {
     return rows.length > 0;
 };
 
+exports.getAllUsers = async () => {
+    const [rows] = await db.query(`
+        SELECT 
+            users.*,
+            roles.name AS role_name
+        FROM users
+        LEFT JOIN roles ON users.id_r = roles.id
+        
+    `);
+
+    return rows;
+};
+
+exports.getBlocked = async () => {
+    const [rows] = await db.query(`
+        SELECT 
+            bu.id,
+            bu.reason,
+            bu.created_at,
+            bu.expires_at,
+
+            u.id AS user_id,
+            u.username AS username,
+
+            b.id AS blocked_by_id,
+            b.username AS blocked_by_username
+
+        FROM blocked_users bu
+
+        LEFT JOIN users u ON bu.user_id = u.id
+        LEFT JOIN users b ON bu.blocked_by_id = b.id
+        
+    `);
+
+    return rows;
+};
+
+exports.createModer = async (user) => {
+    const sql = `
+        UPDATE users
+        SET id_r = 3
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [user.id]);
+};
+
+exports.createAdmin = async (user) => {
+    const sql = `
+        UPDATE users
+        SET id_r = 1
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [user.id]);
+};
+
+exports.withoutRules = async (user) => {
+    const sql = `
+        UPDATE users
+        SET id_r = 2
+        WHERE id = ?
+    `;
+
+    await db.query(sql, [user.id]);
+};
+
+exports.block = async (user) => {
+    const sql = `
+        INSERT INTO blocked_users (user_id, blocked_by_id, reason)
+        VALUES (?, ?, ?)
+    `;
+    const [result] = await db.query(sql, [
+        user.user_id,
+        user.blocked_by_id,
+        user.reason
+    ]);
+    return result;
+};
+
+exports.unblock = async (user) => {
+    const sql = `
+        DELETE FROM blocked_users WHERE user_id = ?
+    `;
+    const [result] = await db.query(sql, [
+        user.user_id
+    ]);
+    return result;
+};
+

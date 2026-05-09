@@ -84,9 +84,57 @@ exports.showRep = async (req, res) => {
     res.render("admin/reports", { userData: user, postRep, topicRep });
 };
 
-exports.showTopics = (req, res) => {
-    res.render("admin/topics");
+exports.showUsers = async (req, res) => {
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const users = await userModel.getAllUsers();
+
+    const bannedUsers = await userModel.getBlocked();
+
+    res.render("admin/users", { userData: user, users, bannedUsers });
 };
+
+/*exports.showTopics = async (req, res) => {
+     const userId = req.session.userId;
+         const categoryId = req.params.id;
+         const topicId = req.params.id;
+         const sort = req.query.sort || "new";
+     
+     
+         const page = parseInt(req.query.page) || 1;
+         const limit = 12;
+         const offset = (page - 1) * limit;
+     
+         const categories = await categoriesModel.getParentsCategories();
+         const user = await userModel.selectNormalUser(userId);
+         const reports = await reportsModel.getReportReasons();
+         const name = await categoriesModel.getName(categoryId);
+     
+         const { topics, total } = await topicsModel.getTopics({
+             sort,
+             categoryId,
+             limit,
+             offset,
+             topicId
+         });
+     
+         const totalPages = Math.ceil(total / limit);
+     
+         res.render("admin/topics", {
+             categories,
+             subTopics: topics,
+             userData: user,
+             sort,
+             categoryId,
+             page,
+             totalPages,
+             reports,
+             name
+         });
+
+};*/
 
 exports.updateVersion = async (req, res) => {
     const { version } = req.body;
@@ -239,6 +287,68 @@ exports.allGood = async (req, res) => {
     res.redirect("/admin/reports");
 };
 
+exports.createModerator = async (req, res) => {
+    console.log(req.body);
+
+    const { user_id } = req.body;
+    await userModel.createModer({
+        id: user_id
+
+    });
+
+    res.redirect("/admin/users");
+};
+
+exports.createAdm = async (req, res) => {
+    console.log(req.body);
+
+    const { user_id } = req.body;
+    await userModel.createAdmin({
+        id: user_id
+
+    });
+
+    res.redirect("/admin/users");
+};
+
+
+exports.withoutRules = async (req, res) => {
+    console.log(req.body);
+
+    const { user_id } = req.body;
+    await userModel.withoutRules({
+        id: user_id
+
+    });
+
+    res.redirect("/admin/users");
+};
+
+exports.block = async (req, res) => {
+    const { user_id } = req.body;
+    const userId = req.session.userId;
+    const reason = "бан от админа / модера";
+    await userModel.block({
+        user_id: user_id,
+        blocked_by_id: userId,
+        reason: reason
+    });
+
+
+    res.redirect("/admin/users");
+};
+
+exports.unblock = async (req, res) => {
+    const { user_id } = req.body;
+    const userId = req.session.userId;
+    await userModel.unblock({
+        user_id: user_id
+    });
+
+
+    res.redirect("/admin/users");
+};
+
 // !!!!!!!!!!!!!!МОДАЛКИ!!!!!!!!!!!!!!!!!!!
 exports.addEvent = async (req, res) => {
     const { event_name, event_description, event_date, id_u } = req.body;
@@ -313,3 +423,4 @@ exports.deleteCat = async (req, res) => {
 
     res.redirect("/admin/categories");
 };
+

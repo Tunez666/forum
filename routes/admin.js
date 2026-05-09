@@ -12,11 +12,13 @@ router.get("/content", authMiddleware.isAuth, authMiddleware.isAdmin, adminConro
 
 router.get("/categories", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showCategories);
 
-router.get("/topics", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showTopics);
+//router.get("/topics", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showTopics);
 
 router.get("/settings", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showSett);
 
 router.get("/reports", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showRep);
+
+router.get("/users", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showUsers);
 
 router.post("/updateVersion", adminConroller.updateVersion);
 
@@ -53,5 +55,11 @@ router.post("/blockUser", authMiddleware.isAuth, authMiddleware.isAdmin, adminCo
 router.post("/blockUserByTop", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.blockUserByTop);
 
 router.post("/good", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.allGood);
+
+router.post("/createModer", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.createModerator);
+router.post("/createAdmin", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.createAdm);
+router.post("/nowUser", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.withoutRules);
+router.post("/block", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.block);
+router.post("/unblock", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.unblock);
 
 module.exports = router;
