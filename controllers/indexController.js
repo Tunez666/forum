@@ -5,6 +5,7 @@ const settingsModel = require("../models/settingsModel");
 const categoriesModel = require("../models/categoriesModel");
 const eventsModel = require("../models/eventsModel");
 const reportsModel = require("../models/reportsModel");
+const contactModel = require("../models/contactModel");
 
 exports.showHome = async (req, res) => {
     const sort = req.query.sort || "new";
@@ -48,7 +49,7 @@ exports.showRules = async (req, res) => {
     const user = await userModel.selectNormalUser(userId);
 
     res.render('rules', {
-         userData: user
+        userData: user
     });
 };
 
@@ -57,7 +58,7 @@ exports.showPolitic = async (req, res) => {
     const user = await userModel.selectNormalUser(userId);
 
     res.render('privacy', {
-         userData: user
+        userData: user
     });
 };
 
@@ -117,14 +118,42 @@ exports.showPosts = async (req, res) => {
 };
 
 exports.showDagTopics = async (req, res) => {
-    const categoryId = req.params.id;
-    const userId = req.session.userId;
-    const subTopics = await topicsModel.getSubTopics(categoryId);
-    const name = await categoriesModel.getName(categoryId);
-    const user = await userModel.selectNormalUser(userId);
 
-    res.render('dagTopics', {
-        subTopics, userData: user, name, topicId
+    const userId = req.session.userId;
+    const categoryId = req.params.id;
+    const topicId = req.params.id;
+    const sort = req.query.sort || "new";
+
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 12;
+    const offset = (page - 1) * limit;
+
+    const categories = await categoriesModel.getParentsCategories();
+    const user = await userModel.selectNormalUser(userId);
+    const reports = await reportsModel.getReportReasons();
+    const name = await categoriesModel.getName(categoryId);
+
+    const { topics, total } = await topicsModel.getTopics({
+        sort,
+        categoryId,
+        limit,
+        offset,
+        topicId
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    res.render("dagTopics", {
+        categories,
+        subTopics: topics,
+        userData: user,
+        sort,
+        categoryId,
+        page,
+        totalPages,
+        reports,
+        name
     });
 };
 
@@ -165,11 +194,11 @@ exports.createTopic = async (req, res) => {
 };
 
 exports.createReport = async (req, res) => {
-    const { report_id, post_id  } = req.body;
+    const { report_id, post_id } = req.body;
     console.log(req.body);
     const userIs = req.session.userId;
     const topicId = req.params.id;
-    const  stat = 'pending';
+    const stat = 'pending';
     await reportsModel.createReport({
         post_id: post_id,
         user_id: userIs,
@@ -181,11 +210,11 @@ exports.createReport = async (req, res) => {
 };
 
 exports.createTopRep = async (req, res) => {
-    const { report_id, top_id  } = req.body;
+    const { report_id, top_id } = req.body;
     console.log(req.body);
     const userIs = req.session.userId;
     const topicId = req.params.id;
-    const  stat = 'pending';
+    const stat = 'pending';
     await reportsModel.createReport({
         topic_id: top_id,
         user_id: userIs,
@@ -194,4 +223,57 @@ exports.createTopRep = async (req, res) => {
     });
 
     res.redirect(`/topics`);
+};
+
+////////////////////////////////////////////////////////////////
+///////////FOOTER
+exports.showContact = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('contact', {
+        userData: user,
+    });
+};
+
+exports.contactSend = async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    console.log(req.body);
+    const stat = 'pending';
+    await contactModel.createContact({
+        name: name,
+        email: email,
+        theme: subject,
+        message: message,
+        status: stat
+    });
+
+    res.redirect(`/`);
+};
+
+exports.showfaq = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('faq', {
+        userData: user,
+    });
+};
+
+exports.showTerms = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('terms', {
+        userData: user,
+    });
+};
+
+exports.showAbout = async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render('about', {
+        userData: user,
+    });
 };

@@ -25,6 +25,21 @@ router.get("/dagTopics/:id", indexController.showDagTopics);
 //посты 
 router.get("/topic/:id", indexController.showPosts);
 
+//Контакты
+router.get("/contact", indexController.showContact);
+
+//факью
+router.get("/faq", indexController.showfaq);
+
+//terms
+router.get("/terms", indexController.showTerms);
+
+//about
+router.get("/about", indexController.showAbout);
+
+//Отпарвка формы связи
+router.post("/contact/send", indexController.contactSend);
+
 //Модалка создания топика
 router.post("/modalCreateTopic", authMiddleware.isAuth, indexController.createTopic);
 

@@ -1,0 +1,122 @@
+<%- include('partials/head') %>
+
+<body>
+    <div class="animated-bg">
+        <div class="grid-overlay"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <%- include('partials/header') %>
+
+    <main class="terms-page">
+        <div class="terms-container">
+
+            <div class="page-header">
+                <h1>Пользовательское соглашение</h1>
+                <p>Последнее обновление: 08.05.2026</p>
+            </div>
+
+            <div class="terms-content">
+
+                <section>
+                    <h2>1. Общие положения</h2>
+                    <p>
+                        Используя данный форум, вы соглашаетесь соблюдать правила платформы и действующее законодательство.
+                        Администрация оставляет за собой право изменять условия без предварительного уведомления.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>2. Регистрация и аккаунт</h2>
+                    <p>
+                        Пользователь несёт ответственность за сохранность своих данных. Запрещено передавать аккаунт третьим лицам.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>3. Контент пользователей</h2>
+                    <p>
+                        Пользователь несёт ответственность за публикуемый контент. Запрещены оскорбления, спам, мошенничество и нарушение законов.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>4. Модерация</h2>
+                    <p>
+                        Администрация имеет право удалять контент, ограничивать доступ и блокировать пользователей без объяснения причин при нарушении правил.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>5. Ограничение ответственности</h2>
+                    <p>
+                        Администрация не несёт ответственности за действия пользователей и содержание сообщений на форуме.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>6. Изменения условий</h2>
+                    <p>
+                        Условия могут быть изменены в любое время. Продолжение использования сайта означает согласие с обновлениями.
+                    </p>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+</body>
+
+<style>
+.terms-page {
+    padding: 80px 20px;
+    min-height: 100vh;
+}
+
+.terms-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.page-header h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    opacity: .7;
+}
+
+.terms-content {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    padding: 30px;
+    backdrop-filter: blur(12px);
+}
+
+.terms-content section {
+    margin-bottom: 30px;
+}
+
+.terms-content h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.terms-content p {
+    opacity: .8;
+    line-height: 1.6;
+}
+</style>
+
+</html>

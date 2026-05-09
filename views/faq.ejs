@@ -1,0 +1,161 @@
+<%- include('partials/head') %>
+
+<body>
+    <div class="animated-bg">
+        <div class="grid-overlay"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <%- include('partials/header') %>
+
+    <main class="faq-page">
+        <div class="faq-container">
+
+            <div class="page-header">
+                <h1>Помощь</h1>
+                <p>Ответы на самые частые вопросы пользователей форума</p>
+            </div>
+
+            <div class="faq-list">
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Как создать тему?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Перейдите в раздел "Топики" и нажмите кнопку "Создать тему".
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Как пожаловаться на сообщение?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Нажмите кнопку жалобы рядом с сообщением и выберите причину.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Как изменить профиль?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Откройте личный кабинет и перейдите в раздел настроек.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Что делать, если аккаунт заблокирован?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Свяжитесь с администрацией через страницу "Связаться с нами".
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Как удалить свой аккаунт?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        В настройках профиля перейдите в раздел безопасности и выберите удаление аккаунта.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+<%- include('partials/footer') %>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+    <style>
+        .faq-page {
+            padding: 80px 20px;
+            min-height: 100vh;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .page-header p {
+            opacity: .75;
+            font-size: 18px;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .faq-item {
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 22px;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 22px;
+            opacity: .75;
+            transition: .3s;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 22px 22px;
+        }
+
+        .faq-item.active .faq-question span {
+            transform: rotate(45deg);
+        }
+
+        .faq-question span {
+            transition: .3s;
+            font-size: 24px;
+        }
+    </style>
