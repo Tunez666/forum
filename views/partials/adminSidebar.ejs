@@ -6,7 +6,7 @@
           <span class="logo-text">Star<span class="logo-accent">Rail</span></span>
         </a>
           
-        <span class="admin-badge">Admin</span>
+        <!--<span class="admin-badge">Admin</span>-->
       </div>
 
       <nav class="sidebar-nav">
@@ -34,16 +34,7 @@
             <span>Контент</span>
           </a>
           
-          <a href="/admin/users" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            <span>Пользователи</span>
-            <!-- TODO: Количество новых регистраций 
-            <span class="nav-badge">+24</span>
-          </a>-->
+          
           
           <!--<a href="/admin/topics" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -81,15 +72,16 @@
             <span>Жалобы</span>
           </a>
           
-          <a href="#bans" class="sidebar-link">
+          <a href="/admin/users" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
-            <span>Баны</span>
+            <span>Пользователи</span>
           </a>
           
-          <a href="#logs" class="sidebar-link">
+         <!--<a href="#logs" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
@@ -99,7 +91,7 @@
             </svg>
             <span>Логи</span>
           </a>
-        </div>
+        </div>-->
 
         <div class="nav-section">
           <span class="nav-section-title">Система</span>
@@ -112,23 +104,25 @@
             <span>Настройки</span>
           </a>
           
-          <a href="#backup" class="sidebar-link">
+          <!--<a href="#backup" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="21 8 21 21 3 21 3 8"/>
               <rect x="1" y="3" width="22" height="5"/>
               <line x1="10" y1="12" x2="14" y2="12"/>
             </svg>
             <span>Бэкапы</span>
-          </a>
+          </a>-->
         </div>
       </nav>
 
       <div class="sidebar-footer">
         <div class="admin-profile">
-          <div class="admin-avatar">A</div>
+          <!--<div class="admin-avatar">
+             <img src="/img/<%= userData.avatarca %>" class="topic-view__avatar">
+          </div>-->
           <div class="admin-info">
-            <span class="admin-name">Administrator</span>
-            <span class="admin-role">Super Admin</span>
+            <span class="admin-name"> <%= userData.username %></span>
+            <span class="admin-role"> <%= userData.role_name %></span>
           </div>
         </div>
 

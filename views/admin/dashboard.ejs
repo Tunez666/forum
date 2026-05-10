@@ -180,7 +180,7 @@
                 </svg>
                 Новые пользователи
               </h2>
-              <a href="#users" class="card-link">Все пользователи &rarr;</a>
+              <a href="/admin/users" class="card-link">Все пользователи &rarr;</a>
             </div>
             
             <div class="users-list">
@@ -218,13 +218,13 @@
                 </svg>
                 Активность за неделю
               </h2>
-              <div class="chart-tabs">
+              <!--<div class="chart-tabs">
                 <button class="chart-tab active">Сообщения</button>
                 <button class="chart-tab">Регистрации</button>
-              </div>
+              </div>-->
             </div>
             
-            <!-- TODO: Подключи реальный график (Chart.js или подобное) -->
+            <!-- TODO: Подключи реальный график (Chart.js или подобное) 
             <div class="chart-placeholder">
               <div class="chart-bars">
                 <div class="chart-bar-group">
@@ -256,10 +256,14 @@
                   <span class="chart-label">Вс</span>
                 </div>
               </div>
-            </div>
+            </div>-->
+
+            <div class="chart-wrapper">
+    <canvas id="activityChart"></canvas>
+</div>
           </section>
 
-          <!-- Quick Actions -->
+          <!-- Quick Actions 
           <section class="dashboard-card actions-card">
             <div class="card-header">
               <h2 class="card-title">
@@ -268,10 +272,10 @@
                 </svg>
                 Быстрые действия
               </h2>
-            </div>
+            </div>-->
             
-            <div class="quick-actions">
-              <!-- TODO: Добавь обработчики для каждого действия -->
+            <!--<div class="quick-actions">
+               TODO: Добавь обработчики для каждого действия 
               <button class="quick-action-btn">
                 <div class="action-icon create">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -311,9 +315,9 @@
                 <span>Создать бэкап</span>
               </button>
             </div>
-          </section>
+          </section>-->
 
-          <!-- Recent Activity Log -->
+          <!-- Recent Activity Log 
           <section class="dashboard-card log-card">
             <div class="card-header">
               <h2 class="card-title">
@@ -327,7 +331,7 @@
             </div>
             
             <div class="activity-log">
-              <!-- TODO: Логи из БД -->
+
               <div class="log-item">
                 <div class="log-icon edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -391,11 +395,66 @@
                   <span class="log-time">2 часа назад</span>
                 </div>
               </div>
-            </div>
+            </div>-->
           </section>
         </div>
       </div>
     </main>
   </div>
 </body>
+
+
+<script>
+const chartData = <%- JSON.stringify(chartData || []) %>;
+
+  const labels = chartData.map(d => d.day);
+  const posts = chartData.map(d => d.posts);
+  const users = chartData.map(d => d.users);
+
+  new Chart(document.getElementById('activityChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Сообщения',
+          data: posts,
+          borderColor: '#06d6d6',
+          backgroundColor: 'rgba(6,214,214,0.2)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Регистрации',
+          data: users,
+          borderColor: '#a855f7',
+          backgroundColor: 'rgba(168,85,247,0.2)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#fff'
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#aaa' },
+          grid: { color: 'rgba(255,255,255,0.05)' }
+        },
+        y: {
+          ticks: { color: '#aaa' },
+          grid: { color: 'rgba(255,255,255,0.05)' }
+        }
+      }
+    }
+  });
+</script>
 </html>

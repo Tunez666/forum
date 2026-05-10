@@ -20,5 +20,12 @@ module.exports = {
         } else {
             return res.status(403).render("errors/403");
         }
+    },
+    isModerator: (req, res, next) => {
+        if (req.session.role === 3) {
+            next(); // модератор
+        } else {
+            return res.status(403).render("errors/403");
+        }
     }
 };

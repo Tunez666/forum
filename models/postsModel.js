@@ -80,7 +80,7 @@ exports.createPost = async (post) => {
 };
 
 exports.deletePost = async (postId) => {
- const sql = `
+    const sql = `
         DELETE FROM posts
         WHERE id = ?
     `;
@@ -88,3 +88,16 @@ exports.deletePost = async (postId) => {
     await db.query(sql, [postId]);
 };
 
+
+exports.grafPosts = async () => {
+    const sql = `
+        SELECT DATE(created_at) as date, COUNT(*) as posts
+FROM posts
+WHERE created_at >= NOW() - INTERVAL 7 DAY
+GROUP BY DATE(created_at)
+ORDER BY date;
+    `;
+     const [rows] = await db.query(sql);
+    return rows;
+
+};

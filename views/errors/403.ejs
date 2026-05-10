@@ -27,7 +27,12 @@
     </p>
 
     <div class="error-actions">
-      <a href="/dashboard" class="btn btn-primary">
+      <% 
+      let link = "/user/lk";
+      if (user.role== 1) link = "/admin/dashboard";
+      else if (user.role == 3) link = "/admin/content";
+      %>
+      <a href="<%= link %>" class="btn btn-primary">
         Вернуться в кабинет
       </a>
 

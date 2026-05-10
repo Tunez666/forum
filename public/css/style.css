@@ -8689,7 +8689,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .tab-btn.active {
-  background: linear-gradient(135deg,#7c3aed,#06b6d4);
+  background: linear-gradient(135deg,#7c3aed,#d418cb);
 }
 
 .tab-content {
@@ -8765,7 +8765,7 @@ button.success {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  background: linear-gradient(135deg, #7c3aed, #d418cb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8782,17 +8782,17 @@ button.success {
 }
 
 .role-badge.user {
-  background: rgba(255,255,255,0.06);
+  background: rgba(231, 71, 191, 0.719);
 }
 
 .role-badge.moderator {
   background: rgba(6,182,212,0.2);
-  color: #06b6d4;
+  color: #d40677;
 }
 
 .role-badge.admin {
   background: rgba(168,85,247,0.2);
-  color: #a855f7;
+  color: #d40677;
 }
 
 /* buttons */
@@ -8807,13 +8807,13 @@ button.success {
   border: none;
   cursor: pointer;
   font-size: 12px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(189, 62, 140, 0.836);
   color: #fff;
   transition: 0.2s;
 }
 
 .action-buttons button:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(224, 47, 47, 0.623);
 }
 
 .action-buttons .danger {
@@ -8877,7 +8877,7 @@ button.success {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #ef4444, #f97316);
+  background: linear-gradient(135deg, #ef4444, #a30937bd);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8925,4 +8925,7 @@ button.success {
 
 #banned-tab button:hover {
   background: rgba(34, 197, 94, 0.25);
+}
+.chart-wrapper {
+    height: 240px;
 }

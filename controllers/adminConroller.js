@@ -24,7 +24,39 @@ exports.showAdmin = async (req, res) => {
 
     const reports = await reportsModel.getFourReports();
 
-    res.render("admin/dashboard", { usersCount, postsCount, topicsCount, users: rowssss, events: rowsssss, reports });
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const posts = await postsModel.grafPosts();
+    const users = await userModel.grafReg();
+
+    const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+    // создаём базу за 7 дней
+    const result = days.map((day, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i));
+
+        const dateStr = date.toISOString().slice(0, 10);
+
+        const postDay = posts.find(
+            p => new Date(p.date).toISOString().slice(0, 10) === dateStr
+        );
+
+        const userDay = users.find(
+            u => new Date(u.date).toISOString().slice(0, 10) === dateStr
+        );
+
+        return {
+            day,
+            posts: postDay ? postDay.posts : 0,
+            users: userDay ? userDay.users : 0
+        };
+    });
+    console.log(result);
+    console.log(posts);
+    console.log(users);
+    res.render("admin/dashboard", { usersCount, postsCount, topicsCount, users: rowssss, events: rowsssss, reports, chartData: result, userData: user });
 };
 
 exports.showContent = async (req, res) => {
@@ -32,6 +64,9 @@ exports.showContent = async (req, res) => {
     const rowsss = await settingsModel.selectSettings();
 
     const eventsRaw = await eventsModel.getLastEvents();
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
 
     const events = eventsRaw.map(e => {
         const date = new Date(e.datee);
@@ -43,7 +78,7 @@ exports.showContent = async (req, res) => {
         };
     });
 
-    res.render("admin/content", { settings: rowsss[0], events });
+    res.render("admin/content", { settings: rowsss[0], events, userData: user });
 };
 
 exports.showCategories = async (req, res) => {
@@ -61,7 +96,10 @@ exports.showCategories = async (req, res) => {
 
     const categories = await categoriesModel.getAllCategoriesWithStats();
 
-    res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories });
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories, userData: user });
 };
 
 exports.showSett = async (req, res) => {

@@ -21,7 +21,7 @@ exports.countUser = async () => {
     `;
 
     const [rows] = await db.query(sql);
-    return rows; 
+    return rows;
 };
 
 exports.selectUser = async (email) => {
@@ -57,15 +57,18 @@ exports.countModerators = async () => {
     `;
 
     const [rows] = await db.query(sql);
-    return rows; 
+    return rows;
 };
 
 exports.selectNormalUser = async (id) => {
 
     const sql = `
-        SELECT username, email, password, id_r, uid, about, avatarca
-        FROM users 
-        WHERE id = ?
+        SELECT 
+        users.*,
+        roles.name AS role_name
+        FROM users
+        LEFT JOIN roles ON users.id_r = roles.id
+        WHERE users.id = ?
     `;
 
     const [rows] = await db.query(sql, [id]);
@@ -88,7 +91,7 @@ exports.updateUserInfo = async (userInfo) => {
         userInfo.about,
         userInfo.avatarca,
         userInfo.id
- 
+
     ]);
     return result;
 };
@@ -226,3 +229,15 @@ exports.unblock = async (user) => {
     return result;
 };
 
+exports.grafReg = async () => {
+    const sql = `
+SELECT DATE(created_at) as date, COUNT(*) as users
+FROM users
+WHERE created_at >= NOW() - INTERVAL 7 DAY
+GROUP BY DATE(created_at)
+ORDER BY date;
+    `;
+    const [rows] = await db.query(sql);
+    return rows;
+
+};

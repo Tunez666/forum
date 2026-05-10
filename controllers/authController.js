@@ -111,6 +111,8 @@ exports.login = async (req, res) => {
         return res.redirect("/");
     } else if (usersRole == 1) {
         return res.redirect("/admin/dashboard");
+    } else if (usersRole == 3) {
+        return res.redirect("/admin/content");
     }
 
 };
