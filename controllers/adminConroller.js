@@ -134,6 +134,7 @@ exports.showUsers = async (req, res) => {
     res.render("admin/users", { userData: user, users, bannedUsers });
 };
 
+
 /*exports.showTopics = async (req, res) => {
      const userId = req.session.userId;
          const categoryId = req.params.id;

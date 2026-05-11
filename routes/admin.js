@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const adminConroller = require("../controllers/adminConroller");
+const backupController = require("../controllers/backupController");
 const authMiddleware = require("../middlewares/auth");
 const upload = require("../middlewares/upload");
 const uploadAva = require("../middlewares/uploadAva");
@@ -20,6 +21,16 @@ router.get("/settings", authMiddleware.isAuth, adminConroller.showSett);
 router.get("/reports", authMiddleware.isAuth, adminConroller.showRep);
 
 router.get("/users", authMiddleware.isAuth, authMiddleware.isAdmin, adminConroller.showUsers);
+
+router.get("/backups", authMiddleware.isAuth, authMiddleware.isAdmin, backupController.getBackups);
+
+router.post("/backups/create", authMiddleware.isAuth, authMiddleware.isAdmin, backupController.createBackup);
+
+router.get("/backups/download/:id", authMiddleware.isAuth, authMiddleware.isAdmin, backupController.downloadBackup);
+
+router.post("/backups/restore/:id", authMiddleware.isAuth, authMiddleware.isAdmin, backupController.restoreBackup);
+
+router.post("/backups/delete/:id", authMiddleware.isAuth, authMiddleware.isAdmin, backupController.deleteBackup);
 
 router.post("/updateVersion", adminConroller.updateVersion);
 

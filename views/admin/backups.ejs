@@ -1,0 +1,120 @@
+<%- include('../partials/head') %>
+
+<body class="admin-backups-page">
+
+<!-- Background -->
+<div class="bg-layer">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-lines"></div>
+</div>
+
+<%- include('../partials/header') %>
+
+<main class="main">
+
+  <div class="section-header">
+    <h2 class="section-title">
+      <span class="title-icon">💾</span>
+      Бэкапы базы данных
+    </h2>
+
+    <form action="/admin/backups/create" method="POST" onclick="return confirm('Создать бэкап базы данных?')">
+      <button class="btn btn-primary" type="submit">
+        + Создать бэкап
+      </button>
+    </form>
+  </div>
+
+  <!-- Info card -->
+  <div class="sidebar-card" style="margin-bottom: 1.5rem;">
+    <div class="sidebar-title">
+      📌 Информация
+    </div>
+    <p style="color: var(--text-secondary); font-size: 0.9rem;">
+      Здесь вы можете создавать, скачивать и восстанавливать резервные копии базы данных форума.
+    </p>
+  </div>
+
+  <!-- Backups list -->
+  <div class="topics-list-container">
+
+    <div class="topics-list-header">
+      <span class="header-cell">Имя файла</span>
+      <span class="header-cell">Дата</span>
+      <span class="header-cell">Размер</span>
+      <span class="header-cell">Действия</span>
+    </div>
+
+    <div class="topics-list-body">
+
+      <% if (backups && backups.length) { %>
+        <% backups.forEach(b => { %>
+
+          <div class="topic-list-row">
+
+            <!-- File name -->
+            <div class="topic-cell">
+              <div class="topic-main-info">
+                <div class="topic-title-text" style="font-size: 0.95rem;">
+                  📄 <%= b.filename %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date -->
+            <div class="category-cell">
+              <span class="category-tag">
+                <%= new Date(b.createdAt).toLocaleString('ru-RU') %>
+              </span>
+            </div>
+
+            <!-- Size -->
+            <div class="replies-cell">
+              <span class="stat-number">
+                <%= b.size %>
+              </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="activity-cell" style="display:flex; gap:0.5rem;">
+
+              <a href="/admin/backups/download/<%= b.id %>" onclick="return confirm('Скачать бэкап базы данных?')" class="btn btn-ghost">
+                Скачать
+              </a>
+
+              <form action="/admin/backups/restore/<%= b.id %>" onclick="return confirm('Восстановить бэкап базы данных?')" method="POST">
+                <button class="btn btn-primary" type="submit">
+                  Восстановить
+                </button>
+              </form>
+
+              <form action="/admin/backups/delete/<%= b.id %>" onclick="return confirm('Удалить бэкап базы данных?')" method="POST">
+                <button class="btn btn-ghost" type="submit">
+                  Удалить
+                </button>
+              </form>
+
+            </div>
+
+          </div>
+
+        <% }) %>
+      <% } else { %>
+
+        <div class="sidebar-card">
+          <div style="color: var(--text-muted);">
+            Бэкапы пока не созданы
+          </div>
+        </div>
+
+      <% } %>
+
+    </div>
+
+  </div>
+
+</main>
+
+<%- include('../partials/footer') %>
