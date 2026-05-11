@@ -13,12 +13,12 @@
 
       <main class="topics-page">
         <div class="topics-container">
-            <h2 class="section-title">
-                  <span class="title-icon">&#9733;</span>
-                  Результаты поиска
-                </h2>
-    
-            <!-- Filters 
+          <h2 class="section-title">
+            <span class="title-icon">&#9733;</span>
+            Результаты поиска
+          </h2>
+
+          <!-- Filters 
             <div class="topics-filters">
               <div class="filter-group">
                 <label class="filter-label">Категория</label>
@@ -49,7 +49,7 @@
               <span class="header-cell topic-cell">Тема</span>
               <span class="header-cell category-cell">Раздел</span>
               <span class="header-cell replies-cell">Ответы</span>
-              <span class="header-cell replies-cell"></span>
+
               <span class="header-cell activity-cell">Автор</span>
             </div>
 
@@ -79,35 +79,31 @@
                   </div>
                   <div class="category-cell">
                     <span class="category-tag" style="--cat-color: #f59e0b;">
-                     <%= top.category_name %>
+                      <%= top.category_name %>
                     </span>
                   </div>
                   <div class="replies-cell">
                     <span class="stat-number">
-                       <%= top.posts_count %>
+                      <%= top.posts_count %>
                     </span>
                   </div>
+                  
                   <div class="activity-cell">
                     <div class="last-activity">
-
+                      <a href="/user/prLk/<%= top.author_id %>" class="topic-user-link">
+                        <div class="topic-avatar-img">
+                          <img src="/img/avas/<%= top.author_avatar %>" />
+                        </div>
+                      </a>
                     </div>
                   </div>
-                  <div class="activity-cell">
-                    <div class="last-activity">
-                      <div class="last-user-avatar" style="--hue: 330;">
-                          <%= top.author_name[0].toUpperCase() %>
-                      </div>
-                      <span class="last-activity-time">
-                        <%= new Date(top.created_at).toLocaleString('ru-RU') %>
-                      </span>
-                    </div>
-                  </div>
-
-
                 </div>
-                <% }) %>
-            </div>
+
+
+
+            <% }) %>
           </div>
+        </div>
         </div>
       </main>
 

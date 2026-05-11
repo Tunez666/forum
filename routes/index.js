@@ -19,8 +19,11 @@ router.get("/privacy", indexController.showPolitic);
 //Категории
 router.get("/topics", indexController.showTop);
 
-//дочерние категории
+//дочерние топики
 router.get("/dagTopics/:id", indexController.showDagTopics);
+
+//категории
+router.get("/cat", indexController.showCategories);
 
 //посты 
 router.get("/topic/:id", indexController.showPosts);

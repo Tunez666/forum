@@ -157,6 +157,27 @@ exports.showDagTopics = async (req, res) => {
     });
 };
 
+exports.showCategories = async (req, res) => {
+
+    const rows = await categoriesModel.countCategories();
+    const categoriesCount = rows[0].countCategories;
+
+    const rowss = await topicsModel.countTopics();
+    const topicsCount = rowss[0].countTopics;
+
+    const rowsss = await userModel.countModerators();
+    const moderCount = rowsss[0].countModerators;
+
+    const rowssss = await categoriesModel.getCategories();
+
+    const categories = await categoriesModel.getAllCategoriesWithStats();
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    res.render("cat", { categoriesCount, topicsCount, moderCount, categories, userData: user });
+};
+
 //create mess
 exports.createMess = async (req, res) => {
     const { content } = req.body;

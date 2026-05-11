@@ -209,6 +209,8 @@ exports.searchTop = async (search) => {
 
             c.name AS category_name,
             u.username AS author_name,
+            u.id AS author_id,
+            u.avatarca AS author_avatar,
 
             COUNT(p.id) AS posts_count
 

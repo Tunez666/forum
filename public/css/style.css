@@ -7787,7 +7787,26 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   align-items: center;
   transition: background 0.3s ease;
 }
+.topic-user-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
 
+.topic-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.topic-avatar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .topics-page .topic-list-row:last-child {
   border-bottom: none;
 }
@@ -8933,4 +8952,10 @@ button.success {
 }
 .chart-wrapper {
     height: 240px;
+}
+.topic-list-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1.5fr;
+  align-items: center;
+  gap: 10px;
 }

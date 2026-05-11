@@ -9,12 +9,14 @@
       <nav class="nav">
         <a href="/" class="nav-link">Главная</a>
         <a href="/topics" class="nav-link">Топики</a>
-        <a href="#" class="nav-link">Гайды</a>
-        <a href="#" class="nav-link">Персонажи</a>
-        <a href="#" class="nav-link">События</a>
+        <a href="/cat" class="nav-link">Категории</a>
       </nav>
 
       <div class="header-actions">
+
+        <form method="GET" action="/searchResults" class="search-form">
+                    <input type="text" name="search" class="search-input" placeholder="Поиск по темам...">
+                  </form>
 
   <% if (!user) { %>
 
