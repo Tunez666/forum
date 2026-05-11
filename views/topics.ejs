@@ -116,9 +116,12 @@
                   
                   <div class="activity-cell">
                     <div class="last-activity">
+                      <a href="/user/prLk/<%= topic.author_id %>" class="topic-view__user-link">
                       <div class="avatar-circle" style="--hue: 285;">
-                        <%= topic.author_name[0].toUpperCase() %>
+                        
+                         <img src="/img/avas/<%= topic.author_avatar %>" class="topic-view__avatar">
                       </div>
+                      </a>
                       <!--<span class="last-activity-time">
                         <%= new Date(topic.created_at).toLocaleString('ru-RU') %>
                       </span>-->

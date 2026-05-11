@@ -1,4 +1,7 @@
 const userModel = require("../models/userModel");
+const topicsModel = require("../models/topicsModel");
+const postsModel = require("../models/postsModel");
+const likesModel = require("../models/likesModel");
 const bcrypt = require("bcrypt");
 
 exports.showUser = async (req, res) => {
@@ -6,7 +9,35 @@ exports.showUser = async (req, res) => {
 
     const user = await userModel.selectNormalUser(userId);
 
-    res.render("user/lk", { userData: user });
+    const posts = await postsModel.userPosts(userId);
+    const postsCount = posts[0].countPosts;
+
+    const topics = await topicsModel.userTopics(userId);
+    const topicsCount = topics[0].countTopics;
+
+    const likes = await likesModel.userLikes(userId);
+    const likesCount = likes[0].total_likes;
+
+    const rep = likesCount + topicsCount + postsCount;
+    res.render("user/lk", { userData: user, postsCount, topicsCount, likesCount, rep });
+};
+
+exports.showLkUser = async (req, res) => {
+    const userId = req.session.userId;
+    console.log(req.params);
+    const user = await userModel.selectNormalUser(req.params.id);
+
+    const posts = await postsModel.userPosts(req.params.id);
+    const postsCount = posts[0].countPosts;
+
+    const topics = await topicsModel.userTopics(req.params.id);
+    const topicsCount = topics[0].countTopics;
+
+    const likes = await likesModel.userLikes(req.params.id);
+    const likesCount = likes[0].total_likes;
+
+    const rep = likesCount + topicsCount + postsCount;
+    res.render("user/prLk", { userData: user, postsCount, topicsCount, likesCount, rep });
 };
 
 exports.updateUserInfo = async (req, res) => {
@@ -33,18 +64,18 @@ exports.updatePass = async (req, res) => {
     const user = await userModel.selectNormalUser(userId);
     const match = await bcrypt.compare(currentPass, user.password);
 
-         if (!match) {
+    if (!match) {
         return res.send("Текущий пароль не совпадает");
     }
-        if (newPass !== enterPass){
-            return res.send("Пароли не совпадают");
-        }
-    const saltRounds = 10; 
+    if (newPass !== enterPass) {
+        return res.send("Пароли не совпадают");
+    }
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPass, saltRounds);
 
     await userModel.updatePass({
         password: hashedPassword,
-        id:userId
+        id: userId
     });
 
     res.redirect("/user/lk");
@@ -52,9 +83,9 @@ exports.updatePass = async (req, res) => {
 exports.deleteUserModal = async (req, res) => {
     const userId = req.session.userId;
     await userModel.deleteUser({
-        id:userId
-});
-req.session.destroy(err => {
+        id: userId
+    });
+    req.session.destroy(err => {
         if (err) {
             return res.send("Ошибка при выходе");
         }

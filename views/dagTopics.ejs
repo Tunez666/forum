@@ -90,9 +90,12 @@
                     </span>
                   </div>
                   <div class="replies-cell">
-                    <span class="avatar-circle" style="--hue: 285;">
-                      <%= sub.author_name[0].toUpperCase() %>
-                    </span>
+                    <a href="/user/prLk/<%= sub.author_id %>" class="topic-view__user-link">
+                      <div class="avatar-circle" style="--hue: 285;">
+                        
+                         <img src="/img/avas/<%= sub.author_avatar %>" class="topic-view__avatar">
+                      </div>
+                      </a>
                   </div>
                   <div class="activity-cell">
 

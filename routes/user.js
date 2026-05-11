@@ -8,6 +8,8 @@ console.log("user routes loaded");
 
 router.get("/lk", authMiddleware.isAuth, authMiddleware.isUser, userConroller.showUser);
 
+router.get("/prLk/:id", userConroller.showLkUser);
+
 router.post("/updateUserInfo", upload.single("ava"), userConroller.updateUserInfo);
 
 router.post("/updatePass", authMiddleware.isAuth, authMiddleware.isUser, userConroller.updatePass);

@@ -241,3 +241,19 @@ ORDER BY date;
     return rows;
 
 };
+
+exports.selectPrUser = async (id) => {
+
+    const sql = `
+        SELECT 
+        users.*,
+        roles.name AS role_name
+        FROM users
+        LEFT JOIN roles ON users.id_r = roles.id
+        WHERE users.id = ?
+    `;
+
+    const [rows] = await db.query(sql, [id]);
+
+    return rows[0];
+};

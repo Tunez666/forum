@@ -39,7 +39,7 @@ exports.getPosts = async (topicId, userId) => {
             p.id,
             p.content,
             p.created_at,
-
+            p.author_id,
             u.username,
             u.avatarca,
 
@@ -98,6 +98,18 @@ GROUP BY DATE(created_at)
 ORDER BY date;
     `;
      const [rows] = await db.query(sql);
+    return rows;
+
+};
+
+exports.userPosts = async (userId) => {
+    const sql = `
+        SELECT COUNT(id) AS countPosts
+        FROM posts 
+        WHERE author_id = ?
+    `;
+
+    const [rows] = await db.query(sql, [userId]);
     return rows;
 
 };

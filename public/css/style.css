@@ -7835,7 +7835,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 0.875rem;
   font-weight: 600;
 }
-
+.topics-page .avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .topics-page .topic-main-info {
   display: flex;
   flex-direction: column;

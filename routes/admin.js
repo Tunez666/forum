@@ -3,6 +3,7 @@ const router = express.Router();
 const adminConroller = require("../controllers/adminConroller");
 const authMiddleware = require("../middlewares/auth");
 const upload = require("../middlewares/upload");
+const uploadAva = require("../middlewares/uploadAva");
 
 console.log("admin routes loaded");
 
@@ -40,7 +41,7 @@ router.post("/modalEditCategories", adminConroller.updateCate);
 
 router.post("/modalDeleteCategory", adminConroller.deleteCat);
 
-router.post("/updateInfo", upload.single("ava"), adminConroller.updateUserInfo);
+router.post("/updateInfo", uploadAva.single("ava"), adminConroller.updateUserInfo);
 
 router.post("/updatePasss", adminConroller.updatePass);
 

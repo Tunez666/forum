@@ -120,7 +120,12 @@
                   <article class="topic-card">
                     <div class="topic-avatar">
                       <div class="avatar-placeholder">
-                        <%= topic.author_name[0].toUpperCase()%>
+                       <a href="/user/prLk/<%= topic.author_id %>" class="topic-view__user-link">
+                      <div class="avatar-circle" style="--hue: 285;">
+                        
+                         <img src="/img/avas/<%= topic.author_avatar %>" class="topic-view__avatar">
+                      </div>
+                      </a>
                       </div>
                     </div>
                     <div class="topic-content">

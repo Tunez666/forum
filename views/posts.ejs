@@ -27,20 +27,30 @@
                     <div class="topic-view__post">
 
                         <!-- Юзер -->
-                        <div class="topic-view__user">
-                            <img src="/img/<%= post.avatarca %>" class="topic-view__avatar">
 
-                            <div class="topic-view__username">
-                                <%= post.username %>
-                            </div>
+                        <div class="topic-view__user">
+
+                            <a href="/user/prLk/<%= post.author_id %>" class="topic-view__user-link">
+
+                                <img src="/img/avas/<%= post.avatarca %>" class="topic-view__avatar">
+
+                                <div class="topic-view__username">
+                                    <%= post.username %>
+                                </div>
+
+                            </a>
+
                         </div>
+
 
                         <!-- Контент -->
                         <div class="topic-view__content">
 
                             <div class="topic-view__text">
-                                <%= post.username %>
+                                <%= post.content %>
                             </div>
+
+
 
                             <div class="topic-view__footer">
                                 <span class="topic-view__date">

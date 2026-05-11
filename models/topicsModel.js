@@ -37,6 +37,8 @@ exports.getLastTopics = async (sort = "new", categoryId = null) => {
 
             c.name AS category_name,
             u.username AS author_name,
+            u.id AS author_id,
+            u.avatarca AS author_avatar,
 
             COUNT(p.id) AS posts_count
 
@@ -94,6 +96,8 @@ exports.getTopics = async ({ sort, categoryId, limit, offset }) => {
 
             c.name AS category_name,
             u.username AS author_name,
+            u.id AS author_id,
+            u.avatarca AS author_avatar,
 
             COUNT(p.id) AS posts_count
 
@@ -171,6 +175,8 @@ SELECT
     t.created_at,
 
     u.username AS author_name,
+    u.id AS author_id,
+    u.avatarca AS author_avatar,
 
     COUNT(p.id) AS posts_count
 
@@ -234,4 +240,16 @@ exports.deleteTop = async (topId) => {
     `;
 
     await db.query(sql, [topId]);
+};
+
+exports.userTopics = async (userId) => {
+    const sql = `
+        SELECT COUNT(id) AS countTopics
+        FROM topics 
+        WHERE author_id = ?
+    `;
+
+    const [rows] = await db.query(sql, [userId]);
+    return rows;
+
 };
