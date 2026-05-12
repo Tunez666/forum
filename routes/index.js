@@ -49,6 +49,12 @@ router.post("/modalCreateTopic", authMiddleware.isAuth, indexController.createTo
 //Отправка соо
 router.post("/reply/:id", authMiddleware.isAuth, indexController.createMess);
 
+//Редактирование соо
+router.post("/edit/:id", authMiddleware.isAuth, indexController.editPost);
+
+//Удаление поста
+router.post("/delete/:id", authMiddleware.isAuth, indexController.delPost);
+
 //like
 router.post("/like", authMiddleware.isAuth, likesController.toggleLike);
 

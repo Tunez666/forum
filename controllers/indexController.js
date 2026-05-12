@@ -113,7 +113,7 @@ exports.showPosts = async (req, res) => {
 
     const reports = await reportsModel.getReportReasons();
 
-    res.render("posts", { userData: user, posts, topicId, error, topic, reports });
+    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId });
 
 };
 
@@ -245,6 +245,30 @@ exports.createTopRep = async (req, res) => {
 
     res.redirect(`/topics`);
 };
+
+exports.editPost = async (req, res) => {
+    const { post_id, content } = req.body;
+    const topicId = req.params.id;
+
+    await postsModel.updatePost({
+        id: post_id,
+        content: content
+    });
+
+    res.redirect(`/topic/${topicId}`);
+};
+
+exports.delPost = async (req, res) => {
+    const { post_id } = req.body;
+    const topicId = req.params.id;
+
+    await postsModel.delPost({
+        id: post_id
+    });
+
+    res.redirect(`/topic/${topicId}`);
+};
+
 
 ////////////////////////////////////////////////////////////////
 ///////////FOOTER

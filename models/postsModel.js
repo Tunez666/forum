@@ -113,3 +113,36 @@ exports.userPosts = async (userId) => {
     return rows;
 
 };
+
+exports.updatePost = async (post) => {
+
+    console.log(post);
+
+    const sql = `
+        UPDATE posts
+        SET content = ?
+        WHERE id = ?
+    `;
+    const [result] = await db.query(sql, [
+        post.content,
+        post.id
+    ]);
+    return result;
+};
+
+exports.delPost = async (post) => {
+
+    console.log(post);
+
+    const sql = `
+        DELETE FROM posts
+        WHERE id = ?
+    `;
+    const [result] = await db.query(sql, [
+        post.id
+    ]);
+    return result;
+};
+        
+
+        
