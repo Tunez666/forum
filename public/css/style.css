@@ -8201,7 +8201,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* HEADER */
 .topic-view__header {
-    background: linear-gradient(135deg, #ff4fd8, #c44bff);
+    background: linear-gradient(135deg, #c03aa3, #c44bff);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 20px;

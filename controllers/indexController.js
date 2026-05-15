@@ -113,7 +113,9 @@ exports.showPosts = async (req, res) => {
 
     const reports = await reportsModel.getReportReasons();
 
-    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId });
+    const categories = await categoriesModel.getParentsCategories();
+
+    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId, categories });
 
 };
 
@@ -268,6 +270,33 @@ exports.delPost = async (req, res) => {
 
     res.redirect(`/topic/${topicId}`);
 };
+
+exports.editTopic = async (req, res) => {
+    const { title, description, category_id, is_closed } = req.body;
+    const topicId = req.params.id;
+
+    await topicsModel.updateTopic({
+        id: topicId,
+        title: title,
+        description: description,
+        category_id: category_id,
+        is_closed: is_closed
+    });
+
+    res.redirect(`/topic/${topicId}`);
+};
+
+/*exports.closeTopic = async (req, res) => {
+    const { topic_id } = req.body;
+    const topicId = req.params.id;
+
+    await topicsModel.closeTopic({
+        id: topic_id
+    });
+
+    res.redirect(`/topic/${topicId}`);
+};*/
+
 
 
 ////////////////////////////////////////////////////////////////

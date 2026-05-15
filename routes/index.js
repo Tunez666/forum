@@ -72,4 +72,9 @@ router.post("/report/:id", authMiddleware.isAuth, indexController.createReport);
 //Модалка жалобы на топик
 router.post("/repTop", authMiddleware.isAuth, indexController.createTopRep);
 
+//Модалка ред топика
+router.post("/modalEditTopic/:id", authMiddleware.isAuth, indexController.editTopic);
+
+//Модалка закрытия топика
+//router.post("/close/:id", authMiddleware.isAuth, indexController.closeTopic);
 module.exports = router;

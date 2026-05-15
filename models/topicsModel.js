@@ -147,19 +147,30 @@ exports.createTopic = async (topic) => {
 
 exports.selectTopic = async (topicId) => {
     const sql = `
-         SELECT 
-            t.id,
-            t.title,
-            t.description,
-            t.created_at,
+        SELECT 
+    t.id,
+    t.title,
+    t.description,
+    t.created_at,
+    t.is_closed,
 
-            u.id AS author_id,
-            u.username AS author_name,
-            u.avatarca AS author_avatar
+    u.id AS author_id,
+    u.username AS author_name,
+    u.avatarca AS author_avatar,
 
-        FROM topics t
-        JOIN users u ON u.id = t.author_id
-        WHERE t.id = ?
+    c.id AS category_id,
+    c.name AS category_name,
+    c.description AS category_description
+
+FROM topics t
+
+JOIN users u 
+    ON u.id = t.author_id
+
+JOIN categories c 
+    ON c.id = t.category_id
+
+WHERE t.id = ?
     `;
 
     const [rows] = await db.query(sql, [topicId]);
@@ -236,7 +247,7 @@ exports.searchTop = async (search) => {
 };
 
 exports.deleteTop = async (topId) => {
- const sql = `
+    const sql = `
         DELETE FROM topics
         WHERE id = ?
     `;
@@ -255,3 +266,37 @@ exports.userTopics = async (userId) => {
     return rows;
 
 };
+
+exports.updateTopic = async (topic) => {
+
+    console.log(topic);
+
+    const sql = `
+        UPDATE topics 
+        SET title = ?, category_id = ?, description = ?, is_closed = ?
+        WHERE id = ?
+    `;
+    const [result] = await db.query(sql, [
+        topic.title,
+        topic.category_id,
+        topic.description,
+        topic.is_closed,
+        topic.id
+    ]);
+    return result;
+};
+
+/*exports.closeTopic = async (topic) => {
+
+    console.log(topic);
+
+    const sql = `
+        UPDATE topics 
+        SET is_closed = 1
+        WHERE id = ?
+    `;
+    const [result] = await db.query(sql, [
+        topic.id
+    ]);
+    return result;
+};*/
