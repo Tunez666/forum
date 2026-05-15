@@ -257,3 +257,40 @@ exports.selectPrUser = async (id) => {
 
     return rows[0];
 };
+
+exports.userPostsByDay = async (id) => {
+
+    const sql = `
+SELECT 
+  DATE(created_at) AS date,
+  COUNT(*) AS posts
+FROM posts
+WHERE author_id = ?
+  AND created_at >= CURDATE() - INTERVAL 7 DAY
+GROUP BY DATE(created_at)
+ORDER BY date;
+    `;
+
+    const [rows] = await db.query(sql, [id]);
+
+    return rows;
+};
+
+exports.userLikesByDay = async (id) => {
+
+    const sql = `
+SELECT 
+  DATE(l.created_at) AS date,
+  COUNT(*) AS likes
+FROM likes l
+JOIN posts p ON p.id = l.post_id
+WHERE p.author_id = ?
+  AND l.created_at >= CURDATE() - INTERVAL 7 DAY
+GROUP BY DATE(l.created_at)
+ORDER BY date;
+    `;
+
+    const [rows] = await db.query(sql, [id]);
+
+    return rows;
+};

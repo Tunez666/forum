@@ -1,0 +1,117 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<div class="user-topics-page">
+
+    <!-- background -->
+    <div class="bg-layer">
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-lines"></div>
+    </div>
+
+    <div class="user-topics-container">
+
+        <!-- header -->
+        <div class="page-header">
+
+            <div>
+                <h1 class="page-title">Мои темы</h1>
+                <p class="page-subtitle">
+                    Темы, которые вы создали на форуме
+                </p>
+            </div>
+
+            <a href="/user/lk" class="btn btn-ghost">
+                ← Профиль
+            </a>
+
+        </div>
+
+        <!-- stats -->
+        <div class="stats-row">
+
+            <div class="stat-card">
+                <div class="stat-label">Всего тем</div>
+                <div class="stat-value"><%= topicsCount %></div>
+            </div>
+
+        </div>
+
+        <!-- list -->
+        <div class="topics-list">
+
+            <% if (topicsData && topicsData.length) { %>
+
+                <% topicsData.forEach(topic => { %>
+
+                    <div class="topic-card">
+
+                        <!-- main -->
+                        <div class="topic-main">
+
+                            <a href="/topic/<%= topic.id %>" class="topic-title">
+                                <%= topic.title %>
+                            </a>
+
+                            <div class="topic-description">
+                                <%= topic.description %>
+                            </div>
+
+                            <div class="topic-actions">
+
+                                <a href="/topic/<%= topic.id %>" class="btn btn-primary">
+                                    Открыть
+                                </a>
+
+                                <a href="/topic/<%= topic.id %>/edit" class="btn btn-primary">
+                                    Редактировать
+                                </a>
+                                <!--
+                                <form method="POST" action="/topic/delete/<%= topic.id %>"
+                                      onsubmit="return confirm('Удалить тему?');">
+                                    <button type="submit" class="btn btn-danger">
+                                        Удалить
+                                    </button>
+                                </form>-->
+
+                            </div>
+
+                        </div>
+
+                        <!-- meta -->
+                        <div class="topic-meta">
+
+                            <div class="meta-badge">
+                                📌 Тема
+                            </div>
+
+                            <div class="meta-date">
+                                <%= new Date(topic.created_at).toLocaleString('ru-RU') %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            <% } else { %>
+
+                <div class="empty-state">
+                    <div class="empty-title">Тем пока нет</div>
+                    <div class="empty-text">Создайте свою первую тему на форуме</div>
+
+                    <a href="/create-topic" class="btn btn-primary">
+                        Создать тему
+                    </a>
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

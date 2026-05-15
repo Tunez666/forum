@@ -143,6 +143,40 @@ exports.delPost = async (post) => {
     ]);
     return result;
 };
+
+exports.userAllPosts = async (userId, limit, offset) => {
+    const sql = `
+SELECT 
+    posts.id AS post_id,
+    posts.content,
+    posts.created_at,
+    posts.updated_at,
+
+    users.id AS author_id,
+    users.username,
+    users.avatarca,
+
+    topics.id AS topic_id,
+    topics.title AS topic_title,
+    topics.description AS topic_description,
+
+    categories.id AS category_id,
+    categories.name AS category_name
+
+FROM posts
+JOIN users ON users.id = posts.author_id
+JOIN topics ON topics.id = posts.topic_id
+JOIN categories ON categories.id = topics.category_id
+
+WHERE posts.author_id = ?
+ORDER BY posts.created_at DESC
+ LIMIT ? OFFSET ?;
+    `;
+
+    const [rows] = await db.query(sql, [userId, limit, offset]);
+    return rows;
+
+};
         
 
         

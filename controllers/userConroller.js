@@ -18,9 +18,94 @@ exports.showUser = async (req, res) => {
     const likes = await likesModel.userLikes(userId);
     const likesCount = likes[0].total_likes;
 
+    const postsRaw = await userModel.userPostsByDay(userId);
+    const likesRaw = await userModel.userLikesByDay(userId);
     const rep = likesCount + topicsCount + postsCount;
-    res.render("user/lk", { userData: user, postsCount, topicsCount, likesCount, rep });
+
+    const formatDate = (d) => {
+        return new Date(d).toISOString().slice(0, 10);
+    };
+
+    const map = {};
+
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+
+        const key = d.toISOString().slice(0, 10);
+
+        map[key] = {
+            day: key,
+            posts: 0,
+            likes: 0
+        };
+    }
+
+    // заполняем посты
+    postsRaw.forEach(r => {
+        const key = formatDate(r.date);
+
+        if (map[key]) {
+            map[key].posts = r.posts;
+        }
+    });
+
+    // заполняем лайки
+    likesRaw.forEach(r => {
+        const key = formatDate(r.date);
+
+        if (map[key]) {
+            map[key].likes = r.likes;
+        }
+    });
+
+    const chartData = Object.values(map);
+
+
+    console.log("postsRaw", postsRaw);
+    console.log("likesRaw", likesRaw);
+    console.log("chartData", chartData);
+    res.render("user/lk", { userData: user, postsCount, topicsCount, likesCount, rep, chartData });
 };
+
+exports.showPosts = async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const posts = await postsModel.userPosts(userId);
+    const postsCount = posts[0].countPosts;
+
+    const postsData = await postsModel.userAllPosts(userId, limit, offset);
+
+    const totalPages = Math.ceil(postsCount / limit);
+
+    res.render("user/userPosts", { userData: user, postsCount, postsData, totalPages, currentPage: page });
+};
+
+exports.showTopics = async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+
+    const userId = req.session.userId;
+    const user = await userModel.selectNormalUser(userId);
+
+    const topics = await topicsModel.userTopics(userId);
+    const topicsCount = topics[0].countTopics;
+
+    const topicsData = await topicsModel.selectUserTopics(userId, limit, offset);
+
+    const totalPages = Math.ceil(topicsCount / limit);
+
+    res.render("user/userTopics", { userData: user, topicsCount, topics, topicsData, totalPages, currentPage: page });
+};
+
 
 exports.showLkUser = async (req, res) => {
     const userId = req.session.userId;
@@ -92,4 +177,14 @@ exports.deleteUserModal = async (req, res) => {
         res.redirect("/");
     });
 
+};
+
+exports.dropPost = async (req, res) => {
+    const { post_id } = req.body;
+
+    await postsModel.delPost({
+        id: post_id
+    });
+
+    res.redirect(`/user/userPosts`);
 };

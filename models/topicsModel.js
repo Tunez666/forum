@@ -300,3 +300,29 @@ exports.updateTopic = async (topic) => {
     ]);
     return result;
 };*/
+
+exports.selectUserTopics = async (userId, limit, offset) => {
+    const sql = `
+        SELECT 
+    t.id,
+    t.title,
+    t.description,
+    t.created_at,
+    t.is_closed,
+
+    c.id AS category_id,
+    c.name AS category_name
+
+FROM topics t
+JOIN categories c ON c.id = t.category_id
+
+WHERE t.author_id = ?
+
+ORDER BY t.created_at DESC
+LIMIT ? OFFSET ?
+    `;
+
+    const [rows] = await db.query(sql, [userId, limit, offset]);
+    return rows;
+
+};
