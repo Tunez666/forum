@@ -22,13 +22,19 @@
                 </svg>
                 Все темы
               </h1>
-              
+              <% if (user) { %>
                 <button class="create-btn" onclick="openCreateTopicModal()">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14" />
                   </svg>
                   Создать тему
                 </button>
+                <% } else { %>
+                      <a href="/login" class="btn btn-primary">
+        Войти для создания темы
+    </a>
+
+<% } %>
                 
             </div>
 
@@ -130,9 +136,11 @@
 
                   <div class="activity-cell">
                     <div class="last-activity">
+                      <% if (user) { %>
                       <button class="topic-view__btn report-btn" onclick="openTopRep(<%= topic.id %>)">
                                         Пожаловаться
                                     </button>
+                                    <% } %>
                     </div>
                   </div>
 
