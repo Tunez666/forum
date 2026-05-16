@@ -194,6 +194,7 @@ exports.showCategories = async (req, res) => {
 //create mess
 exports.createMess = async (req, res) => {
     const { content } = req.body;
+    const patch = req.file ? req.file.filename : null;
     console.log(req.body);
     const userId = req.session.userId;
     const topicId = req.params.id;
@@ -206,6 +207,7 @@ exports.createMess = async (req, res) => {
         topic_id: topicId,
         author_id: userId,
         content: content,
+        patch: patch
 
     });
 

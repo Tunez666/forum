@@ -41,6 +41,7 @@ exports.getPosts = async (topicId, userId) => {
             p.created_at,
             p.updated_at,
             p.author_id,
+            p.patch,
             u.username,
             u.avatarca,
 
@@ -69,14 +70,15 @@ exports.getPosts = async (topicId, userId) => {
 exports.createPost = async (post) => {
 
     const sql = `
-        INSERT INTO posts (topic_id, author_id, content)
-        VALUES (?, ?, ?)
+        INSERT INTO posts (topic_id, author_id, content, patch)
+        VALUES (?, ?, ?, ?)
     `;
 
     const [result] = await db.query(sql, [
         post.topic_id,
         post.author_id,
-        post.content
+        post.content,
+        post.patch
     ]);
 
 
