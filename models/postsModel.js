@@ -66,16 +66,45 @@ exports.getPosts = async (topicId, userId) => {
 };
 
 exports.createPost = async (post) => {
+
     const sql = `
         INSERT INTO posts (topic_id, author_id, content)
         VALUES (?, ?, ?)
     `;
+
     const [result] = await db.query(sql, [
         post.topic_id,
         post.author_id,
         post.content
-
     ]);
+
+
+    const [topicRows] = await db.query(`
+        SELECT author_id
+        FROM topics
+        WHERE id = ?
+    `, [post.topic_id]);
+
+    if (topicRows.length > 0) {
+
+        const topicAuthorId = topicRows[0].author_id;
+
+        // не уведомляем самого себя
+        if (topicAuthorId !== post.author_id) {
+
+            await db.query(`
+                INSERT INTO notifications
+                (user_id, sender_id, type, post_id)
+                VALUES (?, ?, ?, ?)
+            `, [
+                topicAuthorId,
+                post.author_id,
+                'reply',
+                result.insertId
+            ]);
+        }
+    }
+
     return result;
 };
 

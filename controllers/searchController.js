@@ -4,7 +4,7 @@ const topicsModel = require("../models/topicsModel");
 const settingsModel = require("../models/settingsModel");
 const categoriesModel = require("../models/categoriesModel");
 const eventsModel = require("../models/eventsModel");
-
+const notModel = require("../models/notModel");
 
 //SearchTopic
 exports.showSearch = async (req, res) => {
@@ -14,7 +14,7 @@ exports.showSearch = async (req, res) => {
 
     const categories = await categoriesModel.getParentsCategories();
     const user = await userModel.selectNormalUser(userId);
-
+    const notifications = await notModel.userNotifications(userId);
     const topics = await topicsModel.searchTop(search);
 
     res.render("searchResults", {
@@ -22,6 +22,7 @@ exports.showSearch = async (req, res) => {
         selectTopics: topics,
         userData: user,
         sort,
-        search
+        search,
+        notifications
     });
 };

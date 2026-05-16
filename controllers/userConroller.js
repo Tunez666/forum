@@ -2,10 +2,13 @@ const userModel = require("../models/userModel");
 const topicsModel = require("../models/topicsModel");
 const postsModel = require("../models/postsModel");
 const likesModel = require("../models/likesModel");
+const notModel = require("../models/notModel");
 const bcrypt = require("bcrypt");
 
 exports.showUser = async (req, res) => {
     const userId = req.session.userId;
+
+     const notifications = await notModel.userNotifications(userId);
 
     const user = await userModel.selectNormalUser(userId);
 
@@ -21,6 +24,7 @@ exports.showUser = async (req, res) => {
     const postsRaw = await userModel.userPostsByDay(userId);
     const likesRaw = await userModel.userLikesByDay(userId);
     const rep = likesCount + topicsCount + postsCount;
+   
 
     const formatDate = (d) => {
         return new Date(d).toISOString().slice(0, 10);
@@ -65,7 +69,7 @@ exports.showUser = async (req, res) => {
     console.log("postsRaw", postsRaw);
     console.log("likesRaw", likesRaw);
     console.log("chartData", chartData);
-    res.render("user/lk", { userData: user, postsCount, topicsCount, likesCount, rep, chartData });
+    res.render("user/lk", { userData: user, postsCount, topicsCount, likesCount, rep, chartData, notifications });
 };
 
 exports.showPosts = async (req, res) => {
@@ -84,7 +88,9 @@ exports.showPosts = async (req, res) => {
 
     const totalPages = Math.ceil(postsCount / limit);
 
-    res.render("user/userPosts", { userData: user, postsCount, postsData, totalPages, currentPage: page });
+        const notifications = await notModel.userNotifications(userId);
+
+    res.render("user/userPosts", { userData: user, postsCount, postsData, totalPages, currentPage: page, notifications });
 };
 
 exports.showTopics = async (req, res) => {
@@ -103,7 +109,9 @@ exports.showTopics = async (req, res) => {
 
     const totalPages = Math.ceil(topicsCount / limit);
 
-    res.render("user/userTopics", { userData: user, topicsCount, topics, topicsData, totalPages, currentPage: page });
+    const notifications = await notModel.userNotifications(userId);
+
+    res.render("user/userTopics", { userData: user, topicsCount, topics, topicsData, totalPages, currentPage: page, notifications });
 };
 
 
@@ -122,7 +130,8 @@ exports.showLkUser = async (req, res) => {
     const likesCount = likes[0].total_likes;
 
     const rep = likesCount + topicsCount + postsCount;
-    res.render("user/prLk", { userData: user, postsCount, topicsCount, likesCount, rep });
+    const notifications = await notModel.userNotifications(userId);
+    res.render("user/prLk", { userData: user, postsCount, topicsCount, likesCount, rep, notifications });
 };
 
 exports.updateUserInfo = async (req, res) => {

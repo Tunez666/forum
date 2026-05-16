@@ -6,6 +6,7 @@ const categoriesModel = require("../models/categoriesModel");
 const eventsModel = require("../models/eventsModel");
 const reportsModel = require("../models/reportsModel");
 const contactModel = require("../models/contactModel");
+const notModel = require("../models/notModel");
 
 exports.showHome = async (req, res) => {
     const sort = req.query.sort || "new";
@@ -29,6 +30,8 @@ exports.showHome = async (req, res) => {
 
     const topUsers = await postsModel.topPosts();
 
+    const notifications = await notModel.userNotifications(userId);
+
     const eventsRaw = await eventsModel.getLastEvents();
     const events = eventsRaw.map(e => {
         const date = new Date(e.datee);
@@ -40,25 +43,29 @@ exports.showHome = async (req, res) => {
         };
     });
 
-    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user, categories, lastTopics, top: topUsers, events, sort });
+    res.render("index", { usersCount, postsCount, settings: rowsss[0], userData: user, categories, lastTopics, top: topUsers, events, sort, notifications });
 
 };
 
 exports.showRules = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     res.render('rules', {
-        userData: user
+        userData: user,
+        notifications
     });
 };
 
 exports.showPolitic = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+     const notifications = await notModel.userNotifications(userId);
 
     res.render('privacy', {
-        userData: user
+        userData: user,
+        notifications
     });
 };
 
@@ -76,6 +83,7 @@ exports.showTop = async (req, res) => {
     const categories = await categoriesModel.getParentsCategories();
     const user = await userModel.selectNormalUser(userId);
     const reports = await reportsModel.getReportReasons();
+    const notifications = await notModel.userNotifications(userId);
 
     const { topics, total } = await topicsModel.getTopics({
         sort,
@@ -95,7 +103,8 @@ exports.showTop = async (req, res) => {
         categoryId,
         page,
         totalPages,
-        reports
+        reports,
+        notifications
     });
 };
 
@@ -103,6 +112,7 @@ exports.showTop = async (req, res) => {
 exports.showPosts = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     const topicId = req.params.id;
     const posts = await postsModel.getPosts(topicId, userId);
@@ -115,7 +125,7 @@ exports.showPosts = async (req, res) => {
 
     const categories = await categoriesModel.getParentsCategories();
 
-    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId, categories });
+    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId, categories, notifications });
 
 };
 
@@ -135,6 +145,7 @@ exports.showDagTopics = async (req, res) => {
     const user = await userModel.selectNormalUser(userId);
     const reports = await reportsModel.getReportReasons();
     const name = await categoriesModel.getName(categoryId);
+    const notifications = await notModel.userNotifications(userId);
 
     const { topics, total } = await topicsModel.getTopics({
         sort,
@@ -155,12 +166,13 @@ exports.showDagTopics = async (req, res) => {
         page,
         totalPages,
         reports,
-        name
+        name,
+        notifications
     });
 };
 
 exports.showCategories = async (req, res) => {
-
+        const userId = req.session.userId;
     const rows = await categoriesModel.countCategories();
     const categoriesCount = rows[0].countCategories;
 
@@ -173,11 +185,10 @@ exports.showCategories = async (req, res) => {
     const rowssss = await categoriesModel.getCategories();
 
     const categories = await categoriesModel.getAllCategoriesWithStats();
-
-    const userId = req.session.userId;
+    const notifications = await notModel.userNotifications(userId);
     const user = await userModel.selectNormalUser(userId);
 
-    res.render("cat", { categoriesCount, topicsCount, moderCount, categories, userData: user });
+    res.render("cat", { categoriesCount, topicsCount, moderCount, categories, userData: user, notifications });
 };
 
 //create mess
@@ -304,9 +315,11 @@ exports.editTopic = async (req, res) => {
 exports.showContact = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     res.render('contact', {
         userData: user,
+        notifications
     });
 };
 
@@ -328,26 +341,31 @@ exports.contactSend = async (req, res) => {
 exports.showfaq = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
-
+    const notifications = await notModel.userNotifications(userId);
     res.render('faq', {
         userData: user,
+        notifications
     });
 };
 
 exports.showTerms = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     res.render('terms', {
         userData: user,
+        notifications
     });
 };
 
 exports.showAbout = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     res.render('about', {
         userData: user,
+        notifications
     });
 };

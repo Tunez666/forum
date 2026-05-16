@@ -13,17 +13,40 @@ exports.toggleLike = async (userId, postId) => {
             "DELETE FROM likes WHERE user_id = ? AND post_id = ?",
             [userId, postId]
         );
+
         return { liked: false };
+
     } else {
 
         await db.query(
             "INSERT INTO likes (user_id, post_id) VALUES (?, ?)",
             [userId, postId]
         );
+
+        const [postRows] = await db.query(
+            "SELECT author_id FROM posts WHERE id = ?",
+            [postId]
+        );
+
+        const authorId = postRows[0].author_id;
+
+        // НЕ создаём уведомление самому себе
+        if (authorId !== userId) {
+
+            await db.query(`
+                INSERT INTO notifications
+                (user_id, sender_id, type, post_id)
+                VALUES (?, ?, ?, ?)
+            `, [
+                authorId,
+                userId,
+                'like',
+                postId
+            ]);
+        }
+
         return { liked: true };
     }
-
-
 };
 
 exports.userLikes = async (userId) => {

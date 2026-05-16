@@ -4,6 +4,33 @@ function toggleSidebar() {
   sidebar.classList.toggle('closed');
 }
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const notifBtn = document.getElementById('notifBtn');
+    const notifDropdown = document.getElementById('notifDropdown');
+
+    if (notifBtn && notifDropdown) {
+
+        notifBtn.addEventListener('click', () => {
+            notifDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+
+            if (!e.target.closest('.notification-wrapper')) {
+                notifDropdown.classList.remove('active');
+            }
+
+        });
+
+    }
+
+});
+
+
+
 // ============================================
 // Smooth Scroll to Section
 // ============================================
