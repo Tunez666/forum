@@ -39,6 +39,7 @@ exports.getPosts = async (topicId, userId) => {
             p.id,
             p.content,
             p.created_at,
+            p.updated_at,
             p.author_id,
             u.username,
             u.avatarca,
@@ -149,7 +150,7 @@ exports.updatePost = async (post) => {
 
     const sql = `
         UPDATE posts
-        SET content = ?
+        SET content = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
     `;
     const [result] = await db.query(sql, [

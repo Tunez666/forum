@@ -79,42 +79,42 @@
                             <div class="topic-view__footer">
                                 <span class="topic-view__date">
                                     <%= new Date(post.created_at).toLocaleString() %>
-
+                                       <% if (post.updated_at) { %>
+                                    <span>(ред)</span>
+                                    <% } %>
                                 </span>
 
-
-
-                                <div class="topic-view__actions">
-
-                                    <% if (post.author_id===userId) { %>
-                                        <button class="topic-view__btn report-btn"
-                                            onclick='openRed(<%= post.id %>, `<%- post.content %>` )'>
-                                            Редактировать
-                                        </button>
-                                        <% } %>
+                                        <div class="topic-view__actions">
 
                                             <% if (post.author_id===userId) { %>
-                                                <form method="POST" action="/delete/<%= topicId %>"
-                                                    onsubmit="return confirm('Точно удалить?');">
-                                                    <input type="hidden" name="post_id" value="<%= post.id %>">
-                                                    <button class="topic-view__btn like-btn">Удалить</button>
-                                                </form>
+                                                <button class="topic-view__btn report-btn"
+                                                    onclick='openRed(<%= post.id %>, `<%- post.content %>` )'>
+                                                    Редактировать
+                                                </button>
                                                 <% } %>
-                                                    <% if (post.author_id !==userId) { %>
-                                                        <button class="topic-view__btn report-btn"
-                                                            onclick="openReport(<%= post.id %>)">
-                                                            Пожаловаться
-                                                        </button>
-                                                        <% } %>
 
-                                                            <button
-                                                                class="topic-view__btn like-btn <%= post.is_liked ? 'liked' : '' %>"
-                                                                data-post-id="<%= post.id %>">
-                                                                🖤 <span class="like-count">
-                                                                    <%= post.likes_count %>
-                                                                </span>
-                                                            </button>
-                                </div>
+                                                    <% if (post.author_id===userId) { %>
+                                                        <form method="POST" action="/delete/<%= topicId %>"
+                                                            onsubmit="return confirm('Точно удалить?');">
+                                                            <input type="hidden" name="post_id" value="<%= post.id %>">
+                                                            <button class="topic-view__btn like-btn">Удалить</button>
+                                                        </form>
+                                                        <% } %>
+                                                            <% if (post.author_id !==userId) { %>
+                                                                <button class="topic-view__btn report-btn"
+                                                                    onclick="openReport(<%= post.id %>)">
+                                                                    Пожаловаться
+                                                                </button>
+                                                                <% } %>
+
+                                                                    <button
+                                                                        class="topic-view__btn like-btn <%= post.is_liked ? 'liked' : '' %>"
+                                                                        data-post-id="<%= post.id %>">
+                                                                        🖤 <span class="like-count">
+                                                                            <%= post.likes_count %>
+                                                                        </span>
+                                                                    </button>
+                                        </div>
                             </div>
 
                         </div>
