@@ -420,7 +420,7 @@
 
 
   <script>
-    const chartData = <% - JSON.stringify(chartData || []) %>;
+    const chartData = <%- JSON.stringify(chartData || []) %>;
 
     const labels = chartData.map(d => d.day);
     const posts = chartData.map(d => d.posts);

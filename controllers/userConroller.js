@@ -164,6 +164,9 @@ exports.updatePass = async (req, res) => {
     if (newPass !== enterPass) {
         return res.send("Пароли не совпадают");
     }
+    if (newPass.length < 8) {
+        return res.send("Пароль должен содержать минимум 8 символов");
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPass, saltRounds);
 

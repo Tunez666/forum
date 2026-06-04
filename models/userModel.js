@@ -3,7 +3,7 @@ const db = require("../db/index.js");
 exports.createUser = async (user) => {
     const sql = `
         INSERT INTO users (username, email, password, uid, id_r, avatarca)
-        VALUES (?, ?, ?, ?, 2, '1777765795973.jpg')
+        VALUES (?, ?, ?, ?, 2, '1778460387572.jpg')
     `;
     const [result] = await db.query(sql, [
         user.username,
