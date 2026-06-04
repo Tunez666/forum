@@ -9484,3 +9484,75 @@ button.success {
 .contact-link:hover {
     background: #1d4ed8;
 }
+/* ===== PAGINATION REPORTS ===== */
+
+.reports-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.reports-pagination__link {
+    min-width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    color: #fff;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    backdrop-filter: blur(12px);
+
+    transition: all 0.25s ease;
+}
+
+.reports-pagination__link:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 79, 216, 0.9),
+        rgba(168, 85, 247, 0.9)
+    );
+
+    box-shadow:
+        0 0 20px rgba(255, 79, 216, 0.35),
+        0 0 30px rgba(168, 85, 247, 0.25);
+}
+
+.reports-pagination__link--active {
+    background: linear-gradient(
+        135deg,
+        #ff4fd8,
+        #a855f7
+    );
+
+    border-color: transparent;
+
+    box-shadow:
+        0 0 20px rgba(255, 79, 216, 0.45),
+        0 0 30px rgba(168, 85, 247, 0.35);
+
+    font-weight: 700;
+}
+
+.reports-pagination__link--disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.reports-pagination__arrow {
+    font-size: 18px;
+    font-weight: bold;
+}

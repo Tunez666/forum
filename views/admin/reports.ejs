@@ -35,98 +35,130 @@
 
             <!-- Reports Tabs -->
             <div class="reports-tabs">
-                <button class="reports-tab-btn active" onclick="switchReportsTab('posts')">
+                <button class="reports-tab-btn <%= activeTab==='posts' ? 'active' : '' %>"
+                    onclick="switchReportsTab('posts')">
+
                     Жалобы на сообщения
-                </button>
+                    </button>
 
-                <button class="reports-tab-btn" onclick="switchReportsTab('topics')">
-                    Жалобы на темы
-                </button>
+                    <button class="reports-tab-btn <%= activeTab === 'topics' ? 'active' : '' %>"
+                        onclick="switchReportsTab('topics')">
+
+                        Жалобы на темы
+                    </button>
             </div>
-            <div id="posts-tab" class="reports-tab-content active">
-            <div class="reports-list">
-                <% postRep.forEach(report=> { %>
-                    <div class="report-card <%= report.status %>">
-                        <div class="report-top">
-                            <div>
-                                <span class="report-reason">
-                                    <%= report.reason_name %>
+            <div id="posts-tab" class="reports-tab-content <%= activeTab === 'posts' ? 'active' : '' %>">
+                <div class="reports-list">
+                    <% postRep.forEach(report=> { %>
+                        <div class="report-card <%= report.status %>">
+                            <div class="report-top">
+                                <div>
+                                    <span class="report-reason">
+                                        <%= report.reason_name %>
+                                    </span>
+                                    <span class="report-author">Жалоба от <%= report.reporter_name %></span>
+                                    <span class="report-author">на пользователя <%= report.post_author_name %></span>
+                                </div>
+                                <span class="report-date">
+                                    <%= new Date(report.created_at).toLocaleString() %>
                                 </span>
-                                <span class="report-author">Жалоба от <%= report.reporter_name %></span>
-                                <span class="report-author">на пользователя <%= report.post_author_name %></span>
                             </div>
-                            <span class="report-date">
-                                <%= new Date(report.created_at).toLocaleString() %>
-                            </span>
+
+                            <div class="report-message">
+                                <%= report.post_text %>
+                            </div>
+
+                            <div class="report-actions">
+                                <form method="POST" action="/admin/deletePost"
+                                    onsubmit="return confirm('Точно удалить сообщение?');">
+                                    <input type="hidden" name="post_id" value="<%= report.post_id %>">
+                                    <button class="btn btn-danger">Удалить сообщение</button>
+                                </form>
+
+                                <form method="POST" action="/admin/blockUser"
+                                    onsubmit="return confirm('Точно заблокировать?');">
+                                    <input type="hidden" name="post_id" value="<%= report.post_id %>">
+                                    <input type="hidden" name="author_id" value="<%= report.post_author_id %>">
+                                    <input type="hidden" name="reason" value="<%= report.reason_name %>">
+                                    <button class="btn btn-warning">Заблокировать пользователя</button>
+                                </form>
+
+                                <form method="POST" action="/admin/good"
+                                    onsubmit="return confirm('Точно все нормально?');">
+                                    <input type="hidden" name="rep_id" value="<%= report.cId %>">
+                                    <button class="btn btn-success">Нарушений нет </button>
+                                </form>
+                            </div>
                         </div>
+                        <% }) %>
+                </div>
 
-                        <div class="report-message">
-                            <%= report.post_text %>
-                        </div>
+                <div class="reports-pagination">
 
-                        <div class="report-actions">
-                            <form method="POST" action="/admin/deletePost"
-                                onsubmit="return confirm('Точно удалить сообщение?');">
-                                <input type="hidden" name="post_id" value="<%= report.post_id %>">
-                                <button class="btn btn-danger">Удалить сообщение</button>
-                            </form>
+                    <% if(postPage> 1){ %>
+                        <a href="?postPage=<%= postPage - 1 %>&topicPage=<%= topicPage %>#posts-tab"
+                            class="reports-pagination__link reports-pagination__arrow">
+                            ←
+                        </a>
+                        <% } %>
 
-                            <form method="POST" action="/admin/blockUser"
-                                onsubmit="return confirm('Точно заблокировать?');">
-                                <input type="hidden" name="post_id" value="<%= report.post_id %>">
-                                <input type="hidden" name="author_id" value="<%= report.post_author_id %>">
-                                <input type="hidden" name="reason" value="<%= report.reason_name %>">
-                                <button class="btn btn-warning">Заблокировать пользователя</button>
-                            </form>
+                            <% for(let i=1; i <=postPages; i++){ %>
 
-                            <form method="POST" action="/admin/good" onsubmit="return confirm('Точно все нормально?');">
-                                <input type="hidden" name="rep_id" value="<%= report.cId %>">
-                                <button class="btn btn-success">Нарушений нет </button>
-                            </form>
-                        </div>
-                    </div>
-                    <% }) %>
-            </div>
+                                <a href="?postPage=<%= i %>&topicPage=<%= topicPage %>#posts-tab"
+                                    class="reports-pagination__link <%= postPage === i ? 'reports-pagination__link--active' : '' %>">
+                                    <%= i %>
+                                </a>
+
+                                <% } %>
+
+                                    <% if(postPage < postPages){ %>
+                                        <a href="?postPage=<%= postPage + 1 %>&topicPage=<%= topicPage %>#posts-tab"
+                                            class="reports-pagination__link reports-pagination__arrow">
+                                            →
+                                        </a>
+                                        <% } %>
+
+                </div>
             </div>
     </div>
     </div>
 
     <!-- Topic Reports -->
-<div id="topics-tab" class="reports-tab-content">
+    <div id="topics-tab" class="reports-tab-content <%= activeTab === 'topics' ? 'active' : '' %>">
 
-    <div class="reports-list">
+        <div class="reports-list">
 
-        <% topicRep.forEach(report => { %>
+            <% topicRep.forEach(report=> { %>
 
-            <div class="report-card <%= report.status %>">
+                <div class="report-card <%= report.status %>">
 
-                <div class="report-top">
-                    <div>
-                        <span class="report-reason">
-                            <%= report.reason_name %>
-                        </span>
+                    <div class="report-top">
+                        <div>
+                            <span class="report-reason">
+                                <%= report.reason_name %>
+                            </span>
 
-                        <span class="report-author">
-                            Жалоба от <%= report.reporter_name %>
-                        </span>
+                            <span class="report-author">
+                                Жалоба от <%= report.reporter_name %>
+                            </span>
 
-                        <span class="report-author">
-                            на тему <%= report.topic_title %>
+                            <span class="report-author">
+                                на тему <%= report.topic_title %>
+                            </span>
+                        </div>
+
+                        <span class="report-date">
+                            <%= new Date(report.created_at).toLocaleString() %>
                         </span>
                     </div>
 
-                    <span class="report-date">
-                        <%= new Date(report.created_at).toLocaleString() %>
-                    </span>
-                </div>
+                    <div class="report-message">
+                        <%= report.topic_text %>
+                    </div>
 
-                <div class="report-message">
-                    <%= report.topic_text %>
-                </div>
+                    <div class="report-actions">
 
-                <div class="report-actions">
-
-                     <div class="report-actions">
+                        <div class="report-actions">
                             <form method="POST" action="/admin/deleteTopic"
                                 onsubmit="return confirm('Точно удалить сообщение?');">
                                 <input type="hidden" name="top_id" value="<%= report.topic_id %>">
@@ -147,43 +179,81 @@
                             </form>
                         </div>
 
+                    </div>
+
                 </div>
 
-            </div>
+                <% }) %>
 
-        <% }) %>
+        </div>
+
+        <div class="reports-pagination">
+
+            <% if(topicPage> 1){ %>
+                <a href="?postPage=<%= postPage %>&topicPage=<%= topicPage - 1 %>#topics-tab"
+                    class="reports-pagination__link reports-pagination__arrow">
+                    ←
+                </a>
+                <% } %>
+
+                    <% for(let i=1; i <=topicPages; i++){ %>
+
+                        <a href="?postPage=<%= postPage %>&topicPage=<%= i %>#topics-tab"
+                            class="reports-pagination__link <%= topicPage === i ? 'reports-pagination__link--active' : '' %>">
+                            <%= i %>
+                        </a>
+
+                        <% } %>
+
+                            <% if(topicPage < topicPages){ %>
+                                <a href="?postPage=<%= postPage %>&topicPage=<%= topicPage + 1 %>#topics-tab"
+                                    class="reports-pagination__link reports-pagination__arrow">
+                                    →
+                                </a>
+                                <% } %>
+
+        </div>
 
     </div>
 
-</div>
- 
 
     <script>
-    function switchReportsTab(tab) {
 
-        document.querySelectorAll('.reports-tab-btn')
-            .forEach(btn => btn.classList.remove('active'));
+        document.addEventListener('DOMContentLoaded', () => {
 
-        document.querySelectorAll('.reports-tab-content')
-            .forEach(content => content.classList.remove('active'));
+            if (window.location.hash === '#topics-tab') {
+                switchReportsTab('topics');
+            } else {
+                switchReportsTab('posts');
+            }
 
-        if (tab === 'posts') {
-            document.querySelectorAll('.reports-tab-btn')[0]
-                .classList.add('active');
+        });
 
-            document.getElementById('posts-tab')
-                .classList.add('active');
+        function switchReportsTab(tab) {
+
+            document.querySelectorAll('.reports-tab-btn')
+                .forEach(btn => btn.classList.remove('active'));
+
+            document.querySelectorAll('.reports-tab-content')
+                .forEach(content => content.classList.remove('active'));
+
+            if (tab === 'posts') {
+                document.querySelectorAll('.reports-tab-btn')[0]
+                    .classList.add('active');
+
+                document.getElementById('posts-tab')
+                    .classList.add('active');
+            }
+
+            if (tab === 'topics') {
+                document.querySelectorAll('.reports-tab-btn')[1]
+                    .classList.add('active');
+
+                document.getElementById('topics-tab')
+                    .classList.add('active');
+            }
         }
-
-        if (tab === 'topics') {
-            document.querySelectorAll('.reports-tab-btn')[1]
-                .classList.add('active');
-
-            document.getElementById('topics-tab')
-                .classList.add('active');
-        }
-    }
-</script>
+    </script>
 
     <style>
         .admin-reports-page {
@@ -262,40 +332,41 @@
         .btn-success {
             background: #37d67a;
         }
+
         .reports-tabs {
-    display: flex;
-    gap: 14px;
-    margin-top: 30px;
-    margin-bottom: 10px;
-}
+            display: flex;
+            gap: 14px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
 
-.reports-tab-btn {
-    border: 1px solid rgba(255,255,255,.08);
-    background: rgba(255,255,255,.04);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: .25s;
-    font-weight: 600;
-    backdrop-filter: blur(12px);
-}
+        .reports-tab-btn {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .25s;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+        }
 
-.reports-tab-btn:hover {
-    background: rgba(255,255,255,.08);
-    transform: translateY(-2px);
-}
+        .reports-tab-btn:hover {
+            background: rgba(255, 255, 255, .08);
+            transform: translateY(-2px);
+        }
 
-.reports-tab-btn.active {
-    background: linear-gradient(135deg,#ff47d1,#9b5cff);
-    box-shadow: 0 0 20px rgba(255,71,209,.25);
-}
+        .reports-tab-btn.active {
+            background: linear-gradient(135deg, #ff47d1, #9b5cff);
+            box-shadow: 0 0 20px rgba(255, 71, 209, .25);
+        }
 
-.reports-tab-content {
-    display: none;
-}
+        .reports-tab-content {
+            display: none;
+        }
 
-.reports-tab-content.active {
-    display: block;
-}
+        .reports-tab-content.active {
+            display: block;
+        }
     </style>

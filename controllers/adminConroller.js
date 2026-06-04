@@ -115,11 +115,45 @@ exports.showRep = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
 
-    const postRep = await reportsModel.getPostReports();
+    const limit = 5;
 
-    const topicRep = await reportsModel.getTopReports();
+    const postPage = Number(req.query.postPage) || 1;
+    const topicPage = Number(req.query.topicPage) || 1;
 
-    res.render("admin/reports", { userData: user, postRep, topicRep });
+    const postOffset = (postPage - 1) * limit;
+    const topicOffset = (topicPage - 1) * limit;
+
+    const activeTab = req.query.tab || "posts";
+
+    const postRep = await reportsModel.getPostReports(
+        limit,
+        postOffset
+    );
+
+    const topicRep = await reportsModel.getTopReports(
+        limit,
+        topicOffset
+    );
+
+    const totalPostReports =
+        await reportsModel.countPostReports();
+
+    const totalTopicReports =
+        await reportsModel.countTopicReports();
+
+    res.render("admin/reports", {
+        userData: user,
+
+        postRep,
+        topicRep,
+
+        postPage,
+        topicPage,
+
+        postPages: Math.ceil(totalPostReports / limit),
+        topicPages: Math.ceil(totalTopicReports / limit),
+        activeTab
+    });
 };
 
 exports.showUsers = async (req, res) => {

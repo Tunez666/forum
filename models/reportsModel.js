@@ -69,71 +69,96 @@ LIMIT 4;
     return rows;
 };
 
-exports.getPostReports = async () => {
+exports.getPostReports = async (limit, offset) => {
     const [rows] = await db.query(`
-SELECT 
-    c.id AS cId,
-    c.post_id,
-    c.status,
-    c.created_at,
+        SELECT
+            c.id AS cId,
+            c.post_id,
+            c.status,
+            c.created_at,
 
-    p.content AS post_text,
+            p.content AS post_text,
 
-    rr.name AS reason_name,
+            rr.name AS reason_name,
 
-    reporter.username AS reporter_name,
-    author.id AS post_author_id,
-    author.username AS post_author_name
+            reporter.username AS reporter_name,
+            author.id AS post_author_id,
+            author.username AS post_author_name
 
-FROM complaints c
+        FROM complaints c
 
-JOIN posts p ON p.id = c.post_id
-JOIN report_reasons rr ON rr.id = c.reason_id
+        JOIN posts p ON p.id = c.post_id
+        JOIN report_reasons rr ON rr.id = c.reason_id
 
-JOIN users reporter ON reporter.id = c.user_id
-JOIN users author ON author.id = p.author_id
+        JOIN users reporter ON reporter.id = c.user_id
+        JOIN users author ON author.id = p.author_id
 
-WHERE c.post_id IS NOT NULL
+        WHERE c.post_id IS NOT NULL
 
-ORDER BY c.created_at DESC;
-    `);
+        ORDER BY c.created_at DESC
+
+        LIMIT ? OFFSET ?
+    `, [limit, offset]);
 
     return rows;
 };
 
-
-exports.getTopReports = async () => {
-    const [rows] = await db.query(`
-SELECT 
-    c.id AS cId,
-    c.topic_id,
-    c.status,
-    c.created_at,
-
-    t.title AS topic_title,
-    t.description AS topic_text,
-
-    rr.name AS reason_name,
-
-    reporter.username AS reporter_name,
-    author.id AS topic_author_id,
-    author.username AS topic_author_name
-
-FROM complaints c
-
-JOIN topics t ON t.id = c.topic_id
-JOIN report_reasons rr ON rr.id = c.reason_id
-
-JOIN users reporter ON reporter.id = c.user_id
-JOIN users author ON author.id = t.author_id
-
-WHERE c.topic_id IS NOT NULL
-
-ORDER BY c.created_at DESC;
+exports.countPostReports = async () => {
+    const [[row]] = await db.query(`
+        SELECT COUNT(*) AS total
+        FROM complaints
+        WHERE post_id IS NOT NULL
     `);
+
+    return row.total;
+};
+
+
+exports.getTopReports = async (limit, offset) => {
+    const [rows] = await db.query(`
+        SELECT 
+            c.id AS cId,
+            c.topic_id,
+            c.status,
+            c.created_at,
+
+            t.title AS topic_title,
+            t.description AS topic_text,
+
+            rr.name AS reason_name,
+
+            reporter.username AS reporter_name,
+            author.id AS topic_author_id,
+            author.username AS topic_author_name
+
+        FROM complaints c
+
+        JOIN topics t ON t.id = c.topic_id
+        JOIN report_reasons rr ON rr.id = c.reason_id
+
+        JOIN users reporter ON reporter.id = c.user_id
+        JOIN users author ON author.id = t.author_id
+
+        WHERE c.topic_id IS NOT NULL
+
+        ORDER BY c.created_at DESC
+
+        LIMIT ? OFFSET ?
+    `, [limit, offset]);
 
     return rows;
 };
+
+exports.countTopicReports = async () => {
+    const [[row]] = await db.query(`
+        SELECT COUNT(*) AS total
+        FROM complaints
+        WHERE topic_id IS NOT NULL
+    `);
+
+    return row.total;
+};
+
 exports.deleteRep = async (rep_id) => {
     const sql = `
         DELETE FROM complaints
