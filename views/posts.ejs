@@ -48,97 +48,121 @@
             <div class="topic-view__posts">
 
                 <% posts.forEach(post=> { %>
-                    <div class="topic-view__post">
 
-                        <!-- Юзер -->
+                    
 
-                        <div class="topic-view__user">
+                    <div class="topic-view__post" id="post-<%= post.id %>">
 
-                            <a href="/user/prLk/<%= post.author_id %>" class="topic-view__user-link">
-
-                                <img src="/img/avas/<%= post.avatarca %>" class="topic-view__avatar">
-
-                                <div class="topic-view__username">
-                                    <%= post.username %>
+                        <% if(post.parent_id){ %>
+                            <a href="#post-<%= post.parent_id %>" class="reply-preview">
+                                <div class="reply-preview__title">
+                                    Ответ пользователю <%= post.parent_username %>
                                 </div>
 
+                                <div class="reply-preview__text">
+                                    <%= post.parent_content.slice(0, 120) %>
+                                </div>
                             </a>
+                            <% } %>
 
-                        </div>
+                                <!-- Юзер -->
 
+                                <div class="topic-view__user">
 
-                        <!-- Контент -->
-                        <div class="topic-view__content">
+                                    <a href="/user/prLk/<%= post.author_id %>" class="topic-view__user-link">
 
-                            <div class="topic-view__text">
+                                        <img src="/img/avas/<%= post.avatarca %>" class="topic-view__avatar">
 
-                                <%= post.content %>
-
-                                    <% if (post.patch) { %>
-
-                                        <div class="topic-view__image-wrapper">
-
-                                            <img src="/img/uploadsPosts/<%= post.patch %>" class="topic-view__image"
-                                                alt="post image">
-
+                                        <div class="topic-view__username">
+                                            <%= post.username %>
                                         </div>
 
-                                        <% } %>
+                                    </a>
 
-                            </div>
+                                </div>
 
 
+                                <!-- Контент -->
+                                <div class="topic-view__content">
 
-                            <div class="topic-view__footer">
-                                <span class="topic-view__date">
-                                    <%= new Date(post.created_at).toLocaleString() %>
-                                        <% if (post.updated_at) { %>
-                                            <span>(ред)</span>
-                                            <% } %>
-                                </span>
+                                    <div class="topic-view__text">
 
-                                <div class="topic-view__actions">
+                                        <%= post.content %>
 
-                                    <% if (post.author_id===userId) { %>
-                                        <button class="topic-view__btn report-btn"
-                                            onclick='openRed(<%= post.id %>, `<%- post.content %>` )'>
-                                            Редактировать
-                                        </button>
-                                        <% } %>
+                                            <% if (post.patch) { %>
 
-                                            <% if (post.author_id===userId) { %>
-                                                <form method="POST" action="/delete/<%= topicId %>"
-                                                    onsubmit="return confirm('Точно удалить?');">
-                                                    <input type="hidden" name="post_id" value="<%= post.id %>">
-                                                    <button class="topic-view__btn like-btn">Удалить</button>
-                                                </form>
+                                                <div class="topic-view__image-wrapper">
+
+                                                    <img src="/img/uploadsPosts/<%= post.patch %>"
+                                                        class="topic-view__image" alt="post image">
+
+                                                </div>
+
                                                 <% } %>
-                                                    <% if (post.author_id !==userId) { %>
+
+                                    </div>
+
+
+
+                                    <div class="topic-view__footer">
+                                        <span class="topic-view__date">
+                                            <%= new Date(post.created_at).toLocaleString() %>
+                                                <% if (post.updated_at) { %>
+                                                    <span>(ред)</span>
+                                                    <% } %>
+                                        </span>
+
+                                        <div class="topic-view__actions">
+
+                                            <% if (post.author_id !==userId) { %>
+                                                <button class="topic-view__btn report-btn"
+                                                    onclick="replyToPost(<%= post.id %>, '<%= post.username %>')">
+                                                    Ответить
+                                                </button>
+                                                <% } %>
+
+                                                    <% if (post.author_id===userId) { %>
                                                         <button class="topic-view__btn report-btn"
-                                                            onclick="openReport(<%= post.id %>)">
-                                                            Пожаловаться
+                                                            onclick='openRed(<%= post.id %>, `<%- post.content %>` )'>
+                                                            Редактировать
                                                         </button>
                                                         <% } %>
 
-                                                            <button
-                                                                class="topic-view__btn like-btn <%= post.is_liked ? 'liked' : '' %>"
-                                                                data-post-id="<%= post.id %>">
-                                                                🖤 <span class="like-count">
-                                                                    <%= post.likes_count %>
-                                                                </span>
-                                                            </button>
+                                                            <% if (post.author_id===userId) { %>
+                                                                <form method="POST" action="/delete/<%= topicId %>"
+                                                                    onsubmit="return confirm('Точно удалить?');">
+                                                                    <input type="hidden" name="post_id"
+                                                                        value="<%= post.id %>">
+                                                                    <button
+                                                                        class="topic-view__btn like-btn">Удалить</button>
+                                                                </form>
+                                                                <% } %>
+                                                                    <% if (post.author_id !==userId) { %>
+                                                                        <button class="topic-view__btn report-btn"
+                                                                            onclick="openReport(<%= post.id %>)">
+                                                                            Пожаловаться
+                                                                        </button>
+                                                                        <% } %>
 
-                                                            <button
-                                                                class="topic-view__btn dislike-btn <%= post.is_disliked ? 'disliked' : '' %>"
-                                                                data-post-id="<%= post.id %>">
-                                                                👎🏻 <span class="dislike-count">
-                                                                    <%= post.dislikes_count %>
-                                                                </span>
-                                                            </button>
+                                                                            <button
+                                                                                class="topic-view__btn like-btn <%= post.is_liked ? 'liked' : '' %>"
+                                                                                data-post-id="<%= post.id %>">
+                                                                                🖤 <span class="like-count">
+                                                                                    <%= post.likes_count %>
+                                                                                </span>
+                                                                            </button>
+
+                                                                            <button
+                                                                                class="topic-view__btn dislike-btn <%= post.is_disliked ? 'disliked' : '' %>"
+                                                                                data-post-id="<%= post.id %>">
+                                                                                👎🏻 <span class="dislike-count">
+                                                                                    <%= post.dislikes_count %>
+                                                                                </span>
+                                                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
-
-                        </div>
 
                     </div>
                     <% }) %>
@@ -149,6 +173,10 @@
                     <h3 class="topic-view__reply-title">Написать ответ</h3>
 
                     <form method="POST" action="/reply/<%= topicId %>" enctype="multipart/form-data">
+
+                        <input type="hidden" name="parent_post_id" id="parent_post_id">
+
+                        <div id="reply-info" style="display:none;"></div>
 
                         <textarea name="content" class="topic-view__textarea" placeholder="Напиши что-нибудь..."
                             required minlength="3"></textarea>
@@ -168,7 +196,7 @@
                         <% if (typeof error !=='undefined' && error==='empty' ) { %>
                             <div class="error">Сообщение не может быть пустым</div>
                             <% } %>
-                            <p> (JPG, PNG или GIF. Максимум 2MB.)</p>
+                                <p> (JPG, PNG или GIF. Максимум 2MB.)</p>
                                 <button type="submit" class="topic-view__submit">
                                     Отправить
                                 </button>
@@ -348,6 +376,19 @@
 
                 });
 
+            }
+
+            function replyToPost(postId, username) {
+
+                document.getElementById("parent_post_id").value = postId;
+
+                document.getElementById("reply-info").style.display = "block";
+
+                document.getElementById("reply-info").innerHTML =
+                    `Ответ пользователю <strong>${username}</strong>`;
+
+                document.getElementById("reply-textarea")
+                    .focus();
             }
 
             document.addEventListener("DOMContentLoaded", () => {

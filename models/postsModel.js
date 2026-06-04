@@ -48,6 +48,11 @@ exports.getPosts = async (topicId, userId) => {
             COUNT(l.id) AS likes_count,
             COUNT(dl.id) AS dislikes_count,
 
+             parent.id AS parent_id,
+             parent.content AS parent_content,
+
+             parent_user.username AS parent_username,
+
             MAX(CASE WHEN l.user_id = ? THEN 1 ELSE 0 END) AS is_liked,
             MAX(CASE WHEN dl.user_id = ? THEN 1 ELSE 0 END) AS is_disliked
 
@@ -56,6 +61,10 @@ exports.getPosts = async (topicId, userId) => {
         JOIN users u ON u.id = p.author_id
         LEFT JOIN likes l ON l.post_id = p.id
         LEFT JOIN dislikes dl ON dl.post_id = p.id
+        LEFT JOIN posts parent
+        ON p.parent_post_id = parent.id
+        LEFT JOIN users parent_user
+        ON parent.author_id = parent_user.id
 
         WHERE p.topic_id = ?
         AND p.is_deleted = 0
@@ -73,13 +82,14 @@ exports.getPosts = async (topicId, userId) => {
 exports.createPost = async (post) => {
 
     const sql = `
-        INSERT INTO posts (topic_id, author_id, content, patch)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO posts (topic_id, author_id, parent_post_id, content, patch)
+        VALUES (?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(sql, [
         post.topic_id,
         post.author_id,
+        post.parent_post_id,
         post.content,
         post.patch
     ]);
@@ -132,7 +142,7 @@ WHERE created_at >= NOW() - INTERVAL 7 DAY
 GROUP BY DATE(created_at)
 ORDER BY date;
     `;
-     const [rows] = await db.query(sql);
+    const [rows] = await db.query(sql);
     return rows;
 
 };
@@ -212,6 +222,5 @@ ORDER BY posts.created_at DESC
     return rows;
 
 };
-        
 
-        
+
