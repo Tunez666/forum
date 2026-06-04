@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const indexController = require("../controllers/indexController");
 const likesController = require("../controllers/likesController");
+const dislikesController = require("../controllers/dislikesController");
 const searchController = require("../controllers/searchController");
 const authMiddleware = require("../middlewares/auth");
 const upload = require("../middlewares/uploadMess");
@@ -58,6 +59,9 @@ router.post("/delete/:id", authMiddleware.isAuth, indexController.delPost);
 
 //like
 router.post("/like", authMiddleware.isAuth, likesController.toggleLike);
+
+//dislike
+router.post("/dislike", authMiddleware.isAuth, dislikesController.toggleDislike);
 
 //searchRes
 router.get("/searchResults", searchController.showSearch); 

@@ -127,6 +127,14 @@
                                                                     <%= post.likes_count %>
                                                                 </span>
                                                             </button>
+
+                                                            <button
+                                                                class="topic-view__btn dislike-btn <%= post.is_disliked ? 'disliked' : '' %>"
+                                                                data-post-id="<%= post.id %>">
+                                                                👎🏻 <span class="dislike-count">
+                                                                    <%= post.dislikes_count %>
+                                                                </span>
+                                                            </button>
                                 </div>
                             </div>
 
@@ -388,6 +396,60 @@
                             count++;
                         } else {
                             btn.classList.remove("liked");
+                            count--;
+                        }
+
+                        countEl.textContent = count;
+                    });
+                });
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll(".dislike-btn").forEach(btn => {
+                    btn.addEventListener("click", async () => {
+
+                        const postId = btn.dataset.postId;
+
+                        if (!postId) {
+                            console.log("NO POST ID");
+                            return;
+                        }
+
+                        const res = await fetch("/dislike", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ postId })
+                        });
+
+                        let data;
+                        try {
+                            data = await res.json();
+                        } catch (e) {
+                            console.log("INVALID JSON RESPONSE");
+                            return;
+                        }
+
+                        // 💥 ВАЖНО: сначала проверяем авторизацию
+                        if (!res.ok) {
+                            if (data.error === "NOT_AUTH") {
+                                window.location.href = data.redirect;
+                                return;
+                            }
+
+                            console.log("DISLIKE ERROR", data);
+                            return;
+                        }
+
+                        const countEl = btn.querySelector(".dislike-count");
+                        let count = parseInt(countEl.textContent || "0");
+
+                        if (data.disliked) {
+                            btn.classList.add("disliked");
+                            count++;
+                        } else {
+                            btn.classList.remove("disliked");
                             count--;
                         }
 

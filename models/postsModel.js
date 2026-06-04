@@ -46,13 +46,16 @@ exports.getPosts = async (topicId, userId) => {
             u.avatarca,
 
             COUNT(l.id) AS likes_count,
+            COUNT(dl.id) AS dislikes_count,
 
-            MAX(CASE WHEN l.user_id = ? THEN 1 ELSE 0 END) AS is_liked
+            MAX(CASE WHEN l.user_id = ? THEN 1 ELSE 0 END) AS is_liked,
+            MAX(CASE WHEN dl.user_id = ? THEN 1 ELSE 0 END) AS is_disliked
 
         FROM posts p
 
         JOIN users u ON u.id = p.author_id
         LEFT JOIN likes l ON l.post_id = p.id
+        LEFT JOIN dislikes dl ON dl.post_id = p.id
 
         WHERE p.topic_id = ?
         AND p.is_deleted = 0
@@ -62,7 +65,7 @@ exports.getPosts = async (topicId, userId) => {
         ORDER BY p.created_at ASC;
     `;
 
-    const [rows] = await db.query(sql, [userId || 0, topicId]);
+    const [rows] = await db.query(sql, [userId || 0, userId || 0, topicId]);
 
     return rows;
 };
