@@ -83,6 +83,10 @@ exports.showContent = async (req, res) => {
 
 exports.showCategories = async (req, res) => {
 
+    const page = Number(req.query.page) || 1;
+    const limit = 5;
+    const offset = (page - 1) * limit;
+
     const rows = await categoriesModel.countCategories();
     const categoriesCount = rows[0].countCategories;
 
@@ -92,14 +96,34 @@ exports.showCategories = async (req, res) => {
     const rowsss = await userModel.countModerators();
     const moderCount = rowsss[0].countModerators;
 
-    const rowssss = await categoriesModel.getCategories();
+    // Для карточек с пагинацией
+    const categories =
+        await categoriesModel.getAllCategoriesWithStats(
+            limit,
+            offset
+        );
 
-    const categories = await categoriesModel.getAllCategoriesWithStats();
+    // Для select в модалках
+    const allCategories =
+        await categoriesModel.getCategories();
 
     const userId = req.session.userId;
-    const user = await userModel.selectNormalUser(userId);
+    const user =
+        await userModel.selectNormalUser(userId);
 
-    res.render("admin/categories", { categoriesCount, topicsCount, moderCount, categories, userData: user });
+    res.render("admin/categories", {
+        categoriesCount,
+        topicsCount,
+        moderCount,
+
+        categories,
+        allCategories,
+
+        page,
+        pages: Math.ceil(categoriesCount / limit),
+
+        userData: user
+    });
 };
 
 exports.showSett = async (req, res) => {
@@ -161,11 +185,42 @@ exports.showUsers = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
 
-    const users = await userModel.getAllUsers();
+    const limit = 10;
 
-    const bannedUsers = await userModel.getBlocked();
+    const usersPage = Number(req.query.usersPage) || 1;
+    const bannedPage = Number(req.query.bannedPage) || 1;
 
-    res.render("admin/users", { userData: user, users, bannedUsers });
+    const usersOffset = (usersPage - 1) * limit;
+    const bannedOffset = (bannedPage - 1) * limit;
+
+    const users = await userModel.getAllUsers(
+        limit,
+        usersOffset
+    );
+
+    const bannedUsers = await userModel.getBlocked(
+        limit,
+        bannedOffset
+    );
+
+    const totalUsers =
+        await userModel.countUsers();
+
+    const totalBanned =
+        await userModel.countBlocked();
+
+    res.render("admin/users", {
+        userData: user,
+
+        users,
+        bannedUsers,
+
+        usersPage,
+        bannedPage,
+
+        usersPages: Math.ceil(totalUsers / limit),
+        bannedPages: Math.ceil(totalBanned / limit)
+    });
 };
 
 

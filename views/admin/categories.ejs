@@ -161,8 +161,7 @@
                             <button onclick="editCategoryOpen(
 '<%= categorie.id %>',
 '<%= categorie.name %>',
-'<%= categorie.description %>',
-'<%= categorie.parent_id %>'
+'<%= categorie.description %>'
 )">
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -215,6 +214,41 @@
                       </div>
                     </div>
                     <% }) %>
+
+                      <div class="reports-pagination">
+
+                        <% if(page> 1){ %>
+
+                          <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">
+                            ←
+                          </a>
+
+                          <% } %>
+
+                            <% for(let i=1; i <=pages; i++){ %>
+
+                              <a href="?page=<%= i %>" class="reports-pagination__link
+            <%= page === i
+                ? 'reports-pagination__link--active'
+                : '' %>">
+
+                                <%= i %>
+
+                              </a>
+
+                              <% } %>
+
+                                <% if(page < pages){ %>
+
+                                  <a href="?page=<%= page + 1 %>"
+                                    class="reports-pagination__link reports-pagination__arrow">
+                                    →
+                                  </a>
+
+                                  <% } %>
+
+                      </div>
+
               </section>
             </div>
 
@@ -333,17 +367,17 @@
                 <label for="category-name">
                   Название:
                 </label>
-                <input type="text" id="edit-category-name" name="name">
+                <input type="text" id="edit-category-name" name="name" class="form-input">
               </div>
 
               <div class="form-group">
                 <label for="category-description">
                   Описание:
                 </label>
-                <textarea id="edit-category-description" name="description"></textarea>
+                <textarea id="edit-category-description" name="description" class="form-textarea"rows="4"></textarea>
               </div>
             </div>
-            <div class="form-group">
+           <!-- <div class="form-group">
               <label>Текущий родитель:</label>
               <span id="current-parent-name"></span>
             </div>
@@ -351,13 +385,13 @@
               <label for="category-parent">Сменить родительскую категория</label>
               <select id="category-parent-edit" name="parent_id" class="form-input">
                 <option value="">Нет (корневая)</option>
-                <% categories.forEach(categorie=> { %>
+                <% allCategories.forEach(categorie => { %>
                   <option value="<%= categorie.id %>">
                     <%= categorie.name %>
                   </option>
                   <% }) %>
               </select>
-            </div>
+            </div>-->
 
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary">
@@ -477,19 +511,19 @@
             const parentText = document.getElementById('current-parent-name');
 
             // нормализация
-            const pid = parentId && parentId !== 'null' ? String(parentId) : '';
+            //const pid = parentId && parentId !== 'null' ? String(parentId) : '';
 
             // показываем текущего родителя
-            if (!pid) {
+           /* if (!pid) {
               parentText.textContent = 'Нет (корневая)';
             } else {
               const option = document.querySelector(`#category-parent-edit option[value="${pid}"]`);
               parentText.textContent = option ? option.textContent : 'Не найден';
-            }
+            }*/
 
             // ВАЖНО: ставим значение в ПРАВИЛЬНЫЙ select
-            const select = document.getElementById('category-parent-edit');
-            if (select) select.value = pid;
+           // const select = document.getElementById('category-parent-edit');
+            //if (select) select.value = pid;
 
             // открыть модалку
             document.getElementById('edit-category-modal').classList.add('active');

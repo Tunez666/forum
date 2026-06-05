@@ -24,6 +24,16 @@ exports.countUser = async () => {
     return rows;
 };
 
+exports.countBlocked = async () => {
+
+    const [rows] = await db.query(`
+        SELECT COUNT(*) AS total
+        FROM blocked_users
+    `);
+
+    return rows[0].total;
+};
+
 exports.selectUser = async (email) => {
 
     const sql = `
@@ -139,39 +149,63 @@ exports.isUserBlocked = async (userId) => {
     return rows.length > 0;
 };
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (limit, offset) => {
+
     const [rows] = await db.query(`
-        SELECT 
+        SELECT
             users.*,
             roles.name AS role_name
         FROM users
-        LEFT JOIN roles ON users.id_r = roles.id
-        
-    `);
+        LEFT JOIN roles
+            ON users.id_r = roles.id
+
+        ORDER BY users.created_at DESC
+
+        LIMIT ?
+        OFFSET ?
+    `, [limit, offset]);
 
     return rows;
 };
 
-exports.getBlocked = async () => {
+exports.countUsers = async () => {
+
     const [rows] = await db.query(`
-        SELECT 
+        SELECT COUNT(id) AS countUsers
+        FROM users
+    `);
+
+    return rows[0].countUsers;
+};
+
+exports.getBlocked = async (limit, offset) => {
+
+    const [rows] = await db.query(`
+        SELECT
             bu.id,
             bu.reason,
             bu.created_at,
             bu.expires_at,
 
             u.id AS user_id,
-            u.username AS username,
+            u.username,
 
             b.id AS blocked_by_id,
             b.username AS blocked_by_username
 
         FROM blocked_users bu
 
-        LEFT JOIN users u ON bu.user_id = u.id
-        LEFT JOIN users b ON bu.blocked_by_id = b.id
-        
-    `);
+        LEFT JOIN users u
+            ON bu.user_id = u.id
+
+        LEFT JOIN users b
+            ON bu.blocked_by_id = b.id
+
+        ORDER BY bu.created_at DESC
+
+        LIMIT ?
+        OFFSET ?
+    `, [limit, offset]);
 
     return rows;
 };

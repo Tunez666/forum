@@ -30,11 +30,17 @@ exports.createBackup = (req, res) => {
 };
 
 exports.getBackups = async (req, res) => {
+
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
+
     const dir = path.join(__dirname, "../backups");
 
+    const page = Number(req.query.page) || 1;
+    const limit = 10;
+
     const files = fs.readdirSync(dir).map(file => {
+
         const fullPath = path.join(dir, file);
         const stats = fs.statSync(fullPath);
 
@@ -44,9 +50,31 @@ exports.getBackups = async (req, res) => {
             size: (stats.size / 1024).toFixed(2) + " KB",
             createdAt: stats.birthtime
         };
+
     });
 
-    res.render("admin/backups", { backups: files, userData: user });
+    // сортировка по дате (новые сверху)
+    files.sort((a, b) => b.createdAt - a.createdAt);
+
+    const totalBackups = files.length;
+
+    const backupsPages =
+        Math.ceil(totalBackups / limit);
+
+    const offset =
+        (page - 1) * limit;
+
+    const backups =
+        files.slice(offset, offset + limit);
+
+    res.render("admin/backups", {
+        backups,
+        userData: user,
+
+        page,
+        backupsPages
+    });
+
 };
 
 exports.downloadBackup = (req, res) => {

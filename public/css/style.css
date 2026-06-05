@@ -9556,3 +9556,105 @@ button.success {
     font-size: 18px;
     font-weight: bold;
 }
+
+.topics-list-container {
+    background: rgba(20, 20, 30, 0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.topics-list-header {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr 1fr 2fr;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.topic-list-row {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr 1fr 2fr;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.2s ease;
+}
+
+.topic-list-row:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+.topic-list-row:last-child {
+    border-bottom: none;
+}
+.topic-title-text {
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+.stat-number {
+    font-family: monospace;
+    font-size: 0.95rem;
+}
+.activity-cell {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.activity-cell .btn,
+.activity-cell a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 14px;
+    border-radius: 10px;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+.activity-cell .btn-download {
+    background: rgba(6, 214, 214, 0.15);
+    border: 1px solid rgba(6, 214, 214, 0.4);
+    color: #06d6d6;
+}
+
+.activity-cell .btn-download:hover {
+    transform: translateY(-2px);
+    background: rgba(6, 214, 214, 0.25);
+}
+.activity-cell .btn-restore {
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #a855f7
+    );
+
+    border: none;
+    color: white;
+}
+
+.activity-cell .btn-restore:hover {
+    transform: translateY(-2px);
+}
+.activity-cell .btn-delete {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+}
+
+.activity-cell .btn-delete:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: translateY(-2px);
+}
+

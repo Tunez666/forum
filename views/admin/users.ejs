@@ -90,7 +90,7 @@
                                                     <button class="btn btn-danger">Админ</button>
                                                 </form>
 
-                                               <form method="POST" action="/admin/nowUser"
+                                                <form method="POST" action="/admin/nowUser"
                                                     onsubmit="return confirm('Точно снять роль?');">
                                                     <input type="hidden" name="user_id" value="<%= user.id %>">
                                                     <button class="btn btn-danger">Снять роль</button>
@@ -107,6 +107,40 @@
                                 </tbody>
                             </table>
                         </div>
+  
+                        <div class="reports-pagination">
+
+                            <% if(usersPage> 1){ %>
+
+                                <a href="?usersPage=<%= usersPage - 1 %>&bannedPage=<%= bannedPage %>#users-tab"
+                                    class="reports-pagination__link reports-pagination__arrow">
+                                    ←
+                                </a>
+
+                                <% } %>
+
+                                    <% for(let i=1; i <=usersPages; i++){ %>
+
+                                        <a href="?usersPage=<%= i %>&bannedPage=<%= bannedPage %>#users-tab" class="reports-pagination__link
+            <%= usersPage === i ? 'reports-pagination__link--active' : '' %>">
+
+                                            <%= i %>
+
+                                        </a>
+
+                                        <% } %>
+
+                                            <% if(usersPage < usersPages){ %>
+
+                                                <a href="?usersPage=<%= usersPage + 1 %>&bannedPage=<%= bannedPage %>#users-tab"
+                                                    class="reports-pagination__link reports-pagination__arrow">
+                                                    →
+                                                </a>
+
+                                                <% } %>
+
+                        </div>
+
                     </section>
 
                     <!-- BANNED -->
@@ -145,7 +179,7 @@
                                                 <%= user.blocked_by_username %>
                                             </td>
                                             <td>
-                                               <form method="POST" action="/admin/unblock"
+                                                <form method="POST" action="/admin/unblock"
                                                     onsubmit="return confirm('Точно разблокировать?');">
                                                     <input type="hidden" name="user_id" value="<%= user.user_id %>">
                                                     <button class="btn btn-danger">Разблокировать</button>
@@ -156,22 +190,81 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="reports-pagination">
+
+                            <% if(bannedPage> 1){ %>
+
+                                <a href="?usersPage=<%= usersPage %>&bannedPage=<%= bannedPage - 1 %>#banned-tab"
+                                    class="reports-pagination__link reports-pagination__arrow">
+                                    ←
+                                </a>
+
+                                <% } %>
+
+                                    <% for(let i=1; i <=bannedPages; i++){ %>
+
+                                        <a href="?usersPage=<%= usersPage %>&bannedPage=<%= i %>#banned-tab" class="reports-pagination__link
+            <%= bannedPage === i ? 'reports-pagination__link--active' : '' %>">
+
+                                            <%= i %>
+
+                                        </a>
+
+                                        <% } %>
+
+                                            <% if(bannedPage < bannedPages){ %>
+
+                                                <a href="?usersPage=<%= usersPage %>&bannedPage=<%= bannedPage + 1 %>#banned-tab"
+                                                    class="reports-pagination__link reports-pagination__arrow">
+                                                    →
+                                                </a>
+
+                                                <% } %>
+
+                        </div>
+
                     </section>
 
                 </div>
             </main>
             <script>
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.addEventListener('DOMContentLoaded', () => {
 
-                        btn.classList.add('active');
+                    if (window.location.hash === '#banned-tab') {
+                        switchTab('banned');
+                    } else {
+                        switchTab('users');
+                    }
 
-                        document.getElementById(btn.dataset.tab + '-tab').classList.add('active');
-                    });
                 });
 
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+
+                    btn.addEventListener('click', () => {
+
+                        switchTab(btn.dataset.tab);
+
+                    });
+
+                });
+
+                function switchTab(tab) {
+
+                    document.querySelectorAll('.tab-btn')
+                        .forEach(btn => btn.classList.remove('active'));
+
+                    document.querySelectorAll('.tab-content')
+                        .forEach(content => content.classList.remove('active'));
+
+                    document.querySelector(`[data-tab="${tab}"]`)
+                        .classList.add('active');
+
+                    document.getElementById(`${tab}-tab`)
+                        .classList.add('active');
+
+                    window.location.hash = `${tab}-tab`;
+                }
                 function setModerator(id) {
                     console.log('set moderator', id);
                 }
