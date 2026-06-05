@@ -62,6 +62,40 @@
 
       </section>
 
+      <div class="reports-pagination">
+
+    <% if(page > 1){ %>
+
+        <a href="?page=<%= page - 1 %>"
+           class="reports-pagination__link reports-pagination__arrow">
+            ←
+        </a>
+
+    <% } %>
+
+    <% for(let i = 1; i <= categoriesPages; i++){ %>
+
+        <a href="?page=<%= i %>"
+           class="reports-pagination__link
+           <%= page === i ? 'reports-pagination__link--active' : '' %>">
+
+            <%= i %>
+
+        </a>
+
+    <% } %>
+
+    <% if(page < categoriesPages){ %>
+
+        <a href="?page=<%= page + 1 %>"
+           class="reports-pagination__link reports-pagination__arrow">
+            →
+        </a>
+
+    <% } %>
+
+</div>
+
     </div>
 
   </div>

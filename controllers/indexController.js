@@ -172,7 +172,13 @@ exports.showDagTopics = async (req, res) => {
 };
 
 exports.showCategories = async (req, res) => {
-        const userId = req.session.userId;
+
+    const userId = req.session.userId;
+
+    const limit = 6;
+    const page = Number(req.query.page) || 1;
+    const offset = (page - 1) * limit;
+
     const rows = await categoriesModel.countCategories();
     const categoriesCount = rows[0].countCategories;
 
@@ -182,13 +188,33 @@ exports.showCategories = async (req, res) => {
     const rowsss = await userModel.countModerators();
     const moderCount = rowsss[0].countModerators;
 
-    const rowssss = await categoriesModel.getCategories();
+    const categories =
+        await categoriesModel.getAllCategoriesWithStats(
+            limit,
+            offset
+        );
 
-    const categories = await categoriesModel.getAllCategoriesWithStats();
-    const notifications = await notModel.userNotifications(userId);
-    const user = await userModel.selectNormalUser(userId);
+    const notifications =
+        await notModel.userNotifications(userId);
 
-    res.render("cat", { categoriesCount, topicsCount, moderCount, categories, userData: user, notifications });
+    const user =
+        await userModel.selectNormalUser(userId);
+
+    res.render("cat", {
+        categoriesCount,
+        topicsCount,
+        moderCount,
+
+        categories,
+
+        page,
+        categoriesPages: Math.ceil(
+            categoriesCount / limit
+        ),
+
+        userData: user,
+        notifications
+    });
 };
 
 //create mess
