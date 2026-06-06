@@ -16,116 +16,113 @@
 
         <div class="content-grid">
 
-          <div class="content-main">
 
-            <div class="section-header">
-              <h2 class="section-title">
-                <span class="title-icon">★</span>
-                Разделы
-              </h2>
+             <!-- Categories List -->
+        <section class="data-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <h2>Список Разделов</h2>
+              <span class="section-count"><%= parentsCount %> Родительских разделов</span>
             </div>
+          </div>
 
-            <section class="categories-grid">
+          <!-- Category Blocks: ОДИН блок на КАЖДЫЙ родительский раздел (parent_id IS NULL) -->
+          <div class="category-blocks" id="categories-container">
+            <% parents.forEach(categorie => { %>
+              <%
+                // дочерние разделы текущего родителя (со статистикой)
+                const children = categorie.children || [];
+              %>
+              <!-- ROOT CATEGORY BLOCK -->
+              <div class="category-block" data-category-id="<%= categorie.id %>">
 
-              <% categories.forEach(category=> { %>
+                <!-- Parent header row -->
+                <div class="category-parent-row">
+                  <div class="category-parent-info">
+                    <div class="category-icon-wrapper" style="--category-color: #06d6d6;">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                      </svg>
+                    </div>
+                    <div class="category-parent-text">
+                      <h3 class="category-name"><%= categorie.name %></h3>
+                      <p class="category-description"><%= categorie.description %></p>
+                    </div>
+                  </div>
 
-                <% if (!category.parent_id) { %>
-
-                  <div class="category-card">
-
-                    <a href="/dagTopics/<%= category.id %>" class="category-main-link">
-
-                      <div class="category-icon">
-                        <span>📁</span>
+                  <div class="category-parent-meta">
+                    <div class="category-stats">
+                      <div class="category-stat">
+                        <span class="stat-num"><%= categorie.topics_count %></span>
+                        <span class="stat-lbl">Тем</span>
                       </div>
-
-                      <div class="category-info">
-                        <div class="category-name">
-                          <%= category.name %>
-                        </div>
-
-                        <div class="category-desc">
-                          <%= category.description || 'Нет описания' %>
-                        </div>
+                      <div class="category-stat">
+                        <span class="stat-num"><%= categorie.posts_count %></span>
+                        <span class="stat-lbl">Постов</span>
                       </div>
+                    </div>
+                  </div>
+                </div>
 
-                      <div class="category-stats">
-                        <span>Тем: <%= category.topics_count || 0 %></span>
-                        <span>Постов: <%= category.posts_count || 0 %></span>
-                      </div>
+                <!-- CHILDREN -->
+                <% if (children.length) { %>
+                  <div class="category-children">
+                    <div class="children-title">Дочерние разделы</div>
 
-                      <div class="category-arrow">
-                        →
-                      </div>
-
-                    </a>
-
-                    <!-- Дочерние категории -->
-
-                    <div class="category-children">
-
-                        <div class="children-title">
-                          Подразделы
-                        </div>
-
-                        <% categories .filter(child=> child.parent_id === category.id)
-                          .forEach(child => { %>
-
-                          <a href="/dagTopics/<%= child.id %>" class="child-category">
-
-                            <span class="child-category-icon">
-                              ↳
-                            </span>
-
-                            <span>
-                              <%= child.name %>
-                            </span>
-
+                    <div class="children-list">
+                      <% children.forEach(child => { %>
+                        <div class="child-row" data-category-id="<%= child.id %>">
+                          <a href="/dagTopics/<%= child.id %>" class="child-main">
+                            <span class="child-line">└</span>
+                            <span class="child-name"><%= child.name %></span>
                           </a>
 
-                          <% }) %>
-
-                      </div>
-
-                    </div>
-
-                    <% } %>
-
+                          <div class="child-meta">
+                            <div class="category-stats">
+                              <div class="category-stat">
+                                <span class="stat-num"><%= child.topics_count %></span>
+                                <span class="stat-lbl">Тем</span>
+                              </div>
+                              <div class="category-stat">
+                                <span class="stat-num"><%= child.posts_count %></span>
+                                <span class="stat-lbl">Постов</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       <% }) %>
-            </section>
-
-            <div class="reports-pagination">
-
-              <% if(page> 1){ %>
-
-                <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">
-                  ←
-                </a>
-
+                    </div>
+                  </div>
+                <% } else { %>
+                  <div class="category-children">
+                    <div class="children-empty">Нет дочерних разделов</div>
+                  </div>
                 <% } %>
 
-                  <% for(let i=1; i <=categoriesPages; i++){ %>
-
-                    <a href="?page=<%= i %>" class="reports-pagination__link
-           <%= page === i ? 'reports-pagination__link--active' : '' %>">
-
-                      <%= i %>
-
-                    </a>
-
-                    <% } %>
-
-                      <% if(page < categoriesPages){ %>
-
-                        <a href="?page=<%= page + 1 %>" class="reports-pagination__link reports-pagination__arrow">
-                          →
-                        </a>
-
-                        <% } %>
-
-            </div>
-
+              </div>
+              <!-- /ROOT CATEGORY BLOCK -->
+            <% }) %>
           </div>
+
+          <!-- Pagination -->
+          <div class="reports-pagination">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">←</a>
+            <% } %>
+
+            <% for (let i = 1; i <= pages; i++) { %>
+              <a href="?page=<%= i %>" class="reports-pagination__link <%= page === i ? 'reports-pagination__link--active' : '' %>"><%= i %></a>
+            <% } %>
+
+            <% if (page < pages) { %>
+              <a href="?page=<%= page + 1 %>" class="reports-pagination__link reports-pagination__arrow">→</a>
+            <% } %>
+          </div>
+        </section>
+
+            
+
+          
 
         </div>
 

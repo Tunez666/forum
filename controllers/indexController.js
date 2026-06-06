@@ -175,8 +175,8 @@ exports.showCategories = async (req, res) => {
 
     const userId = req.session.userId;
 
-    const limit = 6;
     const page = Number(req.query.page) || 1;
+    const limit = 5;
     const offset = (page - 1) * limit;
 
     const rows = await categoriesModel.countCategories();
@@ -187,7 +187,14 @@ exports.showCategories = async (req, res) => {
 
     const rowsss = await userModel.countModerators();
     const moderCount = rowsss[0].countModerators;
-
+    const parentRows = await categoriesModel.countParents();
+    const parentsCount = parentRows[0].countParents;
+    const parents = await categoriesModel.getParentsWithStats(limit, offset);
+     for (const parent of parents) {
+            parent.children = await categoriesModel.getSubcategories(parent.id);
+        }
+    
+    const allParents = await categoriesModel.getParentsCategories();
     const categories =
         await categoriesModel.getAllCategoriesWithStats(
             limit,
@@ -199,19 +206,18 @@ exports.showCategories = async (req, res) => {
 
     const user =
         await userModel.selectNormalUser(userId);
-
     res.render("cat", {
         categoriesCount,
         topicsCount,
         moderCount,
-
+        parentsCount,
+        parentsCount,
+        parents,
+        allParents,
+        parentRows,
         categories,
-
         page,
-        categoriesPages: Math.ceil(
-            categoriesCount / limit
-        ),
-
+        pages: Math.ceil(parentsCount / limit),
         userData: user,
         notifications
     });

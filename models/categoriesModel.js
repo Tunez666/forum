@@ -29,24 +29,29 @@ exports.getCategories = async () => {
 
 exports.getParentsWithStats = async (limit, offset) => {
     const [rows] = await db.query(`
-        SELECT
-            c.id,
-            c.name,
-            c.description,
-            c.parent_id,
-            COUNT(DISTINCT t.id) AS topics_count,
-            COUNT(p.id)         AS posts_count
-        FROM categories c
-        LEFT JOIN topics t
-            ON t.category_id = c.id
-        LEFT JOIN posts p
-            ON p.topic_id = t.id
-            AND p.is_deleted = 0
-        WHERE c.parent_id IS NULL
-        GROUP BY c.id, c.name, c.description, c.parent_id
-        ORDER BY c.id DESC
-        LIMIT ?
-        OFFSET ?
+      SELECT 
+    c.id,
+    c.name,
+    c.description,
+
+    COUNT(DISTINCT t.id) AS topics_count,
+    COUNT(DISTINCT p.id) AS posts_count
+
+FROM categories c
+
+LEFT JOIN categories sc 
+    ON sc.parent_id = c.id
+
+LEFT JOIN topics t 
+    ON t.category_id = sc.id
+
+LEFT JOIN posts p 
+    ON p.topic_id = t.id AND p.is_deleted = 0
+
+WHERE c.parent_id IS NULL
+
+GROUP BY c.id, c.name, c.description
+LIMIT ? OFFSET ?;
     `, [limit, offset]);
 
     return rows;
@@ -200,3 +205,4 @@ WHERE id = ?
 
     return rows[0];
 };
+
