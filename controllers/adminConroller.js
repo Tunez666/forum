@@ -87,6 +87,7 @@ exports.showCategories = async (req, res) => {
     const limit = 5;
     const offset = (page - 1) * limit;
 
+    // Счётчики для верхних карточек
     const rows = await categoriesModel.countCategories();
     const categoriesCount = rows[0].countCategories;
 
@@ -96,32 +97,29 @@ exports.showCategories = async (req, res) => {
     const rowsss = await userModel.countModerators();
     const moderCount = rowsss[0].countModerators;
 
-    // Для карточек с пагинацией
-    const categories =
-        await categoriesModel.getAllCategoriesWithStats(
-            limit,
-            offset
-        );
+    const parentRows = await categoriesModel.countParents();
+    const parentsCount = parentRows[0].countParents;
 
-    // Для select в модалках
-    const allCategories =
-        await categoriesModel.getCategories();
+    const parents = await categoriesModel.getParentsWithStats(limit, offset);
+
+    for (const parent of parents) {
+        parent.children = await categoriesModel.getSubcategories(parent.id);
+    }
+
+    const allParents = await categoriesModel.getParentsCategories();
 
     const userId = req.session.userId;
-    const user =
-        await userModel.selectNormalUser(userId);
+    const user = await userModel.selectNormalUser(userId);
 
     res.render("admin/categories", {
         categoriesCount,
         topicsCount,
         moderCount,
-
-        categories,
-        allCategories,
-
+        parents,
+        parentsCount,
+        allParents,
         page,
-        pages: Math.ceil(categoriesCount / limit),
-
+        pages: Math.ceil(parentsCount / limit),
         userData: user
     });
 };

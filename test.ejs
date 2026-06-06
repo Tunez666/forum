@@ -1,4 +1,631 @@
-/* ============================================
+<% function getParentName(parentId) { if (!parentId) return 'Нет (корневая)' ; const parent=categories.find(c=> c.id ===
+  parentId);
+  return parent ? parent.name : 'Не найден';
+  }
+  %>
+  <%- include('../partials/head') %>
+
+    <body class="categories-page">
+      <!-- Animated Background -->
+      <div class="bg-layer">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-lines"></div>
+      </div>
+
+      <!-- Admin Layout -->
+      <div class="admin-layout">
+        <%- include('../partials/adminSidebar') %>
+
+          <!-- Main Content -->
+          <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+              <div class="header-left">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                </button>
+                <div class="page-title">
+                  <h1>Управление разделами</h1>
+                  <span class="page-subtitle">Создание и редактирование разделов форума</span>
+                </div>
+              </div>
+
+              <div class="header-right">
+
+                <a href="/" class="btn-back-site">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  На сайт
+                </a>
+
+                <button class="btn btn-primary" onclick="showAddCategoryModal()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Создать раздел
+                </button>
+              </div>
+            </header>
+
+            <!-- Content -->
+            <div class="admin-content">
+              <!-- Stats Cards -->
+              <section class="stats-row">
+                <div class="stat-card">
+                  <div class="stat-icon cyan">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">
+                      <%= categoriesCount %>
+                    </span>
+                    <span class="stat-label">Всего разделоы</span>
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">
+                      <%= topicsCount %>
+                    </span>
+                    <span class="stat-label">Тем в разделах</span>
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-icon pink">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">
+                      <%= moderCount %>
+                    </span>
+                    <span class="stat-label">Модераторов</span>
+                  </div>
+                </div>
+
+                <!--<div class="stat-card">
+            <div class="stat-icon green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">89%</span>
+              <span class="stat-label">Активность</span>
+            </div>
+          </div>-->
+              </section>
+
+              <!-- Categories List -->
+              <section class="data-section">
+                <div class="section-header">
+                  <div class="section-title-group">
+                    <h2>Список Разделов</h2>
+                    <span class="section-count">
+                      <%= categoriesCount %> Разделов
+                    </span>
+                  </div>
+                  <div class="section-actions">
+                    <!--<div class="search-box">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <input type="text" placeholder="Поиск категорий..." class="search-input" id="search-categories">
+                    </div>-->
+                  </div>
+                </div>
+
+                <!-- Categories Grid -->
+                <div class="categories-grid list-view" id="categories-container">
+                  <% categories.forEach(categorie=> { %>
+                    <!-- Category Card 1 -->
+                    <div class="category-card" data-category-id="<%= categorie.id %>">
+                      <div class="category-card-header">
+                        <div class="category-icon-wrapper" style="--category-color: #06d6d6;">
+                          📁
+                        </div>
+                        <div class="category-actions-dropdown">
+                          <button class="dropdown-trigger" onclick="toggleDropdown(event, this)">
+                            ::
+                          </button>
+                          <div class="dropdown-menu">
+                            <button onclick="editCategoryOpen(
+'<%= categorie.id %>',
+'<%= categorie.name %>',
+'<%= categorie.description %>',
+'<%= categorie.parent_id %>'
+)">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                              Редактировать
+                            </button>
+                            <button class="danger" onclick="openDeleteCategoryModal('<%= categorie.id %>')">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path
+                                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              </svg>
+                              Удалить
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="category-card-body">
+                        <h3 class="category-name">
+                          <%= categorie.name %>
+                        </h3>
+                        <p class="category-description">
+                          <%= categorie.description %>
+                        </p>
+                      </div>
+
+                      <!-- CHILDREN -->
+                      <div class="category-children">
+                        <% const children=allCategories.filter(c=> c.parent_id === categorie.id); %>
+
+                          <% if (children.length) { %>
+                            <div class="children-title">Подразделы</div>
+
+                            <div class="children-list">
+                              <% children.forEach(child=> { %>
+
+                                <a href="/dagTopics/<%= child.id %>" class="child-category">
+                                  <span class="child-line">└</span>
+                                  <span class="child-name">
+                                    <%= child.name %>
+                                  </span>
+                                </a>
+
+                                <% }) %>
+                            </div>
+                            <% } %>
+                      </div>
+
+                      <div class="category-card-footer">
+                        <div class="category-stat">
+                          <span>Тем: <%= categorie.topics_count %></span>
+                        </div>
+
+                        <div class="category-stat">
+                          <span>Постов: <%= categorie.posts_count %></span>
+                        </div>
+                      </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+            <% }) %>
+
+              <div class="reports-pagination">
+
+                <% if(page> 1){ %>
+
+                  <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">
+                    ←
+                  </a>
+
+                  <% } %>
+
+                    <% for(let i=1; i <=pages; i++){ %>
+
+                      <a href="?page=<%= i %>" class="reports-pagination__link
+            <%= page === i
+                ? 'reports-pagination__link--active'
+                : '' %>">
+
+                        <%= i %>
+
+                      </a>
+
+                      <% } %>
+
+                        <% if(page < pages){ %>
+
+                          <a href="?page=<%= page + 1 %>" class="reports-pagination__link reports-pagination__arrow">
+                            →
+                          </a>
+
+                          <% } %>
+
+              </div>
+
+              </section>
+      </div>
+
+
+      </main>
+      </div>
+
+      <!-- Add Category Modal -->
+      <div class="modal-overlay" id="category-modal">
+        <div class="modal-content modal-lg">
+          <div class="modal-header">
+            <h3 id="modal-title">Создать раздел</h3>
+            <button class="modal-close" onclick="closeCategoryModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <form id="category-form" method='POST' action='/admin/modalAddCategories'>
+            <input type="hidden" id="category-id" name="id">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="category-name">Название раздела *</label>
+                <input type="text" id="category-name" name="name" class="form-input"
+                  placeholder="Например: Общее обсуждение" required>
+              </div>
+
+              <div class="form-group">
+                <label for="category-description">Описание</label>
+                <textarea id="category-description" name="description" class="form-textarea"
+                  placeholder="Краткое описание категории..." rows="3"></textarea>
+              </div>
+
+              <!--=<div class="form-row">
+            <div class="form-group">
+              <label for="category-color">Цвет</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="category-color" name="color" class="color-input" value="#a855f7">
+                <input type="text" id="category-color-text" class="form-input color-text" value="#a855f7" placeholder="#a855f7">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="category-icon">Иконка</label>
+              <select id="category-icon" name="icon" class="form-input">
+                <option value="folder">Папка</option>
+                <option value="chat">Чат</option>
+                <option value="star">Звезда</option>
+                <option value="user">Пользователь</option>
+                <option value="globe">Глобус</option>
+                <option value="lock">Замок</option>
+                <option value="play">Плей</option>
+                <option value="monitor">Монитор</option>
+              </select>
+            </div>
+          </div>-->
+
+              <div class="form-row">
+                <!--<div class="form-group">
+              <label for="category-order">Порядок</label>
+              <input type="number" id="category-order" name="order" class="form-input" value="1" min="1">
+            </div>-->
+
+                <div class="form-group">
+                  <label for="category-parent">Родительская категория</label>
+                  <select id="category-parent-add" name="parent_id" class="form-input">
+                    <option value="">Нет (корневая)</option>
+                    <% allCategories.forEach(categorie=> { %>
+                      <option value="<%= categorie.id %>">
+                        <%= categorie.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                Сохранить
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
+                Отмена
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Category Modal -->
+      <div class="modal-overlay" id="edit-category-modal">
+        <div class="modal-content modal-lg">
+          <div class="modal-header">
+            <h3 id="modal-title">Редактировать категорию</h3>
+            <button class="modal-close" onclick="closeEditCategoryModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <form id="edit-category-form" method='POST' action='/admin/modalEditCategories'>
+            <input type="hidden" id="edit-category-id" name="id">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="category-name">
+                  Название:
+                </label>
+                <input type="text" id="edit-category-name" name="name" class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label for="category-description">
+                  Описание:
+                </label>
+                <textarea id="edit-category-description" name="description" class="form-textarea" rows="4"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Текущий родитель:</label>
+              <span id="current-parent-name"></span>
+            </div>
+            <div class="form-group">
+              <label for="category-parent">Сменить родительскую категория</label>
+              <select id="category-parent-edit" name="parent_id" class="form-input">
+                <option value="">Нет (корневая)</option>
+                <% allCategories.forEach(categorie=> { %>
+                  <option value="<%= categorie.id %>">
+                    <%= categorie.name %>
+                  </option>
+                  <% }) %>
+              </select>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                Сохранить
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()">
+                Отмена
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Delete Category Modal -->
+      <div class="modal-overlay" id="delete-category-modal" onclick="closeModalOnOverlayDelete(event)">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Удаление категории</h3>
+
+            <button class="modal-close" onclick="closeDeleteCategoryModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <form method="POST" action="/admin/modalDeleteCategory">
+            <input type="hidden" id="delete-category-id" name="id">
+
+            <p style="margin-bottom: 20px;">
+              Вы уверены, что хотите удалить категорию?
+            </p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Удалить
+              </button>
+
+              <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">
+                Отмена
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+
+        // ============================================
+        // Dropdown Menu
+        // ============================================
+
+        function toggleDropdown(event, button) {
+          event.stopPropagation();
+
+          const dropdown = button.closest('.category-actions-dropdown');
+          const isOpen = dropdown.classList.contains('open');
+
+          // Закрыть все другие dropdown
+          document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
+            d.classList.remove('open');
+          });
+
+          // Если не было открыто - открыть
+          if (!isOpen) {
+            dropdown.classList.add('open');
+          }
+        }
+
+        // Закрытие при клике вне dropdown
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.category-actions-dropdown')) {
+            document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
+              d.classList.remove('open');
+            });
+          }
+        });
+        // ============================================
+        // Category Modal
+        // ============================================
+        function showAddCategoryModal() {
+
+          document.getElementById('category-form').reset();
+          document.getElementById('category-modal').classList.add('active');
+        }
+
+        function closeCategoryModal() {
+          document.getElementById('category-modal').classList.remove('active');
+        }
+
+        // Синхронизация color picker и текстового поля
+        document.getElementById('category-color').addEventListener('input', function () {
+          document.getElementById('category-color-text').value = this.value;
+        });
+
+        document.getElementById('category-color-text').addEventListener('input', function () {
+          if (/^#[0-9A-Fa-f]{6}$/.test(this.value)) {
+            document.getElementById('category-color').value = this.value;
+          }
+        });
+
+        function editCategoryOpen(id, name, description, parentId) {
+          try {
+            document.getElementById('edit-category-id').value = id;
+            document.getElementById('edit-category-name').value = name || '';
+            document.getElementById('edit-category-description').value = description || '';
+
+            const parentText = document.getElementById('current-parent-name');
+
+            // нормализация
+            //const pid = parentId && parentId !== 'null' ? String(parentId) : '';
+
+            // показываем текущего родителя
+            /* if (!pid) {
+               parentText.textContent = 'Нет (корневая)';
+             } else {
+               const option = document.querySelector(`#category-parent-edit option[value="${pid}"]`);
+               parentText.textContent = option ? option.textContent : 'Не найден';
+             }*/
+
+            // ВАЖНО: ставим значение в ПРАВИЛЬНЫЙ select
+            // const select = document.getElementById('category-parent-edit');
+            //if (select) select.value = pid;
+
+            // открыть модалку
+            document.getElementById('edit-category-modal').classList.add('active');
+
+          } catch (err) {
+            console.error('editCategoryOpen error:', err);
+          }
+        }
+        function closeEditCategoryModal() {
+          document.getElementById('edit-category-modal').classList.remove('active');
+        }
+
+        // Открыть модалку удаления
+        function openDeleteCategoryModal(id) {
+          document.getElementById('delete-category-id').value = id;
+          document.getElementById('delete-category-modal').classList.add('active');
+        }
+
+        // Закрыть модалку
+        function closeDeleteCategoryModal() {
+          document.getElementById('delete-category-modal').classList.remove('active');
+        }
+
+        // Закрытие по клику на overlay
+        function closeModalOnOverlayDelete(event) {
+          if (event.target.id === 'delete-category-modal') {
+            closeDeleteCategoryModal();
+          }
+        }
+
+        // ============================================
+        // Form Submit
+        // ============================================
+        document.getElementById('category-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(this);
+          const data = Object.fromEntries(formData);
+
+          // TODO: Отправить данные на сервер
+          console.log('Category data:', data);
+
+          if (currentCategoryId) {
+            showToast('Категория обновлена', 'success');
+          } else {
+            showToast('Категория создана', 'success');
+          }
+
+          closeCategoryModal();
+        });
+
+        // ============================================
+        // Search
+        // ============================================
+        document.getElementById('search-categories').addEventListener('input', function (e) {
+          const query = e.target.value.toLowerCase();
+          const cards = document.querySelectorAll('.category-card');
+
+          cards.forEach(card => {
+            const name = card.querySelector('.category-name').textContent.toLowerCase();
+            const desc = card.querySelector('.category-description').textContent.toLowerCase();
+
+            if (name.includes(query) || desc.includes(query)) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+
+        // Закрытие модалок по клику на оверлей
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+          overlay.addEventListener('click', function (e) {
+            if (e.target === this) {
+              this.classList.remove('active');
+            }
+          });
+        });
+
+        // Закрытие модалок по Escape
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+              modal.classList.remove('active');
+            });
+          }
+        });
+      </script>
+    </body>
+
+    </html>
+
+    /* ============================================
    StarRail Station Forum - Unique Design
    Фиолетово-розовая тема с неоновым свечением
    ============================================ */
@@ -4006,231 +4633,303 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
    Не изменяет глобальные классы!
    ============================================ */
 
-/* ============================================================
-   Categories — Block layout (root category + children)
-   Namespace: .categories-page  (no global class overrides)
-   ============================================================ */
+/* ============================================
+   CATEGORIES PAGE NAMESPACE
+   Все стили только внутри .categories-page
+   ============================================ */
 
-/* Список блоков */
-.categories-page .category-blocks {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1.5rem;
+/* Stats Row */
+.categories-page .stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* ---------- ROOT CATEGORY BLOCK ---------- */
-.categories-page .category-block {
-  position: relative;
-  background: rgba(25, 15, 35, 0.5);
+@media (max-width: 1200px) {
+  .categories-page .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .categories-page .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.categories-page .stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  overflow: visible;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.categories-page .category-block:hover {
-  border-color: rgba(6, 214, 214, 0.35);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+.categories-page .stat-card:hover {
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
 }
 
-/* Когда в блоке открыт dropdown — поднимаем его над остальными */
-.categories-page .category-block:has(.category-actions-dropdown.open) {
-  z-index: 100;
-}
-
-/* ---------- Шапка родительского раздела ---------- */
-.categories-page .category-parent-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem;
-}
-
-.categories-page .category-parent-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.categories-page .category-icon-wrapper {
-  flex-shrink: 0;
+.categories-page .stat-icon {
   width: 48px;
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  color: var(--category-color, #06d6d6);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--category-color, #06d6d6) 22%, transparent) 0%,
-    color-mix(in srgb, var(--category-color, #06d6d6) 6%, transparent) 100%
-  );
-}
-
-.categories-page .category-parent-text {
-  min-width: 0;
-}
-
-.categories-page .category-name {
-  font-family: var(--font-display, inherit);
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.25rem;
-}
-
-.categories-page .category-description {
-  font-family: var(--font-display, inherit);
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.25rem;
-}
-
-.categories-page .category-description {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Правая часть шапки: статистика + дропдаун */
-.categories-page .category-parent-meta {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
   flex-shrink: 0;
 }
 
-/* ---------- Статистика ---------- */
-.categories-page .category-stats {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+.categories-page .stat-icon.cyan {
+  background: linear-gradient(135deg, rgba(6, 214, 214, 0.2) 0%, rgba(6, 214, 214, 0.05) 100%);
+  color: var(--accent-cyan);
 }
 
-.categories-page .category-stat {
+.categories-page .stat-icon.purple {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.05) 100%);
+  color: var(--accent-purple);
+}
+
+.categories-page .stat-icon.pink {
+  background: linear-gradient(135deg, rgba(255, 45, 117, 0.2) 0%, rgba(255, 45, 117, 0.05) 100%);
+  color: var(--accent-pink);
+}
+
+.categories-page .stat-icon.green {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.05) 100%);
+  color: var(--accent-green);
+}
+
+.categories-page .stat-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  line-height: 1.1;
 }
 
-.categories-page .category-stat .stat-num {
-  font-size: 1rem;
+.categories-page .stat-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
-.categories-page .category-stat .stat-lbl {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.categories-page .stat-label {
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
-/* ---------- Дочерние разделы ---------- */
-.categories-page .category-children {
-  padding: 0 1.25rem 1.25rem;
+/* Data Section */
+.categories-page .data-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.categories-page .children-title {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.categories-page .children-empty {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-style: italic;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.categories-page .children-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Строка дочернего раздела */
-.categories-page .child-row {
-  position: relative;
+.categories-page .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
 }
 
-.categories-page .child-row:hover {
-  background: rgba(6, 214, 214, 0.06);
-  border-color: rgba(6, 214, 214, 0.25);
-}
-
-.categories-page .child-main {
+.categories-page .section-title-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: var(--text-secondary);
-  min-width: 0;
-  flex: 1;
-  transition: color 0.2s ease;
+  gap: 0.75rem;
 }
 
-.categories-page .child-row:hover .child-main {
+.categories-page .section-title-group h2 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-.categories-page .child-line {
-  opacity: 0.4;
-  flex-shrink: 0;
+.categories-page .section-count {
+  padding: 0.25rem 0.75rem;
+  background: rgba(168, 85, 247, 0.15);
+  border-radius: var(--radius-xl);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-purple);
 }
 
-.categories-page .child-name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.categories-page .child-meta {
+.categories-page .section-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex-shrink: 0;
 }
 
-.categories-page .child-meta .category-stats {
-  gap: 1rem;
+/* Search Box */
+.categories-page .search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.categories-page .child-meta .category-stat .stat-num {
+.categories-page .search-box svg {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.categories-page .search-input {
+  padding: 0.625rem 1rem 0.625rem 2.75rem;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
   font-size: 0.875rem;
+  min-width: 200px;
+  transition: all 0.3s ease;
 }
 
-/* ---------- Dropdown (родитель + дети) ---------- */
+.categories-page .search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.categories-page .search-input:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+/* View Toggle */
+.categories-page .view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.categories-page .view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categories-page .view-btn:hover {
+  color: var(--text-primary);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.categories-page .view-btn.active {
+  color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.2);
+}
+
+/* Categories Grid */
+.categories-page .categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.categories-page .categories-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding: 0;
+}
+
+.categories-page .categories-grid.list-view .category-card {
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-color);
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.categories-page .categories-grid.list-view .category-card:last-child {
+  border-bottom: none;
+}
+
+/* Category Card */
+.categories-page .category-card {
+  position: relative;
+  background: rgba(25, 15, 35, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: visible;
+  transition: all 0.3s ease;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.categories-page .category-card:hover {
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.categories-page .category-card.locked {
+  opacity: 0.7;
+}
+
+.categories-page .category-card.locked:hover {
+  opacity: 1;
+}
+
+.categories-page .category-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+}
+
+.categories-page .category-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--category-color) 20%, transparent) 0%, color-mix(in srgb, var(--category-color) 5%, transparent) 100%);
+  border-radius: var(--radius-md);
+  color: var(--category-color);
+}
+
+.categories-page .locked-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  background: rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+/* Dropdown - контейнер с относительным позиционированием */
 .categories-page .category-actions-dropdown {
   position: relative;
+  z-index: 10;
 }
 
 .categories-page .dropdown-trigger {
@@ -4253,11 +4952,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: rgba(168, 85, 247, 0.2);
 }
 
+/* Dropdown меню - абсолютное позиционирование относительно родителя */
 .categories-page .dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
-  min-width: 190px;
+  left: 0;
+  min-width: 180px;
   padding: 0.5rem;
   background: rgba(20, 12, 30, 0.98);
   border: 1px solid var(--accent-purple);
@@ -4271,10 +4971,17 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   backdrop-filter: blur(10px);
 }
 
+/* Открытое состояние */
 .categories-page .category-actions-dropdown.open .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+/* При наведении на открытый dropdown - увеличиваем z-index карточки */
+.categories-page .category-card:has(.category-actions-dropdown.open) {
+  z-index: 100;
+  overflow: visible;
 }
 
 .categories-page .dropdown-menu button {
@@ -4311,45 +5018,437 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
 
+.categories-page .dropdown-menu button.danger {
+  color: var(--text-secondary);
+}
+
 .categories-page .dropdown-menu button.danger:hover {
   background: rgba(239, 68, 68, 0.15);
   color: var(--accent-red);
 }
 
-/* ---------- Адаптив ---------- */
-@media (max-width: 768px) {
-  .categories-page .category-blocks {
-    padding: 1rem;
-  }
+.categories-page .dropdown-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.5rem 0;
+}
 
-  .categories-page .category-parent-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.875rem;
-  }
+.categories-page .category-card-body {
+  padding: 0 1.25rem 1rem;
+}
 
-  .categories-page .category-parent-meta {
-    width: 100%;
-    justify-content: space-between;
-  }
+.categories-page .category-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.375rem;
+}
 
-  .categories-page .child-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.625rem;
-  }
+.categories-page .category-description {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-  .categories-page .child-meta {
-    width: 100%;
-    justify-content: space-between;
-  }
+.categories-page .category-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(10, 6, 18, 0.3);
+  border-top: 1px solid var(--border-color);
+}
 
-  /* На узких экранах меню детей не должно уезжать вправо за экран */
-  .categories-page .child-meta .dropdown-menu {
-    right: auto;
-    left: 0;
+.categories-page .category-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.categories-page .category-stat svg {
+  opacity: 0.7;
+}
+
+.categories-page .category-order {
+  margin-left: auto;
+  padding: 0.125rem 0.5rem;
+  background: rgba(168, 85, 247, 0.15);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+}
+
+/* Modal Styles */
+.categories-page .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.categories-page .modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.categories-page .modal-content {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.categories-page .modal.active .modal-content {
+  transform: scale(1) translateY(0);
+}
+
+.categories-page .modal-lg {
+  max-width: 600px;
+}
+
+.categories-page .modal-sm {
+  max-width: 400px;
+}
+
+.categories-page .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.categories-page .modal-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.categories-page .modal-header.danger {
+  border-bottom-color: rgba(239, 68, 68, 0.3);
+}
+
+.categories-page .modal-header.danger h3 {
+  color: var(--accent-red);
+}
+
+.categories-page .modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categories-page .modal-close:hover {
+  color: var(--text-primary);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.categories-page .modal-body {
+  padding: 1.5rem;
+}
+
+.categories-page .modal-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.categories-page .modal-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  justify-content: flex-end;
+}
+
+/* Form Styles */
+.categories-page .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.categories-page .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.categories-page .form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.categories-page .form-input,
+.categories-page .form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.categories-page .form-input::placeholder,
+.categories-page .form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.categories-page .form-input:focus,
+.categories-page .form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+.categories-page .form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.categories-page select.form-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a89bc2' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 3rem;
+}
+
+/* Color Picker */
+.categories-page .color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.categories-page .color-picker {
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.categories-page .color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.categories-page .color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.categories-page .color-value {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Icon Grid */
+.categories-page .icon-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+}
+
+.categories-page .icon-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categories-page .icon-option:hover {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+.categories-page .icon-option.selected {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: white;
+}
+
+/* Permission Toggle */
+.categories-page .permission-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(25, 15, 35, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+}
+
+.categories-page .permission-toggle:last-child {
+  margin-bottom: 0;
+}
+
+.categories-page .permission-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.categories-page .permission-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.categories-page .permission-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Toggle Switch */
+.categories-page .toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.categories-page .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.categories-page .toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(25, 15, 35, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.categories-page .toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  top: 2px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.categories-page .toggle-switch input:checked + .toggle-slider {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.categories-page .toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: white;
+}
+
+/* Toast */
+.categories-page .toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.categories-page .toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
+
+.categories-page .toast.success {
+  border-color: var(--accent-green);
+}
+
+.categories-page .toast.success .toast-icon {
+  color: var(--accent-green);
+}
+
+.categories-page .toast.error {
+  border-color: var(--accent-red);
+}
+
+.categories-page .toast.error .toast-icon {
+  color: var(--accent-red);
+}
+
+.categories-page .toast-message {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
 /* ============================================
    TOPICS PAGE NAMESPACE
    Все стили только внутри .topics-page
@@ -9316,4 +10415,3 @@ button.success {
 .child-name {
   font-size: 14px;
 }
-

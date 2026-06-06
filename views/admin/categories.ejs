@@ -1,617 +1,502 @@
-<% function getParentName(parentId) { if (!parentId) return 'Нет (корневая)' ; const parent=categories.find(c=> c.id ===
-  parentId);
-  return parent ? parent.name : 'Не найден';
-  }
-  %>
-  <%- include('../partials/head') %>
+<%- include('../partials/head') %>
 
-    <body class="categories-page">
-      <!-- Animated Background -->
-      <div class="bg-layer">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <div class="grid-lines"></div>
-      </div>
+<body class="categories-page">
+  <!-- Animated Background -->
+  <div class="bg-layer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
 
-      <!-- Admin Layout -->
-      <div class="admin-layout">
-        <%- include('../partials/adminSidebar') %>
+  <!-- Admin Layout -->
+  <div class="admin-layout">
+    <%- include('../partials/adminSidebar') %>
 
-          <!-- Main Content -->
-          <main class="admin-main">
-            <!-- Header -->
-            <header class="admin-header">
-              <div class="header-left">
-                <button class="sidebar-toggle" onclick="toggleSidebar()">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                  </svg>
-                </button>
-                <div class="page-title">
-                  <h1>Управление разделами</h1>
-                  <span class="page-subtitle">Создание и редактирование разделов форума</span>
-                </div>
-              </div>
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="admin-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="page-title">
+            <h1>Управление разделами</h1>
+            <span class="page-subtitle">Создание и редактирование разделов форума</span>
+          </div>
+        </div>
 
-              <div class="header-right">
+        <div class="header-right">
+          <a href="/" class="btn-back-site">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+            На сайт
+          </a>
 
-                <a href="/" class="btn-back-site">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                  На сайт
-                </a>
+          <button class="btn btn-primary" onclick="showAddCategoryModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Создать раздел
+          </button>
+        </div>
+      </header>
 
-                <button class="btn btn-primary" onclick="showAddCategoryModal()">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
-                  Создать раздел
-                </button>
-              </div>
-            </header>
-
-            <!-- Content -->
-            <div class="admin-content">
-              <!-- Stats Cards -->
-              <section class="stats-row">
-                <div class="stat-card">
-                  <div class="stat-icon cyan">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                    </svg>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">
-                      <%= categoriesCount %>
-                    </span>
-                    <span class="stat-label">Всего разделоы</span>
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-icon purple">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">
-                      <%= topicsCount %>
-                    </span>
-                    <span class="stat-label">Тем в разделах</span>
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-icon pink">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">
-                      <%= moderCount %>
-                    </span>
-                    <span class="stat-label">Модераторов</span>
-                  </div>
-                </div>
-
-                <!--<div class="stat-card">
-            <div class="stat-icon green">
+      <!-- Content -->
+      <div class="admin-content">
+        <!-- Stats Cards -->
+        <section class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon cyan">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
               </svg>
             </div>
             <div class="stat-info">
-              <span class="stat-value">89%</span>
-              <span class="stat-label">Активность</span>
+              <span class="stat-value"><%= categoriesCount %></span>
+              <span class="stat-label">Всего разделов</span>
             </div>
-          </div>-->
-              </section>
+          </div>
 
-              <!-- Categories List -->
-              <section class="data-section">
-                <div class="section-header">
-                  <div class="section-title-group">
-                    <h2>Список Разделов</h2>
-                    <span class="section-count">
-                      <%= categoriesCount %> Разделов
-                    </span>
-                  </div>
-                  <div class="section-actions">
-                    <!--<div class="search-box">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value"><%= topicsCount %></span>
+              <span class="stat-label">Тем в разделах</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon pink">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value"><%= moderCount %></span>
+              <span class="stat-label">Модераторов</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Categories List -->
+        <section class="data-section">
+          <div class="section-header">
+            <div class="section-title-group">
+              <h2>Список Разделов</h2>
+              <span class="section-count"><%= parentsCount %> Родительских разделов</span>
+            </div>
+          </div>
+
+          <!-- Category Blocks: ОДИН блок на КАЖДЫЙ родительский раздел (parent_id IS NULL) -->
+          <div class="category-blocks" id="categories-container">
+            <% parents.forEach(categorie => { %>
+              <%
+                // дочерние разделы текущего родителя (со статистикой)
+                const children = categorie.children || [];
+              %>
+              <!-- ROOT CATEGORY BLOCK -->
+              <div class="category-block" data-category-id="<%= categorie.id %>">
+
+                <!-- Parent header row -->
+                <div class="category-parent-row">
+                  <div class="category-parent-info">
+                    <div class="category-icon-wrapper" style="--category-color: #06d6d6;">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                       </svg>
-                      <input type="text" placeholder="Поиск категорий..." class="search-input" id="search-categories">
-                    </div>-->
+                    </div>
+                    <div class="category-parent-text">
+                      <h3 class="category-name"><%= categorie.name %></h3>
+                      <p class="category-description"><%= categorie.description %></p>
+                    </div>
+                  </div>
+
+                  <div class="category-parent-meta">
+                    <div class="category-stats">
+                      <div class="category-stat">
+                        <span class="stat-num"><%= categorie.topics_count %></span>
+                        <span class="stat-lbl">Тем</span>
+                      </div>
+                      <div class="category-stat">
+                        <span class="stat-num"><%= categorie.posts_count %></span>
+                        <span class="stat-lbl">Постов</span>
+                      </div>
+                    </div>
+
+                    <div class="category-actions-dropdown">
+                      <button class="dropdown-trigger" onclick="toggleDropdown(event, this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="1" />
+                          <circle cx="12" cy="5" r="1" />
+                          <circle cx="12" cy="19" r="1" />
+                        </svg>
+                      </button>
+                      <div class="dropdown-menu">
+                        <button onclick="editCategoryOpen('<%= categorie.id %>', '<%= categorie.name %>', '<%= categorie.description %>', '<%= categorie.parent_id %>')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                          Редактировать
+                        </button>
+                        <button class="danger" onclick="openDeleteCategoryModal('<%= categorie.id %>')">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          </svg>
+                          Удалить
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Categories Grid -->
-                <div class="categories-grid list-view" id="categories-container">
-                  <% categories.forEach(categorie=> { %>
-                    <!-- Category Card 1 -->
-                    <div class="category-card" data-category-id="1">
-                      <div class="category-card-header">
-                        <div class="category-icon-wrapper" style="--category-color: #06d6d6;">
-                          📁
-                        </div>
-                        <div class="category-actions-dropdown">
-                          <button class="dropdown-trigger" onclick="toggleDropdown(event, this)">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                              stroke-width="2">
-                              <circle cx="12" cy="12" r="1" />
-                              <circle cx="12" cy="5" r="1" />
-                              <circle cx="12" cy="19" r="1" />
-                            </svg>
-                          </button>
-                          <div class="dropdown-menu">
-                            <button onclick="editCategoryOpen(
-'<%= categorie.id %>',
-'<%= categorie.name %>',
-'<%= categorie.description %>'
-)">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                              </svg>
-                              Редактировать
-                            </button>
-                            <button class="danger" onclick="openDeleteCategoryModal('<%= categorie.id %>')">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <polyline points="3 6 5 6 21 6" />
-                                <path
-                                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                              </svg>
-                              Удалить
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="category-card-body">
-                        <h3 class="category-name">
-                          <%= categorie.name %>
-                        </h3>
-                        <p class="category-description">
-                          <%= categorie.description %>
-                        </p>
-                      </div>
-                      <div class="category-card-footer">
-                        <div class="category-stat">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                          </svg>
-                          <span>
-                            <%= categorie.topics_count %>
-                          </span>
-                        </div>
-                        <div class="category-stat">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path
-                              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                          </svg>
-                          <span>
-                            <%= categorie.posts_count %>
-                          </span>
-                        </div>
-                        <span class="category-order">#1</span>
-                      </div>
-                    </div>
-                    <% }) %>
+                <!-- CHILDREN -->
+                <% if (children.length) { %>
+                  <div class="category-children">
+                    <div class="children-title">Дочерние разделы</div>
 
-                      <div class="reports-pagination">
-
-                        <% if(page> 1){ %>
-
-                          <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">
-                            ←
+                    <div class="children-list">
+                      <% children.forEach(child => { %>
+                        <div class="child-row" data-category-id="<%= child.id %>">
+                          <a href="/dagTopics/<%= child.id %>" class="child-main">
+                            <span class="child-line">└</span>
+                            <span class="child-name"><%= child.name %></span>
                           </a>
 
-                          <% } %>
+                          <div class="child-meta">
+                            <div class="category-stats">
+                              <div class="category-stat">
+                                <span class="stat-num"><%= child.topics_count %></span>
+                                <span class="stat-lbl">Тем</span>
+                              </div>
+                              <div class="category-stat">
+                                <span class="stat-num"><%= child.posts_count %></span>
+                                <span class="stat-lbl">Постов</span>
+                              </div>
+                            </div>
 
-                            <% for(let i=1; i <=pages; i++){ %>
-
-                              <a href="?page=<%= i %>" class="reports-pagination__link
-            <%= page === i
-                ? 'reports-pagination__link--active'
-                : '' %>">
-
-                                <%= i %>
-
-                              </a>
-
-                              <% } %>
-
-                                <% if(page < pages){ %>
-
-                                  <a href="?page=<%= page + 1 %>"
-                                    class="reports-pagination__link reports-pagination__arrow">
-                                    →
-                                  </a>
-
-                                  <% } %>
-
-                      </div>
-
-              </section>
-            </div>
-
-
-          </main>
-      </div>
-
-      <!-- Add Category Modal -->
-      <div class="modal-overlay" id="category-modal">
-        <div class="modal-content modal-lg">
-          <div class="modal-header">
-            <h3 id="modal-title">Создать раздел</h3>
-            <button class="modal-close" onclick="closeCategoryModal()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <form id="category-form" method='POST' action='/admin/modalAddCategories'>
-            <input type="hidden" id="category-id" name="id">
-
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="category-name">Название раздела *</label>
-                <input type="text" id="category-name" name="name" class="form-input"
-                  placeholder="Например: Общее обсуждение" required>
-              </div>
-
-              <div class="form-group">
-                <label for="category-description">Описание</label>
-                <textarea id="category-description" name="description" class="form-textarea"
-                  placeholder="Краткое описание категории..." rows="3"></textarea>
-              </div>
-
-              <!--=<div class="form-row">
-            <div class="form-group">
-              <label for="category-color">Цвет</label>
-              <div class="color-picker-wrapper">
-                <input type="color" id="category-color" name="color" class="color-input" value="#a855f7">
-                <input type="text" id="category-color-text" class="form-input color-text" value="#a855f7" placeholder="#a855f7">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="category-icon">Иконка</label>
-              <select id="category-icon" name="icon" class="form-input">
-                <option value="folder">Папка</option>
-                <option value="chat">Чат</option>
-                <option value="star">Звезда</option>
-                <option value="user">Пользователь</option>
-                <option value="globe">Глобус</option>
-                <option value="lock">Замок</option>
-                <option value="play">Плей</option>
-                <option value="monitor">Монитор</option>
-              </select>
-            </div>
-          </div>-->
-
-              <div class="form-row">
-                <!--<div class="form-group">
-              <label for="category-order">Порядок</label>
-              <input type="number" id="category-order" name="order" class="form-input" value="1" min="1">
-            </div>-->
-
-                <!--<div class="form-group">
-                  <label for="category-parent">Родительская категория</label>
-                  <select id="category-parent-add" name="parent_id" class="form-input">
-                    <option value="">Нет (корневая)</option>
-                    <% categories.forEach(categorie=> { %>
-                      <option value="<%= categorie.id %>">
-                        <%= categorie.name %>
-                      </option>
+                            <div class="category-actions-dropdown">
+                              <button class="dropdown-trigger" onclick="toggleDropdown(event, this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <circle cx="12" cy="12" r="1" />
+                                  <circle cx="12" cy="5" r="1" />
+                                  <circle cx="12" cy="19" r="1" />
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu">
+                                <button onclick="editCategoryOpen('<%= child.id %>', '<%= child.name %>', '<%= child.description %>', '<%= child.parent_id %>')">
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                  </svg>
+                                  Редактировать
+                                </button>
+                                <button class="danger" onclick="openDeleteCategoryModal('<%= child.id %>')">
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6" />
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                  </svg>
+                                  Удалить
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       <% }) %>
-                  </select>
-                </div>-->
+                    </div>
+                  </div>
+                <% } else { %>
+                  <div class="category-children">
+                    <div class="children-empty">Нет дочерних разделов</div>
+                  </div>
+                <% } %>
+
               </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
-                </svg>
-                Сохранить
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
-                Отмена
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Edit Category Modal -->
-      <div class="modal-overlay" id="edit-category-modal">
-        <div class="modal-content modal-lg">
-          <div class="modal-header">
-            <h3 id="modal-title">Редактировать категорию</h3>
-            <button class="modal-close" onclick="closeEditCategoryModal()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+              <!-- /ROOT CATEGORY BLOCK -->
+            <% }) %>
           </div>
 
-          <form id="edit-category-form" method='POST' action='/admin/modalEditCategories'>
-            <input type="hidden" id="edit-category-id" name="id">
+          <!-- Pagination -->
+          <div class="reports-pagination">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">←</a>
+            <% } %>
 
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="category-name">
-                  Название:
-                </label>
-                <input type="text" id="edit-category-name" name="name" class="form-input">
-              </div>
+            <% for (let i = 1; i <= pages; i++) { %>
+              <a href="?page=<%= i %>" class="reports-pagination__link <%= page === i ? 'reports-pagination__link--active' : '' %>"><%= i %></a>
+            <% } %>
 
-              <div class="form-group">
-                <label for="category-description">
-                  Описание:
-                </label>
-                <textarea id="edit-category-description" name="description" class="form-textarea"rows="4"></textarea>
-              </div>
-            </div>
-           <!-- <div class="form-group">
-              <label>Текущий родитель:</label>
-              <span id="current-parent-name"></span>
-            </div>
+            <% if (page < pages) { %>
+              <a href="?page=<%= page + 1 %>" class="reports-pagination__link reports-pagination__arrow">→</a>
+            <% } %>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div class="modal-overlay" id="category-modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3 id="modal-title">Создать раздел</h3>
+        <button class="modal-close" onclick="closeCategoryModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="category-form" method='POST' action='/admin/modalAddCategories'>
+        <input type="hidden" id="category-id" name="id">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="category-name">Название раздела *</label>
+            <input type="text" id="category-name" name="name" class="form-input"
+              placeholder="Например: Общее обсуждение" required>
+          </div>
+
+          <div class="form-group">
+            <label for="category-description">Описание</label>
+            <textarea id="category-description" name="description" class="form-textarea"
+              placeholder="Краткое описание категории..." rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
             <div class="form-group">
-              <label for="category-parent">Сменить родительскую категория</label>
-              <select id="category-parent-edit" name="parent_id" class="form-input">
+              <label for="category-parent-add">Родительская категория</label>
+              <select id="category-parent-add" name="parent_id" class="form-input">
                 <option value="">Нет (корневая)</option>
-                <% allCategories.forEach(categorie => { %>
-                  <option value="<%= categorie.id %>">
-                    <%= categorie.name %>
-                  </option>
-                  <% }) %>
+                <% allParents.forEach(parent => { %>
+                  <option value="<%= parent.id %>"><%= parent.name %></option>
+                <% }) %>
               </select>
-            </div>-->
-
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
-                </svg>
-                Сохранить
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()">
-                Отмена
-              </button>
             </div>
-          </form>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Сохранить
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Category Modal -->
+  <div class="modal-overlay" id="edit-category-modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3 id="modal-title">Редактировать категорию</h3>
+        <button class="modal-close" onclick="closeEditCategoryModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
       </div>
 
-      <!-- Delete Category Modal -->
-      <div class="modal-overlay" id="delete-category-modal" onclick="closeModalOnOverlayDelete(event)">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3>Удаление категории</h3>
+      <form id="edit-category-form" method='POST' action='/admin/modalEditCategories'>
+        <input type="hidden" id="edit-category-id" name="id">
 
-            <button class="modal-close" onclick="closeDeleteCategoryModal()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-category-name">Название:</label>
+            <input type="text" id="edit-category-name" name="name" class="form-input">
           </div>
 
-          <form method="POST" action="/admin/modalDeleteCategory">
-            <input type="hidden" id="delete-category-id" name="id">
+          <div class="form-group">
+            <label for="edit-category-description">Описание:</label>
+            <textarea id="edit-category-description" name="description" class="form-textarea" rows="4"></textarea>
+          </div>
 
-            <p style="margin-bottom: 20px;">
-              Вы уверены, что хотите удалить категорию?
-            </p>
-
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Удалить
-              </button>
-
-              <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">
-                Отмена
-              </button>
-            </div>
-          </form>
+          <div class="form-group">
+            <label for="category-parent-edit">Сменить родительскую категорию</label>
+            <select id="category-parent-edit" name="parent_id" class="form-input">
+              <option value="">Нет (корневая)</option>
+              <% allParents.forEach(parent => { %>
+                <option value="<%= parent.id %>"><%= parent.name %></option>
+              <% }) %>
+            </select>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Сохранить
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditCategoryModal()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Category Modal -->
+  <div class="modal-overlay" id="delete-category-modal" onclick="closeModalOnOverlayDelete(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Удаление категории</h3>
+        <button class="modal-close" onclick="closeDeleteCategoryModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
       </div>
 
-      <script>
+      <form method="POST" action="/admin/modalDeleteCategory">
+        <input type="hidden" id="delete-category-id" name="id">
 
-        // ============================================
-        // Dropdown Menu
-        // ============================================
+        <p style="margin-bottom: 20px;">Вы уверены, что хотите удалить категорию?</p>
 
-        function toggleDropdown(event, button) {
-          event.stopPropagation();
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Удалить
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-          const dropdown = button.closest('.category-actions-dropdown');
-          const isOpen = dropdown.classList.contains('open');
+  <script>
+    // ============================================
+    // Dropdown Menu
+    // ============================================
+    function toggleDropdown(event, button) {
+      event.stopPropagation();
 
-          // Закрыть все другие dropdown
-          document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
-            d.classList.remove('open');
-          });
+      const dropdown = button.closest('.category-actions-dropdown');
+      const isOpen = dropdown.classList.contains('open');
 
-          // Если не было открыто - открыть
-          if (!isOpen) {
-            dropdown.classList.add('open');
-          }
-        }
+      // Закрыть все другие dropdown
+      document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
+        d.classList.remove('open');
+      });
 
-        // Закрытие при клике вне dropdown
-        document.addEventListener('click', function (e) {
-          if (!e.target.closest('.category-actions-dropdown')) {
-            document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
-              d.classList.remove('open');
-            });
-          }
+      // Если не было открыто - открыть
+      if (!isOpen) {
+        dropdown.classList.add('open');
+      }
+    }
+
+    // Закрытие при клике вне dropdown
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.category-actions-dropdown')) {
+        document.querySelectorAll('.category-actions-dropdown.open').forEach(d => {
+          d.classList.remove('open');
         });
-        // ============================================
-        // Category Modal
-        // ============================================
-        function showAddCategoryModal() {
+      }
+    });
 
-          document.getElementById('category-form').reset();
-          document.getElementById('category-modal').classList.add('active');
+    // ============================================
+    // Add Category Modal
+    // ============================================
+    function showAddCategoryModal() {
+      document.getElementById('category-form').reset();
+      document.getElementById('category-modal').classList.add('active');
+    }
+
+    function closeCategoryModal() {
+      document.getElementById('category-modal').classList.remove('active');
+    }
+
+    // ============================================
+    // Edit Category Modal
+    // ============================================
+    function editCategoryOpen(id, name, description, parentId) {
+      try {
+        document.getElementById('edit-category-id').value = id;
+        document.getElementById('edit-category-name').value = name || '';
+        document.getElementById('edit-category-description').value = description || '';
+
+        // нормализация и установка текущего родителя в select
+        const pid = parentId && parentId !== 'null' && parentId !== '0' ? String(parentId) : '';
+        const select = document.getElementById('category-parent-edit');
+        if (select) select.value = pid;
+
+        document.getElementById('edit-category-modal').classList.add('active');
+      } catch (err) {
+        console.error('editCategoryOpen error:', err);
+      }
+    }
+
+    function closeEditCategoryModal() {
+      document.getElementById('edit-category-modal').classList.remove('active');
+    }
+
+    // ============================================
+    // Delete Category Modal
+    // ============================================
+    function openDeleteCategoryModal(id) {
+      document.getElementById('delete-category-id').value = id;
+      document.getElementById('delete-category-modal').classList.add('active');
+    }
+
+    function closeDeleteCategoryModal() {
+      document.getElementById('delete-category-modal').classList.remove('active');
+    }
+
+    function closeModalOnOverlayDelete(event) {
+      if (event.target.id === 'delete-category-modal') {
+        closeDeleteCategoryModal();
+      }
+    }
+
+    // ============================================
+    // Закрытие модалок по клику на оверлей
+    // ============================================
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === this) {
+          this.classList.remove('active');
         }
+      });
+    });
 
-        function closeCategoryModal() {
-          document.getElementById('category-modal').classList.remove('active');
-        }
-
-        // Синхронизация color picker и текстового поля
-        document.getElementById('category-color').addEventListener('input', function () {
-          document.getElementById('category-color-text').value = this.value;
+    // Закрытие модалок по Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+          modal.classList.remove('active');
         });
+      }
+    });
+  </script>
+</body>
 
-        document.getElementById('category-color-text').addEventListener('input', function () {
-          if (/^#[0-9A-Fa-f]{6}$/.test(this.value)) {
-            document.getElementById('category-color').value = this.value;
-          }
-        });
-
-        function editCategoryOpen(id, name, description, parentId) {
-          try {
-            document.getElementById('edit-category-id').value = id;
-            document.getElementById('edit-category-name').value = name || '';
-            document.getElementById('edit-category-description').value = description || '';
-
-            const parentText = document.getElementById('current-parent-name');
-
-            // нормализация
-            //const pid = parentId && parentId !== 'null' ? String(parentId) : '';
-
-            // показываем текущего родителя
-           /* if (!pid) {
-              parentText.textContent = 'Нет (корневая)';
-            } else {
-              const option = document.querySelector(`#category-parent-edit option[value="${pid}"]`);
-              parentText.textContent = option ? option.textContent : 'Не найден';
-            }*/
-
-            // ВАЖНО: ставим значение в ПРАВИЛЬНЫЙ select
-           // const select = document.getElementById('category-parent-edit');
-            //if (select) select.value = pid;
-
-            // открыть модалку
-            document.getElementById('edit-category-modal').classList.add('active');
-
-          } catch (err) {
-            console.error('editCategoryOpen error:', err);
-          }
-        }
-        function closeEditCategoryModal() {
-          document.getElementById('edit-category-modal').classList.remove('active');
-        }
-
-        // Открыть модалку удаления
-        function openDeleteCategoryModal(id) {
-          document.getElementById('delete-category-id').value = id;
-          document.getElementById('delete-category-modal').classList.add('active');
-        }
-
-        // Закрыть модалку
-        function closeDeleteCategoryModal() {
-          document.getElementById('delete-category-modal').classList.remove('active');
-        }
-
-        // Закрытие по клику на overlay
-        function closeModalOnOverlayDelete(event) {
-          if (event.target.id === 'delete-category-modal') {
-            closeDeleteCategoryModal();
-          }
-        }
-
-        // ============================================
-        // Form Submit
-        // ============================================
-        document.getElementById('category-form').addEventListener('submit', function (e) {
-          e.preventDefault();
-
-          const formData = new FormData(this);
-          const data = Object.fromEntries(formData);
-
-          // TODO: Отправить данные на сервер
-          console.log('Category data:', data);
-
-          if (currentCategoryId) {
-            showToast('Категория обновлена', 'success');
-          } else {
-            showToast('Категория создана', 'success');
-          }
-
-          closeCategoryModal();
-        });
-
-        // ============================================
-        // Search
-        // ============================================
-        document.getElementById('search-categories').addEventListener('input', function (e) {
-          const query = e.target.value.toLowerCase();
-          const cards = document.querySelectorAll('.category-card');
-
-          cards.forEach(card => {
-            const name = card.querySelector('.category-name').textContent.toLowerCase();
-            const desc = card.querySelector('.category-description').textContent.toLowerCase();
-
-            if (name.includes(query) || desc.includes(query)) {
-              card.style.display = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-
-        // Закрытие модалок по клику на оверлей
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-          overlay.addEventListener('click', function (e) {
-            if (e.target === this) {
-              this.classList.remove('active');
-            }
-          });
-        });
-
-        // Закрытие модалок по Escape
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape') {
-            document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-              modal.classList.remove('active');
-            });
-          }
-        });
-      </script>
-    </body>
-
-    </html>
+</html>

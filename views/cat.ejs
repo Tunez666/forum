@@ -1,105 +1,134 @@
 <%- include('partials/head') %>
 
-<body class="categories-page">
+  <body class="categories-page">
 
-<!-- Background -->
-<div class="bg-layer">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="grid-lines"></div>
-</div>
-
-<%- include('partials/header') %>
-
-<main class="main">
-
-  <div class="content-grid">
-
-    <div class="content-main">
-
-      <div class="section-header">
-        <h2 class="section-title">
-          <span class="title-icon">★</span>
-          Разделы
-        </h2>
-      </div>
-
-      <section class="categories-grid">
-
-        <% categories.forEach(category => { %>
-          <% if (!category.parent_id) { %>
-
-            <a href="/dagTopics/<%= category.id %>" class="category-card">
-
-              <div class="category-icon">
-                <span>📁</span>
-              </div>
-
-              <div class="category-info">
-                <div class="category-name">
-                  <%= category.name %>
-                </div>
-
-                <div class="category-desc">
-                  <%= category.description || 'Нет описания' %>
-                </div>
-              </div>
-
-              <div class="category-stats">
-                <span>Тем: <%= category.topics_count || 0 %></span>
-                <span>Постов: <%= category.posts_count || 0 %></span>
-              </div>
-
-              <div class="category-arrow">
-                →
-              </div>
-
-            </a>
-
-          <% } %>
-        <% }) %>
-
-      </section>
-
-      <div class="reports-pagination">
-
-    <% if(page > 1){ %>
-
-        <a href="?page=<%= page - 1 %>"
-           class="reports-pagination__link reports-pagination__arrow">
-            ←
-        </a>
-
-    <% } %>
-
-    <% for(let i = 1; i <= categoriesPages; i++){ %>
-
-        <a href="?page=<%= i %>"
-           class="reports-pagination__link
-           <%= page === i ? 'reports-pagination__link--active' : '' %>">
-
-            <%= i %>
-
-        </a>
-
-    <% } %>
-
-    <% if(page < categoriesPages){ %>
-
-        <a href="?page=<%= page + 1 %>"
-           class="reports-pagination__link reports-pagination__arrow">
-            →
-        </a>
-
-    <% } %>
-
-</div>
-
+    <!-- Background -->
+    <div class="bg-layer">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-lines"></div>
     </div>
 
-  </div>
+    <%- include('partials/header') %>
 
-</main>
+      <main class="main">
 
-<%- include('partials/footer') %>
+        <div class="content-grid">
+
+          <div class="content-main">
+
+            <div class="section-header">
+              <h2 class="section-title">
+                <span class="title-icon">★</span>
+                Разделы
+              </h2>
+            </div>
+
+            <section class="categories-grid">
+
+              <% categories.forEach(category=> { %>
+
+                <% if (!category.parent_id) { %>
+
+                  <div class="category-card">
+
+                    <a href="/dagTopics/<%= category.id %>" class="category-main-link">
+
+                      <div class="category-icon">
+                        <span>📁</span>
+                      </div>
+
+                      <div class="category-info">
+                        <div class="category-name">
+                          <%= category.name %>
+                        </div>
+
+                        <div class="category-desc">
+                          <%= category.description || 'Нет описания' %>
+                        </div>
+                      </div>
+
+                      <div class="category-stats">
+                        <span>Тем: <%= category.topics_count || 0 %></span>
+                        <span>Постов: <%= category.posts_count || 0 %></span>
+                      </div>
+
+                      <div class="category-arrow">
+                        →
+                      </div>
+
+                    </a>
+
+                    <!-- Дочерние категории -->
+
+                    <div class="category-children">
+
+                        <div class="children-title">
+                          Подразделы
+                        </div>
+
+                        <% categories .filter(child=> child.parent_id === category.id)
+                          .forEach(child => { %>
+
+                          <a href="/dagTopics/<%= child.id %>" class="child-category">
+
+                            <span class="child-category-icon">
+                              ↳
+                            </span>
+
+                            <span>
+                              <%= child.name %>
+                            </span>
+
+                          </a>
+
+                          <% }) %>
+
+                      </div>
+
+                    </div>
+
+                    <% } %>
+
+                      <% }) %>
+            </section>
+
+            <div class="reports-pagination">
+
+              <% if(page> 1){ %>
+
+                <a href="?page=<%= page - 1 %>" class="reports-pagination__link reports-pagination__arrow">
+                  ←
+                </a>
+
+                <% } %>
+
+                  <% for(let i=1; i <=categoriesPages; i++){ %>
+
+                    <a href="?page=<%= i %>" class="reports-pagination__link
+           <%= page === i ? 'reports-pagination__link--active' : '' %>">
+
+                      <%= i %>
+
+                    </a>
+
+                    <% } %>
+
+                      <% if(page < categoriesPages){ %>
+
+                        <a href="?page=<%= page + 1 %>" class="reports-pagination__link reports-pagination__arrow">
+                          →
+                        </a>
+
+                        <% } %>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <%- include('partials/footer') %>
