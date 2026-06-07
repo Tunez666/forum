@@ -289,7 +289,7 @@ exports.updateCharacter = async (req, res) => {
 
 exports.updateUserInfo = async (req, res) => {
     const userId = req.session.userId;
-    const { username, uid, about } = req.body;
+    const { username, email, uid, about } = req.body;
 
     console.log("=== DEBUG ===");
     console.log("req.file:", req.file);           // что пришло от multer
@@ -304,6 +304,7 @@ exports.updateUserInfo = async (req, res) => {
     await userModel.updateUserInfo({
         id: userId,
         username,
+        email,
         uid,
         about,
         avatarca

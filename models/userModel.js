@@ -92,11 +92,12 @@ exports.updateUserInfo = async (userInfo) => {
 
     const sql = `
         UPDATE users
-        SET username = ?, uid = ?, about = ?, avatarca = ?
+        SET username = ?, email = ?, uid = ?, about = ?, avatarca = ?
         WHERE id = ?;
     `;
     const [result] = await db.query(sql, [
         userInfo.username,
+        userInfo.email,
         userInfo.uid,
         userInfo.about,
         userInfo.avatarca,

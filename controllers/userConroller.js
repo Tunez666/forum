@@ -137,13 +137,18 @@ exports.showLkUser = async (req, res) => {
 exports.updateUserInfo = async (req, res) => {
     const userId = req.session.userId;
 
-    const { username, uid, about } = req.body;
+    const { username, email, uid, about } = req.body;
 
-    const avatarca = req.file ? req.file.filename : null;
+     const currentUser = await userModel.selectNormalUser(userId);
+
+    const avatarca = req.file
+        ? req.file.filename
+        : currentUser.avatarca;
 
     await userModel.updateUserInfo({
         id: userId,
         username,
+        email,
         uid,
         about,
         avatarca
