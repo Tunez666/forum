@@ -31,15 +31,16 @@
                 <div class="topic-view__meta">
                     <% if (topic.author_id===userId) { %>
                         <button
-                            style="margin-left: 20px; padding: 5px 10px; background-color: #0a0612; color: #ffffff; border: none; border-radius: 4px; cursor: pointer;"
-                            onclick='openTopicEdit(
-`<%- topic.title %>`,
-`<%- topic.description %>`,
-`<%= topic.category_id %>`,
-`<%= topic.is_closed %>`
-)'>
-                            Редактировать тему
-                        </button>
+    style="margin-left: 20px; padding: 5px 10px; background-color: #0a0612; color: #ffffff; border: none; border-radius: 4px; cursor: pointer;"
+    onclick='openTopicEdit(<%- JSON.stringify({
+        title: topic.title,
+        description: topic.description,
+        categoryId: topic.category_id,
+        parentId: topic.parent_category_id
+    }) %>)'
+>
+    Редактировать тему
+</button>
                         <% } %>
                 </div>
             </div>
@@ -49,7 +50,7 @@
 
                 <% posts.forEach(post=> { %>
 
-                    
+
 
                     <div class="topic-view__post" id="post-<%= post.id %>">
 
@@ -312,12 +313,23 @@
 
                     <div class="form-group">
                         <label for="category-parent">Раздел</label>
-                        <select id="category-parent-add" name="category_id" class="form-input">
-                            <% categories.forEach(categorie=> { %>
-                                <option value="<%= categorie.id %>">
-                                    <%= categorie.name %>
+
+                        <select id="edit-parent-category" class="form-input" onchange="updateEditChildren(this.value)">
+                            <option value="">Выберите раздел</option>
+
+                            <% categories.forEach(c=> { %>
+                                <option value="<%= c.id %>" <%=topic.parent_category_id==c.id ? 'selected' : '' %>>
+                                    <%= c.name %>
                                 </option>
                                 <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category-child">Подраздел</label>
+
+                        <select id="edit-child-category" name="category_id" class="form-input">
+                            <option value="">Сначала выберите раздел</option>
                         </select>
                     </div>
 
@@ -355,7 +367,27 @@
 
 
         <script>
+            const allChildCategories = <%- JSON.stringify(childCategories) %>;
 
+            function updateEditChildren(parentId, selectedChildId = null) {
+                const childSelect = document.getElementById("edit-child-category");
+
+                childSelect.innerHTML = `<option value="">Все подразделы</option>`;
+
+                const filtered = allChildCategories.filter(c => c.parent_id == parentId);
+
+                filtered.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+
+                    if (selectedChildId && selectedChildId == c.id) {
+                        opt.selected = true;
+                    }
+
+                    childSelect.appendChild(opt);
+                });
+            }
             const postImageInput = document.getElementById("post-image");
             const fileName = document.getElementById("file-name");
 
@@ -566,26 +598,29 @@
                 }
             }
 
-            function openTopicEdit(title, description, category_name) {
+            function openTopicEdit(data) {
+    const modal = document.getElementById('topic-modal');
 
-                const modal = document.getElementById('topic-modal');
+    document.getElementById('title').value = data.title || "";
+    document.getElementById('description').value = data.description || "";
 
-                const titleInput = document.getElementById('title');
+    const parentSelect = document.getElementById('edit-parent-category');
+    const childSelect = document.getElementById('edit-child-category');
 
-                const descriptionInput = document.getElementById('description');
+    const parentId = String(data.parentId || "");
+    const categoryId = String(data.categoryId || "");
 
-                const categorySelect = document.getElementById('category-parent-add');
+    parentSelect.value = parentId;
 
-                titleInput.value = title;
+    if (parentId) {
+        updateEditChildren(parentId, categoryId);
+    } else {
+        childSelect.innerHTML = `<option value="">Выберите раздел</option>`;
+    }
 
-                descriptionInput.value = description;
-
-                categorySelect.value = category_name;
-
-                modal.classList.add('active');
-
-                document.body.style.overflow = 'hidden';
-            }
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
             function closeCreateTopicModal() {
 

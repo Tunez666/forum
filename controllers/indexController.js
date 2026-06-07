@@ -61,7 +61,7 @@ exports.showRules = async (req, res) => {
 exports.showPolitic = async (req, res) => {
     const userId = req.session.userId;
     const user = await userModel.selectNormalUser(userId);
-     const notifications = await notModel.userNotifications(userId);
+    const notifications = await notModel.userNotifications(userId);
 
     res.render('privacy', {
         userData: user,
@@ -71,16 +71,24 @@ exports.showPolitic = async (req, res) => {
 
 exports.showTop = async (req, res) => {
     const userId = req.session.userId;
-    const topicId = req.params.id;
 
     const sort = req.query.sort || "new";
-    const categoryId = req.query.category || null;
+
+const parentCategory = req.query.parent
+    ? parseInt(req.query.parent)
+    : null;
+
+const categoryId = req.query.category
+    ? parseInt(req.query.category)
+    : null;
 
     const page = parseInt(req.query.page) || 1;
     const limit = 12;
     const offset = (page - 1) * limit;
 
     const categories = await categoriesModel.getParentsCategories();
+    const childCategories = await categoriesModel.getChildCategories();
+
     const user = await userModel.selectNormalUser(userId);
     const reports = await reportsModel.getReportReasons();
     const notifications = await notModel.userNotifications(userId);
@@ -88,19 +96,21 @@ exports.showTop = async (req, res) => {
     const { topics, total } = await topicsModel.getTopics({
         sort,
         categoryId,
+        parentCategory,
         limit,
-        offset,
-        topicId
+        offset
     });
 
     const totalPages = Math.ceil(total / limit);
 
     res.render("topics", {
         categories,
+        childCategories,
         selectTopics: topics,
         userData: user,
         sort,
         categoryId,
+        parentCategory,
         page,
         totalPages,
         reports,
@@ -124,9 +134,66 @@ exports.showPosts = async (req, res) => {
     const reports = await reportsModel.getReportReasons();
 
     const categories = await categoriesModel.getParentsCategories();
+    const childCategories = await categoriesModel.getChildCategories();
 
-    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId, categories, notifications });
+    res.render("posts", { userData: user, posts, topicId, error, topic, reports, userId, categories, childCategories, notifications });
 
+};
+
+exports.showDagCat = async (req, res) => {
+
+    const userId = req.session.userId;
+    const categoryId = req.params.id;
+
+    const sort = req.query.sort || 'popular';
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 12;
+    const offset = (page - 1) * limit;
+
+    const categories = await categoriesModel.getParentsCategories();
+    const user = await userModel.selectNormalUser(userId);
+    const reports = await reportsModel.getReportReasons();
+    const name = await categoriesModel.getName(categoryId);
+    const notifications = await notModel.userNotifications(userId);
+
+    const {
+        categories: subCategories,
+        total
+    } = await categoriesModel.getSubcategories(
+        categoryId,
+        limit,
+        offset,
+        sort
+    );
+
+    const totalPages = Math.ceil(total / limit);
+
+    const stats = {
+        categories: subCategories.length,
+        topics: subCategories.reduce(
+            (sum, c) => sum + (c.topics_count || 0),
+            0
+        ),
+        posts: subCategories.reduce(
+            (sum, c) => sum + (c.posts_count || 0),
+            0
+        )
+    };
+
+    res.render("dagCat", {
+        categories,
+        subCategories,
+        userData: user,
+        categoryId,
+        page,
+        totalPages,
+        reports,
+        name,
+        notifications,
+        sort,
+        stats
+    });
 };
 
 exports.showDagTopics = async (req, res) => {
@@ -190,10 +257,10 @@ exports.showCategories = async (req, res) => {
     const parentRows = await categoriesModel.countParents();
     const parentsCount = parentRows[0].countParents;
     const parents = await categoriesModel.getParentsWithStats(limit, offset);
-     for (const parent of parents) {
-            parent.children = await categoriesModel.getSubcategories(parent.id);
-        }
-    
+    for (const parent of parents) {
+        parent.children = await categoriesModel.getSubcategories(parent.id);
+    }
+
     const allParents = await categoriesModel.getParentsCategories();
     const categories =
         await categoriesModel.getAllCategoriesWithStats(
@@ -318,15 +385,22 @@ exports.delPost = async (req, res) => {
 };
 
 exports.editTopic = async (req, res) => {
-    const { title, description, category_id, is_closed } = req.body;
+    let { title, description, category_id, is_closed } = req.body;
+
     const topicId = req.params.id;
+
+    category_id = parseInt(category_id);
+
+    if (!category_id || isNaN(category_id)) {
+        return res.status(400).send("Выберите корректный подраздел");
+    }
 
     await topicsModel.updateTopic({
         id: topicId,
-        title: title,
-        description: description,
-        category_id: category_id,
-        is_closed: is_closed
+        title,
+        description,
+        category_id,
+        is_closed
     });
 
     res.redirect(`/topic/${topicId}`);

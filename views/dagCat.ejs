@@ -1,0 +1,231 @@
+<%- include('partials/head') %>
+
+    <body>
+        <!-- Background -->
+        <div class="bg-layer">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="grid-lines"></div>
+        </div>
+
+        <%- include('partials/header') %>
+
+            <main class="topics-page">
+                <div class="topics-container">
+
+                    <!-- Page Header -->
+                    <div class="topics-page-header">
+                        <div class="page-title-row">
+                            <h1 class="page-title">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                                </svg>
+                                Дочериние разделы в <%= name.name %>
+                            </h1>
+                        </div>
+
+                        <div class="category-overview">
+                            <div class="overview-card">
+                                <div class="overview-number">
+                                    <%= stats.categories %>
+                                </div>
+                                <div class="overview-label">
+                                    Подразделов
+                                </div>
+                            </div>
+
+                            <div class="overview-card">
+                                <div class="overview-number">
+                                    <%= stats.topics %>
+                                </div>
+                                <div class="overview-label">
+                                    Тем
+                                </div>
+                            </div>
+
+                            <div class="overview-card">
+                                <div class="overview-number">
+                                    <%= stats.posts %>
+                                </div>
+                                <div class="overview-label">
+                                    Постов
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search -->
+                        <div class="topics-filters">
+                            <div class="filter-group search-group">
+                                <label class="filter-label">Поиск</label>
+
+                                <div class="search-input-wrapper">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    </svg>
+
+                                    <form method="GET" action="/searchResults" class="search-form">
+                                        <input type="text" name="search" class="search-input"
+                                            placeholder="Поиск по разделам...">
+                                    </form>
+                                </div>
+
+                                <div class="filter-group">
+                                    <label class="filter-label">
+                                        Сортировка
+                                    </label>
+
+                                    <div class="section-tabs">
+
+                                        <a href="?sort=popular" class="tab <%= sort === 'popular' ? 'active' : '' %>">
+                                            Популярные
+                                        </a>
+
+                                        <a href="?sort=posts" class="tab <%= sort === 'posts' ? 'active' : '' %>">
+                                            По постам
+                                        </a>
+
+                                        <a href="?sort=name" class="tab <%= sort === 'name' ? 'active' : '' %>">
+                                            По имени
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories List -->
+                    <div class="topics-list-container">
+
+                        <div class="topics-list-header">
+                            <span class="header-cell topic-cell">
+                                Раздел
+                            </span>
+
+                            <span class="header-cell category-cell">
+                                Тем
+                            </span>
+
+                            <span class="header-cell activity-cell">
+                                Постов
+                            </span>
+
+                            <span class="header-cell activity-cell">
+                                Активность
+                            </span>
+                        </div>
+                        <div class="topics-list-body">
+
+                            <% if (subCategories && subCategories.length> 0) { %>
+
+                                <% subCategories.forEach(category=> { %>
+
+                                    <div class="topic-list-row" style="cursor:pointer;"
+                                        onclick="window.location='/dagTopics/<%= category.id %>'">
+
+                                        <div class="topic-cell">
+                                            <div class="topic-avatar">
+                                                <div class="avatar-circle" style="--hue: 270;">
+                                                    <%= category.name[0].toUpperCase() %>
+                                                </div>
+                                            </div>
+
+                                            <div class="topic-main-info">
+                                                <a href="/dagTopics/<%= category.id %>" class="topic-title-text">
+                                                    <%= category.name %>
+                                                </a>
+
+                                                <div class="topic-meta-row">
+                                                    <div class="topic-badges">
+                                                        <span class="topic-category-badge"
+                                                            style="--cat-color: #f755a6;">
+                                                            <%= category.description || 'Описание отсутствует' %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="category-cell">
+                                            <span class="category-tag" style="--cat-color: #3b82f6;">
+                                                <%= category.topics_count || 0 %>
+                                            </span>
+                                        </div>
+
+                                        <div class="activity-cell">
+                                            <span class="category-tag" style="--cat-color: #10b981;">
+                                                <%= category.posts_count || 0 %>
+                                            </span>
+                                        </div>
+                                        <div class="activity-cell">
+
+                                            <% const score=(category.topics_count || 0) + (category.posts_count || 0);
+                                                %>
+
+                                                <span class="category-tag" style="--cat-color:#8b5cf6;">
+                                                    <%= score %>
+                                                </span>
+
+                                        </div>
+                                    </div>
+
+                                    <% }) %>
+
+                                        <% } else { %>
+
+                                            <div class="topic-list-row">
+                                                <div class="topic-cell" style="padding: 24px; width: 100%;">
+                                                    В данной категории пока нет подразделов.
+                                                </div>
+                                            </div>
+
+                                            <% } %>
+
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+
+                        <div class="pagination-info"></div>
+
+                        <div class="pagination-controls">
+
+                            <% if (page> 1) { %>
+                                <a class="pagination-btn"
+                                    href="/dagTopics/<%= categoryId %>?page=<%= page - 1 %>&sort=<%= sort %>">
+                                    ←
+                                </a>
+                                <% } %>
+
+                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                        <a class="pagination-btn <%= page === i ? 'active' : '' %>"
+                                            href="/dagTopics/<%= categoryId %>?page=<%= i %>&sort=<%= sort %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+
+                                            <% if (page < totalPages) { %>
+                                                <a class="pagination-btn"
+                                                    href="/dagTopics/<%= categoryId %>?page=<%= page + 1 %>&sort=<%= sort %>">
+                                                    →
+                                                </a>
+                                                <% } %>
+
+                        </div>
+
+                        <div class="per-page-selector"></div>
+
+                    </div>
+
+                </div>
+            </main>
+
+            <%- include('partials/footer') %>
+
+    </body>

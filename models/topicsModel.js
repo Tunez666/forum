@@ -14,8 +14,21 @@ exports.getLastTopics = async (sort = "new", categoryId = null) => {
 
     const sortMap = {
         new: "t.created_at DESC",
-        popular: "posts_count DESC",
-        empty: "posts_count ASC"
+
+        popular: `
+            COUNT(p.id) DESC,
+            t.created_at DESC
+        `,
+
+        posts: `
+            COUNT(p.id) DESC,
+            t.created_at DESC
+        `,
+
+        empty: `
+            COUNT(p.id) ASC,
+            t.created_at DESC
+        `
     };
 
     const orderBy = sortMap[sort] || sortMap.new;
@@ -35,7 +48,95 @@ exports.getLastTopics = async (sort = "new", categoryId = null) => {
             t.description,
             t.created_at,
 
+            c.id AS category_id,
             c.name AS category_name,
+
+            pc.id AS parent_category_id,
+            pc.name AS parent_category_name,
+
+            u.username AS author_name,
+            u.id AS author_id,
+            u.avatarca AS author_avatar,
+
+            COUNT(p.id) AS posts_count
+
+        FROM topics t
+
+        JOIN categories c ON c.id = t.category_id
+        LEFT JOIN categories pc ON pc.id = c.parent_id
+
+        JOIN users u ON u.id = t.author_id
+
+        LEFT JOIN posts p 
+            ON p.topic_id = t.id 
+            AND p.is_deleted = 0
+
+        ${where}
+
+        GROUP BY 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+            c.id,
+            c.name,
+            pc.id,
+            pc.name,
+            u.username,
+            u.id,
+            u.avatarca
+
+        ORDER BY ${orderBy}
+        LIMIT 10
+    `, params);
+
+    return rows;
+};
+
+exports.getTopics = async ({ sort, categoryId, parentCategory, limit, offset }) => {
+
+    const sortMap = {
+        new: "t.created_at DESC",
+        popular: "posts_count DESC",
+        empty: "posts_count ASC"
+    };
+
+    const orderBy = sortMap[sort] || sortMap.new;
+
+    let where = "";
+    const params = [];
+
+    // 1. Подкатегория (самый точный фильтр)
+    if (categoryId) {
+        where = "WHERE t.category_id = ?";
+        params.push(categoryId);
+    }
+
+    // 2. Родитель → ищем детей БЕЗ IN SUBQUERY (надёжнее)
+    else if (parentCategory) {
+
+        where = `
+            WHERE t.category_id IN (
+                SELECT c.id
+                FROM categories c
+                WHERE c.parent_id = ?
+            )
+        `;
+
+        params.push(parentCategory);
+    }
+
+    const [topics] = await db.query(`
+        SELECT 
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+
+            c.id AS category_id,
+            c.name AS category_name,
+            c.parent_id AS parent_id,
+
             u.username AS author_name,
             u.id AS author_id,
             u.avatarca AS author_avatar,
@@ -54,71 +155,15 @@ exports.getLastTopics = async (sort = "new", categoryId = null) => {
         ${where}
 
         GROUP BY 
-            t.id,
-            t.title,
-            t.description,
-            t.created_at,
-            c.name,
-            u.username
+            t.id, t.title, t.description, t.created_at,
+            c.id, c.name, c.parent_id,
+            u.username, u.id, u.avatarca
 
         ORDER BY ${orderBy}
-        LIMIT 10;
-    `, params);
 
-    return rows;
-};
-
-exports.getTopics = async ({ sort, categoryId, limit, offset }) => {
-
-    const sortMap = {
-        new: "t.created_at DESC",
-        popular: "posts_count DESC",
-        empty: "posts_count ASC"
-    };
-
-    const orderBy = sortMap[sort] || sortMap.new;
-
-    let where = "";
-    const params = [];
-
-    if (categoryId) {
-        where = "WHERE t.category_id = ?";
-        params.push(categoryId);
-    }
-
-    // 1. данные
-    const [topics] = await db.query(`
-        SELECT 
-            t.id,
-            t.title,
-            t.description,
-            t.created_at,
-
-            c.name AS category_name,
-            u.username AS author_name,
-            u.id AS author_id,
-            u.avatarca AS author_avatar,
-
-            COUNT(p.id) AS posts_count
-
-        FROM topics t
-
-        JOIN categories c ON c.id = t.category_id
-        JOIN users u ON u.id = t.author_id
-
-        LEFT JOIN posts p 
-            ON p.topic_id = t.id 
-            AND p.is_deleted = 0
-
-        ${where}
-
-        GROUP BY t.id
-
-        ORDER BY ${orderBy}
         LIMIT ? OFFSET ?
     `, [...params, limit, offset]);
 
-    // 2. общее количество
     const [countRows] = await db.query(`
         SELECT COUNT(*) as total
         FROM topics t

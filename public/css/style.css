@@ -9327,3 +9327,191 @@ button.success {
   font-size: 14px;
 }
 
+/* ==========================================
+   OVERVIEW CARDS
+========================================== */
+
+.category-overview {
+    display: flex;
+    gap: 16px;
+    margin: 20px 0 28px;
+    flex-wrap: wrap;
+}
+
+.overview-card {
+    flex: 1;
+    min-width: 180px;
+
+    padding: 18px;
+
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+
+    text-align: center;
+
+    transition: all .25s ease;
+}
+
+.overview-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(99,102,241,.35);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.25),
+        0 0 20px rgba(99,102,241,.12);
+}
+
+.overview-number {
+    font-size: 28px;
+    font-weight: 700;
+
+    color: #fff;
+
+    margin-bottom: 6px;
+}
+
+.overview-label {
+    color: rgba(255,255,255,.65);
+    font-size: 14px;
+}
+
+/* ==========================================
+   SORT TABS
+========================================== */
+
+.section-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.section-tabs .tab {
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    color: rgba(255,255,255,.75);
+
+    background: rgba(255,255,255,.04);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    transition: all .2s ease;
+}
+
+.section-tabs .tab:hover {
+    color: #fff;
+
+    background: rgba(99,102,241,.15);
+
+    border-color: rgba(99,102,241,.35);
+}
+
+.section-tabs .tab.active {
+    color: #fff;
+
+    background: rgba(99,102,241,.22);
+
+    border-color: rgba(99,102,241,.55);
+
+    box-shadow:
+        0 0 16px rgba(99,102,241,.18);
+}
+
+/* ==========================================
+   CATEGORY ROW
+========================================== */
+
+.topic-list-row {
+    transition:
+        background .2s ease,
+        transform .15s ease;
+}
+
+.topic-list-row:hover {
+    background: rgba(255,255,255,.03);
+    transform: translateX(4px);
+}
+
+/* ==========================================
+   ACTIVITY SCORE
+========================================== */
+
+.activity-score {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 55px;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: rgba(139,92,246,.15);
+
+    border: 1px solid rgba(139,92,246,.35);
+
+    color: #c4b5fd;
+
+    font-weight: 600;
+}
+
+/* ==========================================
+   BETTER TABLE HEADER
+========================================== */
+
+.topics-list-header {
+    background: rgba(255,255,255,.03);
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 10;
+}
+
+/* ==========================================
+   DESCRIPTION LIMIT
+========================================== */
+
+.topic-category-badge {
+    max-width: 450px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .category-overview {
+        flex-direction: column;
+    }
+
+    .overview-card {
+        min-width: auto;
+    }
+
+    .section-tabs {
+        width: 100%;
+    }
+
+    .section-tabs .tab {
+        flex: 1;
+        text-align: center;
+    }
+
+}

@@ -70,7 +70,7 @@
 
               <div class="categories-grid">
                 <% categories.forEach(categorie=> { %>
-                  <a href="/dagTopics/<%= categorie.id %>" class="category-card">
+                  <a href="/dagCat/<%= categorie.id %>" class="category-card">
                     <div class="category-icon" style="--accent: #ff6b9d;">
                       <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -107,34 +107,51 @@
                   Последние темы
                 </h2>
                 <div class="section-tabs">
-                  <a href="/?sort=new" class="tab <%= sort === 'new' ? 'active' : '' %>">Новые</a>
-                  <a href="/?sort=popular" class="tab <%= sort === 'popular' ? 'active' : '' %>">Популярные</a>
-                  <a href="/?sort=empty" class="tab <%= sort === 'empty' ? 'active' : '' %>">Не популярные</a>
+
+                  <a href="/?sort=new" class="tab <%= sort === 'new' ? 'active' : '' %>">
+                    Новые
+                  </a>
+
+                  <a href="/?sort=popular" class="tab <%= sort === 'popular' ? 'active' : '' %>">
+                    Популярные
+                  </a>
+
+                  <a href="/?sort=posts" class="tab <%= sort === 'posts' ? 'active' : '' %>">
+                    По постам
+                  </a>
+
+                  <a href="/?sort=empty" class="tab <%= sort === 'empty' ? 'active' : '' %>">
+                    Без ответов
+                  </a>
+
                 </div>
               </div>
 
-              
+
 
               <div class="topics-list">
                 <% lastTopics.forEach(topic=> { %>
                   <article class="topic-card">
                     <div class="topic-avatar">
                       <div class="avatar-placeholder">
-                       <a href="/user/prLk/<%= topic.author_id %>" class="topic-view__user-link">
-                      <div class="avatar-circle" style="--hue: 285;">
-                        
-                         <img src="/img/avas/<%= topic.author_avatar %>" class="topic-view__avatar">
-                      </div>
-                      </a>
+                        <a href="/user/prLk/<%= topic.author_id %>" class="topic-view__user-link">
+                          <div class="avatar-circle" style="--hue: 285;">
+
+                            <img src="/img/avas/<%= topic.author_avatar %>" class="topic-view__avatar">
+                          </div>
+                        </a>
                       </div>
                     </div>
                     <div class="topic-content">
                       <div class="topic-meta">
-                        <span class="topic-category">
-                          <%= topic.category_name %>
-                        </span>
-                        <!--<span class="topic-badge hot">Горячее</span>-->
-                      </div>
+  <span class="topic-category">
+    <%= topic.parent_category_name %>
+  </span>
+/
+  <span class="topic-category">
+     <%= topic.category_name %>
+  </span>
+</div>
                       <h3 class="topic-title">
                         <a href="/topic/<%= topic.id %>">
                           <%= topic.title %>

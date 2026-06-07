@@ -58,23 +58,25 @@ LIMIT ? OFFSET ?;
 };
 
 exports.getCategoriesWithStats = async () => {
-    const [rows] = await db.query(`
-SELECT 
+    const [rows] = await db.query(` 
+   SELECT 
     c.id,
     c.name,
     c.description,
 
     COUNT(DISTINCT t.id) AS topics_count,
-    COUNT(p.id) AS posts_count
+    COUNT(DISTINCT p.id) AS posts_count
 
 FROM categories c
 
+LEFT JOIN categories sc 
+    ON sc.parent_id = c.id
+
 LEFT JOIN topics t 
-    ON c.id = t.category_id
+    ON t.category_id = sc.id
 
 LEFT JOIN posts p 
-    ON t.id = p.topic_id
-    AND p.is_deleted = 0
+    ON p.topic_id = t.id AND p.is_deleted = 0
 
 WHERE c.parent_id IS NULL
 
@@ -131,35 +133,81 @@ exports.getParentsCategories = async () => {
     return rows;
 };
 
-exports.getSubcategories = async (parentId) => {
+exports.getChildCategories = async () => {
     const [rows] = await db.query(`
-SELECT 
-    c.id,
-    c.name,
-    c.description,
-    parent.name AS parent_name,
-
-    COUNT(DISTINCT t.id) AS topics_count,
-    COUNT(p.id) AS posts_count
-
-FROM categories c
-
-LEFT JOIN categories parent 
-    ON c.parent_id = parent.id
-
-LEFT JOIN topics t 
-    ON t.category_id = c.id
-
-LEFT JOIN posts p 
-    ON p.topic_id = t.id
-    AND p.is_deleted = 0
-
-WHERE c.parent_id = ?
-
-GROUP BY c.id, c.name, c.description, parent.name;
-    `, [parentId]);
+        SELECT id, name, description, parent_id
+        FROM categories
+        WHERE parent_id IS NOT NULL;
+    `);
 
     return rows;
+};
+
+exports.getSubcategories = async (parentId, limit, offset, sort = 'popular') => {
+
+    let orderBy = `
+        topics_count DESC,
+        posts_count DESC,
+        c.name ASC
+    `;
+
+    if (sort === 'posts') {
+        orderBy = `
+            posts_count DESC,
+            topics_count DESC,
+            c.name ASC
+        `;
+    }
+
+    if (sort === 'name') {
+        orderBy = `c.name ASC`;
+    }
+
+    const [[{ total }]] = await db.query(`
+        SELECT COUNT(*) AS total
+        FROM categories
+        WHERE parent_id = ?
+    `, [parentId]);
+
+    const [rows] = await db.query(`
+        SELECT 
+            c.id,
+            c.name,
+            c.description,
+            parent.name AS parent_name,
+
+            COUNT(DISTINCT t.id) AS topics_count,
+            COUNT(DISTINCT p.id) AS posts_count
+
+        FROM categories c
+
+        LEFT JOIN categories parent
+            ON c.parent_id = parent.id
+
+        LEFT JOIN topics t
+            ON t.category_id = c.id
+
+        LEFT JOIN posts p
+            ON p.topic_id = t.id
+            AND p.is_deleted = 0
+
+        WHERE c.parent_id = ?
+
+        GROUP BY
+            c.id,
+            c.name,
+            c.description,
+            parent.name
+
+        ORDER BY ${orderBy}
+
+        LIMIT ? OFFSET ?
+    `, [parentId, limit, offset]);
+
+    return {
+        categories: rows,
+        total
+    };
 };
 
 exports.getAllCategoriesWithStats = async (limit, offset) => {
