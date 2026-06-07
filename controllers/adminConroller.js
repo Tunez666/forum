@@ -103,7 +103,7 @@ exports.showCategories = async (req, res) => {
     const parents = await categoriesModel.getParentsWithStats(limit, offset);
 
     for (const parent of parents) {
-        parent.children = await categoriesModel.getSubcategories(parent.id);
+        parent.children = await categoriesModel.getSub(parent.id);
     }
 
     const allParents = await categoriesModel.getParentsCategories();

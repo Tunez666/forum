@@ -143,6 +143,30 @@ exports.getChildCategories = async () => {
     return rows;
 };
 
+// В models/categoriesModel.js
+
+// Получить подкатегории для конкретного родителя (без пагинации, все подкатегории)
+exports.getSub = async (parentId) => {
+    const sql = `
+        SELECT 
+            c.id,
+            c.name,
+            c.description,
+            c.parent_id,
+            COUNT(DISTINCT t.id) AS topics_count,
+            COUNT(DISTINCT p.id) AS posts_count
+        FROM categories c
+        LEFT JOIN topics t ON t.category_id = c.id
+        LEFT JOIN posts p ON p.topic_id = t.id
+        WHERE c.parent_id = ?
+        GROUP BY c.id
+        ORDER BY c.name ASC
+    `;
+    
+    const [rows] = await db.query(sql, [parentId]);
+    return rows;
+};
+
 exports.getSubcategories = async (parentId, limit, offset, sort = 'popular') => {
 
     let orderBy = `
