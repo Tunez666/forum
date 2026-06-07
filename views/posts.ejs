@@ -30,18 +30,19 @@
 
                 <div class="topic-view__meta">
                     <% if (topic.author_id===userId) { %>
-                        <button
-    style="margin-left: 20px; padding: 5px 10px; background-color: #0a0612; color: #ffffff; border: none; border-radius: 4px; cursor: pointer;"
-    onclick='openTopicEdit(<%- JSON.stringify({
-        title: topic.title,
-        description: topic.description,
-        categoryId: topic.category_id,
-        parentId: topic.parent_category_id
-    }) %>)'
->
-    Редактировать тему
-</button>
-                        <% } %>
+    <button
+        style="margin-left: 20px; padding: 5px 10px; background-color: #0a0612; color: #ffffff; border: none; border-radius: 4px; cursor: pointer;"
+        onclick='openTopicEdit({
+            title: `<%- topic.title %>`,
+            description: `<%- topic.description %>`,
+            categoryId: `<%- topic.category_id %>`,
+            parentId: `<%- topic.parent_category_id %>`,
+            isClosed: `<%- topic.is_closed %>`
+        })'
+    >
+        Редактировать тему
+    </button>
+<% } %>
                 </div>
             </div>
 
@@ -367,27 +368,37 @@
 
 
         <script>
-            const allChildCategories = <%- JSON.stringify(childCategories) %>;
+            const allChildCategories = JSON.parse('<%- JSON.stringify(childCategories || []) %>');
 
-            function updateEditChildren(parentId, selectedChildId = null) {
-                const childSelect = document.getElementById("edit-child-category");
+            document.getElementById('edit-parent-category').addEventListener('change', function () {
+  updateEditChildren(this.value);
+});
 
-                childSelect.innerHTML = `<option value="">Все подразделы</option>`;
-
-                const filtered = allChildCategories.filter(c => c.parent_id == parentId);
-
-                filtered.forEach(c => {
-                    const opt = document.createElement("option");
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-
-                    if (selectedChildId && selectedChildId == c.id) {
-                        opt.selected = true;
-                    }
-
-                    childSelect.appendChild(opt);
-                });
+           function updateEditChildren(parentId, selectedChildId = null) {
+    const child = document.getElementById('edit-child-category');
+    if (!child) return;
+    
+    child.innerHTML = '<option value="">Выберите подраздел</option>';
+    
+    if (!parentId) return;
+    
+    allChildCategories
+        .filter(c => String(c.parent_id) === String(parentId))
+        .forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            if (String(selectedChildId) === String(c.id)) {
+                opt.selected = true;
             }
+            child.appendChild(opt);
+        });
+}
+
+// Обновляем обработчик события
+document.getElementById('edit-parent-category').addEventListener('change', function () {
+    updateEditChildren(this.value);
+});
             const postImageInput = document.getElementById("post-image");
             const fileName = document.getElementById("file-name");
 
@@ -600,28 +611,51 @@
 
             function openTopicEdit(data) {
     const modal = document.getElementById('topic-modal');
-
+    
+    // Заполняем текстовые поля
     document.getElementById('title').value = data.title || "";
     document.getElementById('description').value = data.description || "";
-
+    
+    // Заполняем статус темы
+    const isClosedSelect = document.getElementById('is_closed');
+    if (isClosedSelect) {
+        isClosedSelect.value = data.isClosed || "0";
+    }
+    
     const parentSelect = document.getElementById('edit-parent-category');
     const childSelect = document.getElementById('edit-child-category');
-
+    
     const parentId = String(data.parentId || "");
     const categoryId = String(data.categoryId || "");
-
+    
+    // Устанавливаем выбранный родительский раздел
     parentSelect.value = parentId;
-
+    
+    // Обновляем дочерние категории и выбираем нужную
     if (parentId) {
-        updateEditChildren(parentId, categoryId);
+        // Очищаем дочерний селект
+        childSelect.innerHTML = '<option value="">Выберите подраздел</option>';
+        
+        // Находим и добавляем дочерние категории
+        const children = allChildCategories.filter(c => String(c.parent_id) === String(parentId));
+        
+        children.forEach(child => {
+            const option = document.createElement('option');
+            option.value = child.id;
+            option.textContent = child.name;
+            if (String(child.id) === String(categoryId)) {
+                option.selected = true;
+            }
+            childSelect.appendChild(option);
+        });
     } else {
-        childSelect.innerHTML = `<option value="">Выберите раздел</option>`;
+        childSelect.innerHTML = '<option value="">Сначала выберите раздел</option>';
     }
-
+    
+    // Открываем модалку
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
-
             function closeCreateTopicModal() {
 
                 const modal = document.getElementById('topic-modal');

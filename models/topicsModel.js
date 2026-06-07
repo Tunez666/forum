@@ -193,29 +193,22 @@ exports.createTopic = async (topic) => {
 exports.selectTopic = async (topicId) => {
     const sql = `
         SELECT 
-    t.id,
-    t.title,
-    t.description,
-    t.created_at,
-    t.is_closed,
-
-    u.id AS author_id,
-    u.username AS author_name,
-    u.avatarca AS author_avatar,
-
-    c.id AS category_id,
-    c.name AS category_name,
-    c.description AS category_description
-
-FROM topics t
-
-JOIN users u 
-    ON u.id = t.author_id
-
-JOIN categories c 
-    ON c.id = t.category_id
-
-WHERE t.id = ?
+            t.id,
+            t.title,
+            t.description,
+            t.created_at,
+            t.is_closed,
+            u.id AS author_id,
+            u.username AS author_name,
+            u.avatarca AS author_avatar,
+            c.id AS category_id,
+            c.name AS category_name,
+            c.description AS category_description,
+            c.parent_id AS parent_category_id  
+        FROM topics t
+        JOIN users u ON u.id = t.author_id
+        JOIN categories c ON c.id = t.category_id
+        WHERE t.id = ?
     `;
 
     const [rows] = await db.query(sql, [topicId]);
