@@ -293,27 +293,28 @@ exports.showCategories = async (req, res) => {
 //create mess
 exports.createMess = async (req, res) => {
     const { content, parent_post_id } = req.body;
-    const patch = req.file ? req.file.filename : null;
-    console.log(req.body);
     const userId = req.session.userId;
     const topicId = req.params.id;
-
+    
+    // Получаем файлы из req.files
+    const image1 = req.files && req.files['image1'] ? req.files['image1'][0].filename : null;
+    const image2 = req.files && req.files['image2'] ? req.files['image2'][0].filename : null;
+    
     if (!content || !content.trim()) {
         return res.redirect(`/topic/${topicId}?error=empty`);
     }
-
+    
     await postsModel.createPost({
         topic_id: topicId,
         author_id: userId,
         parent_post_id: parent_post_id || null,
         content: content,
-        patch: patch
-
+        image1: image1,
+        image2: image2
     });
-
+    
     res.redirect(`/topic/${topicId}#last`);
 };
-
 //modals
 exports.createTopic = async (req, res) => {
     const { title, description, category_id } = req.body;
@@ -362,15 +363,53 @@ exports.createTopRep = async (req, res) => {
 };
 
 exports.editPost = async (req, res) => {
-    const { post_id, content } = req.body;
-    const topicId = req.params.id;
-
-    await postsModel.updatePost({
-        id: post_id,
-        content: content
-    });
-
-    res.redirect(`/topic/${topicId}`);
+    try {
+        const topicId = req.params.id;
+        
+        // ВАЖНО: при использовании .fields(), текстовые поля приходят в req.body
+        // НО! Если форма пустая, может быть undefined
+        console.log('req.body:', req.body);
+        console.log('req.files:', req.files);
+        
+        // Получаем post_id из body
+        const post_id = req.body.post_id;
+        const content = req.body.content;
+        
+        // Проверяем наличие post_id
+        if (!post_id) {
+            console.error('post_id not found in req.body');
+            return res.redirect(`/topic/${topicId}?error=no_post_id`);
+        }
+        
+        if (!content || !content.trim()) {
+            return res.redirect(`/topic/${topicId}?error=empty_content`);
+        }
+        
+        // Получаем новые файлы если есть
+        let image1, image2;
+        
+        if (req.files) {
+            if (req.files['image1']) {
+                image1 = req.files['image1'][0].filename;
+            }
+            if (req.files['image2']) {
+                image2 = req.files['image2'][0].filename;
+            }
+        }
+        
+        // Обновляем пост
+        await postsModel.updatePostWithImages({
+            id: post_id,
+            content: content,
+            image1: image1,  // undefined - не обновит поле
+            image2: image2   // undefined - не обновит поле
+        });
+        
+        res.redirect(`/topic/${topicId}#post-${post_id}`);
+    } catch (error) {
+        console.error('Error in editPost:', error);
+        res.redirect(`/topic/${req.params.id}?error=edit_failed`);
+    }
 };
 
 exports.delPost = async (req, res) => {

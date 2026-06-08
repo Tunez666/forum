@@ -7,11 +7,26 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        const name = Date.now() + ext;
+        const name = Date.now() + '-' + file.fieldname + ext;
         cb(null, name);
     }
 });
 
-const upload = multer({ storage });
+const uploadMulter = multer({ 
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
 
-module.exports = upload;
+// Для множественных файлов (2 изображения)
+const uploadMultiple = uploadMulter.fields([
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 }
+]);
+
+// Для одного файла (старый функционал)
+const uploadSingle = uploadMulter.single("ava");
+
+module.exports = {
+    uploadMultiple,
+    uploadSingle
+};

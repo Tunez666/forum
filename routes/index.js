@@ -5,7 +5,7 @@ const likesController = require("../controllers/likesController");
 const dislikesController = require("../controllers/dislikesController");
 const searchController = require("../controllers/searchController");
 const authMiddleware = require("../middlewares/auth");
-const upload = require("../middlewares/uploadMess");
+const { uploadMultiple, uploadSingle } = require("../middlewares/uploadMess");
 
 console.log("index routes loaded");
 
@@ -52,10 +52,10 @@ router.post("/contact/send", indexController.contactSend);
 router.post("/modalCreateTopic", authMiddleware.isAuth, indexController.createTopic);
 
 //Отправка соо
-router.post("/reply/:id", authMiddleware.isAuth,  upload.single("ava"), indexController.createMess);
+router.post("/reply/:id", authMiddleware.isAuth,  uploadMultiple, indexController.createMess);
 
 //Редактирование соо
-router.post("/edit/:id", authMiddleware.isAuth, indexController.editPost);
+router.post("/edit/:id", authMiddleware.isAuth, uploadMultiple, indexController.editPost);
 
 //Удаление поста
 router.post("/delete/:id", authMiddleware.isAuth, indexController.delPost);

@@ -41,17 +41,17 @@ exports.getPosts = async (topicId, userId) => {
             p.created_at,
             p.updated_at,
             p.author_id,
-            p.patch,
+            p.image1,
+            p.image2,
             u.username,
             u.avatarca,
 
             COUNT(l.id) AS likes_count,
             COUNT(dl.id) AS dislikes_count,
 
-             parent.id AS parent_id,
-             parent.content AS parent_content,
-
-             parent_user.username AS parent_username,
+            parent.id AS parent_id,
+            parent.content AS parent_content,
+            parent_user.username AS parent_username,
 
             MAX(CASE WHEN l.user_id = ? THEN 1 ELSE 0 END) AS is_liked,
             MAX(CASE WHEN dl.user_id = ? THEN 1 ELSE 0 END) AS is_disliked
@@ -61,29 +61,24 @@ exports.getPosts = async (topicId, userId) => {
         JOIN users u ON u.id = p.author_id
         LEFT JOIN likes l ON l.post_id = p.id
         LEFT JOIN dislikes dl ON dl.post_id = p.id
-        LEFT JOIN posts parent
-        ON p.parent_post_id = parent.id
-        LEFT JOIN users parent_user
-        ON parent.author_id = parent_user.id
+        LEFT JOIN posts parent ON p.parent_post_id = parent.id
+        LEFT JOIN users parent_user ON parent.author_id = parent_user.id
 
         WHERE p.topic_id = ?
         AND p.is_deleted = 0
 
         GROUP BY p.id
-
         ORDER BY p.created_at ASC;
     `;
 
     const [rows] = await db.query(sql, [userId || 0, userId || 0, topicId]);
-
     return rows;
 };
 
 exports.createPost = async (post) => {
-
     const sql = `
-        INSERT INTO posts (topic_id, author_id, parent_post_id, content, patch)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO posts (topic_id, author_id, parent_post_id, content, image1, image2)
+        VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(sql, [
@@ -91,9 +86,9 @@ exports.createPost = async (post) => {
         post.author_id,
         post.parent_post_id,
         post.content,
-        post.patch
+        post.image1 || null,
+        post.image2 || null
     ]);
-
 
     const [topicRows] = await db.query(`
         SELECT author_id
@@ -102,12 +97,9 @@ exports.createPost = async (post) => {
     `, [post.topic_id]);
 
     if (topicRows.length > 0) {
-
         const topicAuthorId = topicRows[0].author_id;
-
-        // не уведомляем самого себя
+        
         if (topicAuthorId !== post.author_id) {
-
             await db.query(`
                 INSERT INTO notifications
                 (user_id, sender_id, type, post_id)
@@ -160,18 +152,46 @@ exports.userPosts = async (userId) => {
 };
 
 exports.updatePost = async (post) => {
-
-    console.log(post);
-
     const sql = `
-        UPDATE posts
-        SET content = ?, updated_at = CURRENT_TIMESTAMP
+        UPDATE posts 
+        SET content = ?, updated_at = NOW()
         WHERE id = ?
     `;
+    
     const [result] = await db.query(sql, [
         post.content,
         post.id
     ]);
+    
+    return result;
+};
+
+exports.updatePostWithImages = async (post) => {
+    let sql = `
+        UPDATE posts 
+        SET content = ?, updated_at = NOW()
+    `;
+    const params = [post.content];
+    
+    // Проверяем, что image1 определен (не undefined)
+    if (post.image1 !== undefined) {
+        sql += `, image1 = ?`;
+        params.push(post.image1);
+    }
+    
+    // Проверяем, что image2 определен (не undefined)
+    if (post.image2 !== undefined) {
+        sql += `, image2 = ?`;
+        params.push(post.image2);
+    }
+    
+    sql += ` WHERE id = ?`;
+    params.push(post.id);
+    
+    console.log('SQL:', sql);
+    console.log('Params:', params);
+    
+    const [result] = await db.query(sql, params);
     return result;
 };
 
