@@ -90,7 +90,7 @@ exports.createPost = async (post) => {
         post.image2 || null
     ]);
 
-    const [topicRows] = await db.query(`
+    /*const [topicRows] = await db.query(`
         SELECT author_id
         FROM topics
         WHERE id = ?
@@ -111,7 +111,7 @@ exports.createPost = async (post) => {
                 result.insertId
             ]);
         }
-    }
+    }*/
 
     return result;
 };

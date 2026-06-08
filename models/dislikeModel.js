@@ -30,6 +30,14 @@ exports.toggleDislike = async (userId, postId) => {
 
         const authorId = postRows[0].author_id;
 
+        if (authorId !== userId) {
+            await db.query(`
+        INSERT INTO notifications
+        (user_id, sender_id, type, post_id)
+        VALUES (?, ?, ?, ?)
+    `, [authorId, userId, 'dislike', postId]);
+        }
+
         return { disliked: true };
     }
 };

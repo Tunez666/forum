@@ -52,8 +52,8 @@
                     💬
                 <% } %>
 
-                <% if (notif.type === 'mention') { %>
-                    @
+                <% if (notif.type === 'dislike') { %>
+                    👎
                 <% } %>
 
             </div>
@@ -82,13 +82,13 @@
 
                     <% } %>
 
-                    <% if (notif.type === 'mention') { %>
+                    <% if (notif.type === 'dislike') { %>
 
                         <strong>
                             <%= notif.username %>
                         </strong>
 
-                        упомянул вас
+                        дизлайкнул ваш пост
 
                     <% } %>
 
