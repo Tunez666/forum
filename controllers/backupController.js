@@ -11,7 +11,7 @@ exports.createBackup = (req, res) => {
   const fileName = `backup-${date}.sql`;
   const filePath = path.join(__dirname, "../backups", fileName);
 
-  const mysqldumpPath = "D:\\Xxamp\\mysql\\bin\\mysqldump.exe";
+  const mysqldumpPath = "C:\\xampp\\mysql\\bin\\mysqldump.exe"; 
 
   const user = process.env.DB_USER || "root";
   const db = process.env.DB_NAME || "forum";
@@ -90,7 +90,7 @@ exports.restoreBackup = (req, res) => {
     const file = req.params.id;
     const filePath = path.join(__dirname, "../backups", file);
 
-    const mysqlPath = "D:\\Xxamp\\mysql\\bin\\mysql.exe";
+    const mysqlPath = "C:\\xampp\\mysql\\bin\\mysql.exe";
 
     const command = `"${mysqlPath}" -u root forum < "${filePath}"`;
 
