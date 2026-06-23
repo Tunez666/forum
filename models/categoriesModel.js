@@ -143,7 +143,32 @@ exports.getChildCategories = async () => {
     return rows;
 };
 
-// В models/categoriesModel.js
+// Для главной страницы: получаем ВСЕХ детей без пагинации, но со статистикой
+exports.getSubCategoriesForTree = async (parentId) => {
+    const sql = `
+        SELECT 
+            c.id,
+            c.name,
+            c.description,
+            parent.name AS parent_name,
+            COUNT(DISTINCT t.id) AS topics_count,
+            COUNT(DISTINCT p.id) AS posts_count
+        FROM categories c
+        LEFT JOIN categories parent ON c.parent_id = parent.id
+        LEFT JOIN topics t ON t.category_id = c.id
+        LEFT JOIN posts p ON p.topic_id = t.id AND p.is_deleted = 0
+        WHERE c.parent_id = ?
+        GROUP BY c.id, c.name, c.description, parent.name
+        ORDER BY c.name ASC
+    `;
+    
+    const [rows] = await db.query(sql, [parentId]);
+    return {
+        categories: rows,
+        total: rows.length 
+    };
+};
+
 
 // Получить подкатегории для конкретного родителя (без пагинации, все подкатегории)
 exports.getSub = async (parentId) => {

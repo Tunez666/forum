@@ -217,7 +217,7 @@
 
               <div class="form-group">
                 <label>Раздел</label>
-
+                  
                 <!-- parent -->
                 <select id="parent-category" class="filter-select"
                   onchange="applyParent(this); updateChildFilter(this.value)">
@@ -332,7 +332,7 @@
         }
 
         function updateChildFilter(parentId) {
-          const childSelect = document.getElementById("childFilter");
+          const childSelect = document.getElementById("child-category");
 
           childSelect.innerHTML = `<option value="">Все подразделы</option>`;
 

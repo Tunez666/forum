@@ -257,8 +257,9 @@ exports.showCategories = async (req, res) => {
     const parentRows = await categoriesModel.countParents();
     const parentsCount = parentRows[0].countParents;
     const parents = await categoriesModel.getParentsWithStats(limit, offset);
-    for (const parent of parents) {
-        parent.children = await categoriesModel.getSubcategories(parent.id);
+     for (const parent of parents) {
+        const result = await categoriesModel.getSubCategoriesForTree(parent.id);
+        parent.children = result.categories; 
     }
 
     const allParents = await categoriesModel.getParentsCategories();
